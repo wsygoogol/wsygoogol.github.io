@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Søk"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -91,7 +91,57 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/28/About-the-Blog/" data-id="cj4ie06lk0000ns1b52a1buy4" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/28/About-the-Blog/" data-id="cj4ie6hax0000s01b52w4i3qy" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-WAF-Bypass-技巧总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/29/WAF-Bypass-技巧总结/" class="article-date">
+  <time datetime="2017-06-29T12:11:51.000Z" itemprop="datePublished">2017-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/29/WAF-Bypass-技巧总结/">WAF Bypass 技巧总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="waf分类"><a href="#waf分类" class="headerlink" title="waf分类"></a>waf分类</h4><p>掌握绕过各类WAF可以说是渗透测试人员的一项基本技能，本文将WAF分为云WAF、硬件WAF、软件WAF、代码级WAF，分别从各自的特性来谈一些相关的绕过技巧，更侧重于针对基于规则类的WAF绕过技巧。</p>
+<p>####### 云waf</p>
+<p>Eg:加速乐</p>
+<p>目前CDN服务的功能是越来越多，安全性也越加强悍，用户的每个请求都会被发送到指定的CDN节点上，最后转发给真实站点。这个过程就好像加了一道关卡，这个关卡提供了缓存、加速、防御的特点。</p>
+<p>绕过关键：查询真实IP，若是直接访问服务器的IP就不经过CDN了。</p>
+<p>以下四点有助于绕过。</p>
+<p>1.查询历史DNS（在2016年加入到了cnd节点里面，可以通过查询2016年之前的dns记录）</p>
+<p>2.查看子域名解析地址是否和主域名的IP地址相近。（有些网站只会讲主站加入到CDN节点里面，这时可以查看其二级、三级域名的IP地址信息，进而猜到主站的IP地址）</p>
+<p>3.CDN节点分发缺陷，通过国外IP访问网站可能会出现真实IP，因为有的CDN服务商可能只做了国内节点，没做国外的，这样访问请求是直接被转发到真实服务器地址上。</p>
+<p>4.让服务器主动连接你。比如rss订阅服务或则是向邮箱服务器发送个错误的邮件比如地址不存在 通过抓包观察返回的头来,查找IP地址信息。</p>
+<p>硬件waf</p>
+<p>Eg:绿盟WAF</p>
+<p>软件waf</p>
+<p>Eg:安全狗</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/06/29/WAF-Bypass-技巧总结/" data-id="cj4ie6hb60004s01bk9pgfg90" class="article-share-link">Share</a>
       
       
     </footer>
@@ -147,7 +197,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/sql注入之数据库识别/" data-id="cj4ie06lu0005ns1be5x1oqb1" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/sql注入之数据库识别/" data-id="cj4ie6hb20002s01bsu50gvc2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -191,7 +241,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cj4ie06lo0001ns1b798evrq0" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cj4ie6hba0006s01b5ll2d9la" class="article-share-link">Share</a>
       
       
     </footer>
@@ -293,7 +343,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/面试一年前的自己/" data-id="cj4ie06ls0004ns1bs0n1mey2" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/面试一年前的自己/" data-id="cj4ie6hba0007s01bte9dd7te" class="article-share-link">Share</a>
       
       
     </footer>
@@ -347,7 +397,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/28/Hexo-搭建Blog教程/" data-id="cj4ie06lq0002ns1bys550wcj" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/28/Hexo-搭建Blog教程/" data-id="cj4ie6hb80005s01b6k6p8ztr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -392,7 +442,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/27/hello-world/" data-id="cj4ie06lr0003ns1bfm1mylo0" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/27/hello-world/" data-id="cj4ie6hb50003s01bvs3yzjrf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -417,7 +467,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Arkiv</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li></ul>
     </div>
@@ -427,9 +477,13 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Siste innlegg</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2017/06/29/WAF-Bypass-技巧总结/">WAF Bypass 技巧总结</a>
+          </li>
         
           <li>
             <a href="/2017/06/29/sql注入之数据库识别/">sql注入之数据库识别</a>
@@ -447,10 +501,6 @@
             <a href="/2017/06/28/Hexo-搭建Blog教程/">Hexo 搭建Blog教程</a>
           </li>
         
-          <li>
-            <a href="/2017/06/28/About-the-Blog/">About the Blog</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -465,7 +515,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 SY0U<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
