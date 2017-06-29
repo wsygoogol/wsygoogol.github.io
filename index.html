@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -91,7 +91,63 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/28/About-the-Blog/" data-id="cj4id2esq0004v01bqdprb8rq" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/28/About-the-Blog/" data-id="cj4idxu990002lw1bp73isdts" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-sql注入之数据库识别" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/06/29/sql注入之数据库识别/" class="article-date">
+  <time datetime="2017-06-29T12:01:05.000Z" itemprop="datePublished">2017-06-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/06/29/sql注入之数据库识别/">sql注入之数据库识别</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>目前，主流扫描器在性能和准确性上一直是各个厂家追捧的对象，然而由于缺少对一些特定环境的判断，例如，数据库的版本识别，页面相似度的计算，爬虫对单 url扫描时间的采样等，所以导致对于一个sql注入的检测势必会采取全规则扫描，那么对于一个数据库怎样去识别呢，我们可以根据所谓的“指纹”去探索， 数据库的类型。</p>
+<h4 id="根据数据库连接字符串的不同进行识别"><a href="#根据数据库连接字符串的不同进行识别" class="headerlink" title="根据数据库连接字符串的不同进行识别"></a>根据数据库连接字符串的不同进行识别</h4><p>在控制某个字符串数据项的查询中，可以再一个请求中提交一个特殊的值，然后测试个中连接方式，生成自己想要的字符串，如果得到相同的结果，就可以确定所使 用的数据库类型，如果该页面存在sql注入，当然就是用最简单的测试手法，进行探测，如果探测成功，然后就进行字符的连接测试，对于后台如果一个 url：<a href="http://www.site.com/select.php?a=1&amp;b=2，假设存在注入漏洞，注入点是ｂ，你可以加入一下内容，" target="_blank" rel="external">http://www.site.com/select.php?a=1&amp;b=2，假设存在注入漏洞，注入点是ｂ，你可以加入一下内容，</a> 构造你认为对的注入条件：</p>
+<p>a)  字符串类型：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1.   ORACLE：’database‘  || ’_detect‘</div><div class="line">2.   MS-SQL： ’database‘+’_detect‘</div><div class="line">3.   MYSQL：’database‘  ’_detect‘</div></pre></td></tr></table></figure></p>
+<p>b)  数字类型<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE：BITAND(1,1) - BITAND(1,1)</div><div class="line">2.  MS-SQL：@@PACK_RECEIVED - @@PACK_RECEIVED</div><div class="line">3.  MYSQL： CONNECTION_ID() - CONNECTION_ID()</div></pre></td></tr></table></figure></p>
+<p>根据页面的返回特征，如果有你想要看到的现象，那么就可以确定数据库的类别。</p>
+<h4 id="根据数据库默认函数的不同进行识别"><a href="#根据数据库默认函数的不同进行识别" class="headerlink" title="根据数据库默认函数的不同进行识别"></a>根据数据库默认函数的不同进行识别</h4><p>a)  基于时间的</p>
+<ol>
+<li>在oracle之中，没有专门的内置时间函数，但是它有一个向远端服务器发送http请求的内置函数，UTL_HTTP,如果发送一个不存在的远端主机请 求，它就会尝试去连接，这样势必会造成一定程度的延迟。</li>
+<li>在ms-sql之中，可以使用waitfor delay ‘0:0:10’注入参数之中，造成一定的延迟然后和预期的正常请求时间相比较，如果符合自己的预期，那么就可以确定数据库的类型</li>
+<li>在mysql之中，可以使用sleep(5)注入参数之中，造成延迟来判断数据库类型<br>b)  基于错误类型的<br>众所周知对于不同的数据库，如果sql语句触发了错误，它们所爆出来的错误信息是不一样的，当然我们可以试探的形式去发现，例如我们用单引号，双引号，宽字节等有效手段，或者引发除零错之类的触发sql语句的错误，然后从错误信息之中寻找信息<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line"></div><div class="line">ORA-01756:quoted string not properly terminated</div><div class="line">ORA-00933:SQLcommand not properly ended</div><div class="line"></div><div class="line">2.  MS-SQL</div><div class="line"></div><div class="line">Msg 170,level 15, State 1,Line 1</div><div class="line">Line 1:Incorrect syntax near ‘foo</div><div class="line">Msg 105,level 15,state 1,Line 1</div><div class="line">Unclose quotation mark before the character string ‘foo</div><div class="line"></div><div class="line">3.  MYSQL</div><div class="line">you have an error <span class="keyword">in</span> your SQL syntax,check the manual that corresponds to you mysql server version <span class="keyword">for</span> the right stntax to use near ‘’foo’ at line x</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>c)  根据注释也可以初步判断数据库类型，但是注释一般可以被程序过滤，所以严格意义上讲，不在考虑范围之内<br>       这里举例就先这些，其实错误信息很多，如果个事实三者中的任意一个，那么就可以确定是哪一种数据库.</p>
+<h4 id="怎样去获取数据库的详细信息"><a href="#怎样去获取数据库的详细信息" class="headerlink" title="怎样去获取数据库的详细信息"></a>怎样去获取数据库的详细信息</h4><p>a)  获取数据库的版本字符串<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select banner from v<span class="variable">$version</span></div><div class="line">2.  MS-SQL</div><div class="line">Select @@version</div><div class="line">3.  MYSQL</div><div class="line">Select @@version</div></pre></td></tr></table></figure></p>
+<p>b)  获取当前操作的数据库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select SYS_CONTEXT(‘USERENV’,’DBNAME’) from dual</div><div class="line">2.  MS-SQL</div><div class="line">Select db_name()</div><div class="line">获取服务器的名称可以用 select servername</div><div class="line">3.  MYSQL</div><div class="line">Select database()</div></pre></td></tr></table></figure></p>
+<p>c)  获取当前用户的权限<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select privilege from session_privs</div><div class="line">2.  MS-SQL</div><div class="line">Select grantee,table_name,privilege_type from</div><div class="line">INFORMATION_SCHEMA.TABLE_PRIVILEGES</div><div class="line">3.  MYSQL</div><div class="line">Select * from information_schema.user_privileges <span class="built_in">where</span> grantee = ‘user’</div><div class="line">这里的user可以来自select user()</div><div class="line">如果要对这些检索出来的信息，进行一列显示，那么就要用到前面提到的连接符号</div></pre></td></tr></table></figure></p>
+<p>d)  显示用户表<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select object_name,object_type,from user_objectsWHEREobject_type=’TABLE’或者显示用户访问的所有表，从其中获取信息</div><div class="line">Select table_name form all_tables</div><div class="line">2.  MS-SQL</div><div class="line">Select name from sysobjectsWHERExtype=’U’</div><div class="line">3.  MYSQL</div><div class="line">Select table_name from information_schema.tables <span class="built_in">where</span> table_type=’BASE TABLE’ and table_schema!=’mysql’</div></pre></td></tr></table></figure></p>
+<p>e)  显示表foo的列名称<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select column_name,Name form uer_tab_columns <span class="built_in">where</span> table_name = ‘FOO’,如果目标数据部位当前应用程序用户所有，使用ALL_table_columns表</div><div class="line">2.  MS-SQL</div><div class="line">Select column_name,FORM information_schema.columns <span class="built_in">where</span> table_name=’foo’</div><div class="line">3.  MYSQL</div><div class="line">Select column_name from information_schema.columns <span class="built_in">where</span> table_name=’foo’</div></pre></td></tr></table></figure></p>
+<p>f)  显示用户对象<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select object_name,object_type from user_objects</div><div class="line">2.  MS-SQL</div><div class="line">Select name form sysobjects</div><div class="line">3.  MYSQL</div><div class="line">Select table_name from information_schema.tables或者select trigger_name from information_schema.triggers</div></pre></td></tr></table></figure></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结:"></a>总结:</h4><p>如果对于一个存在sql注入的站点来说，前两点可以轻松判断数据库的类型，最后的一点，可以根据实际情况进行sql拼接构造，对一个数据库进行探测</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/06/29/sql注入之数据库识别/" data-id="cj4idxu9f0006lw1bcycii9vo" class="article-share-link">Share</a>
       
       
     </footer>
@@ -135,7 +191,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cj4id2esj0003v01bng470in2" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cj4idxu9c0003lw1bfq36dgf0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -237,7 +293,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/面试一年前的自己/" data-id="cj4id2esv0005v01b6tfsvfz3" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/面试一年前的自己/" data-id="cj4idxu9e0005lw1b1ur5toub" class="article-share-link">Share</a>
       
       
     </footer>
@@ -291,7 +347,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/28/Hexo-搭建Blog教程/" data-id="cj4id2es40000v01b0fnno62u" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/28/Hexo-搭建Blog教程/" data-id="cj4idxu930000lw1bh96j85vh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -336,7 +392,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/27/hello-world/" data-id="cj4id2esa0002v01bnxxdeuqt" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/27/hello-world/" data-id="cj4idxu9d0004lw1bu33ux906" class="article-share-link">Share</a>
       
       
     </footer>
@@ -371,9 +427,13 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2017/06/29/sql注入之数据库识别/">sql注入之数据库识别</a>
+          </li>
         
           <li>
             <a href="/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/">Spring Boot框架SPEL表达式注入漏洞</a>
@@ -391,10 +451,6 @@
             <a href="/2017/06/28/About-the-Blog/">About the Blog</a>
           </li>
         
-          <li>
-            <a href="/2017/06/27/hello-world/">Hello World</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -409,7 +465,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 SY0U<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
