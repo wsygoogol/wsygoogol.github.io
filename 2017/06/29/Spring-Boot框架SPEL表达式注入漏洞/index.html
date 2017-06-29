@@ -93,16 +93,21 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="description" content="pring是2003年兴起的轻量级Java开发框架。任何Java应用都可以使用该框架的核心特性，在Java EE平台之上有可用于构建Web应用的扩展。Spring Boot是Spring 的一个核心子项目，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置国内包括百度、阿里巴巴、腾讯等诸多知名企业都在使用该框架。最">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2017/06/27/hello-world/index.html">
+<meta property="og:title" content="Spring Boot框架SPEL表达式注入漏洞">
+<meta property="og:url" content="http://yoursite.com/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta property="og:updated_time" content="2017-06-22T10:01:22.771Z">
+<meta property="og:description" content="pring是2003年兴起的轻量级Java开发框架。任何Java应用都可以使用该框架的核心特性，在Java EE平台之上有可用于构建Web应用的扩展。Spring Boot是Spring 的一个核心子项目，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置国内包括百度、阿里巴巴、腾讯等诸多知名企业都在使用该框架。最">
+<meta property="og:image" content="http://yoursite.com/upload_image/3.png">
+<meta property="og:image" content="http://yoursite.com/upload_image/4.png">
+<meta property="og:image" content="http://yoursite.com/upload_image/5.png">
+<meta property="og:image" content="http://yoursite.com/upload_image/6.png">
+<meta property="og:updated_time" content="2017-06-29T07:53:47.607Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="Spring Boot框架SPEL表达式注入漏洞">
+<meta name="twitter:description" content="pring是2003年兴起的轻量级Java开发框架。任何Java应用都可以使用该框架的核心特性，在Java EE平台之上有可用于构建Web应用的扩展。Spring Boot是Spring 的一个核心子项目，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置国内包括百度、阿里巴巴、腾讯等诸多知名企业都在使用该框架。最">
+<meta name="twitter:image" content="http://yoursite.com/upload_image/3.png">
 
 
 
@@ -130,13 +135,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/06/27/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/"/>
 
 
 
 
 
-  <title>Hello World | SY0U's Blog</title>
+  <title>Spring Boot框架SPEL表达式注入漏洞 | SY0U's Blog</title>
   
 
 
@@ -265,7 +270,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/27/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="SY0U">
@@ -282,7 +287,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">Spring Boot框架SPEL表达式注入漏洞</h1>
         
 
         <div class="post-meta">
@@ -294,8 +299,8 @@
               
                 <span class="post-meta-item-text">Veröffentlicht am</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-27T19:57:51+08:00">
-                2017-06-27
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-29T15:42:14+08:00">
+                2017-06-29
               </time>
             
 
@@ -329,15 +334,14 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <p>pring是2003年兴起的轻量级Java开发框架。任何Java应用都可以使用该框架的核心特性，在Java EE平台之上有可用于构建Web应用的扩展。Spring Boot是Spring 的一个核心子项目，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置国内包括百度、阿里巴巴、腾讯等诸多知名企业都在使用该框架。<br>最近Spring Boot框架的SpEL表达式注入通用漏洞曝光，利用该漏洞，远程攻击者在服务器上可执行任意命令。</p>
+<h4 id="受影响的版本"><a href="#受影响的版本" class="headerlink" title="受影响的版本"></a>受影响的版本</h4><p>Spring Boot 1.1 1.2 1.3.0版本</p>
+<h4 id="不受影响的版本"><a href="#不受影响的版本" class="headerlink" title="不受影响的版本"></a>不受影响的版本</h4><p>Spring Boot 1.3.1及以上版本</p>
+<h4 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h4><p>以下是官方给的漏洞说明：<br><img src="/upload_image/3.png" alt=""><br>查看spring boot1.3.0的源文件ErrorMvcAutoConfiguration.java，发现出问题的地方主要在SpelView类中：<br><img src="/upload_image/4.png" alt=""><br>经过分析得知在用户采用了Spring Boot启动Spring MVC项目后Spring Boot的默认异常模板在处理异常信息的时候递归解析SPEL表达式，可导致SPEL表达式注入并执行。主要问题是SpelView类中会对路径中或者名字中含有的表达式递归解析，所以在1.3.1修复时添加了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
+<h4 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h4><p>利用此漏洞，只需在SpringMVC的Controller中的参数触发一个异常，异常信息带有SPEL表达式就可以注入了。<br>POC：<br><a href="http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}" target="_blank" rel="external">http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}</a><br>漏洞证明：<br><img src="/upload_image/5.png" alt=""><br>利用表达式成功创建了字符串Nsfocus.</p>
+<h4 id="补丁分析"><a href="#补丁分析" class="headerlink" title="补丁分析"></a>补丁分析</h4><p>从spring-boot的github的项目中可以看到，这个漏洞是在这个commit中修复的：<br><a href="https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6</a><br>在修复的log里可以看到存着漏洞的1.3.0和1.3.1的差别：<br><img src="/upload_image/6.png" alt=""><br>1.3.1创建了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
+<h4 id="修复方法"><a href="#修复方法" class="headerlink" title="修复方法"></a>修复方法</h4><p>升级Spring Boot版本至1.3.1或以上版本</p>
+<h4 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h4><p><a href="http://www.freebuf.com/news/108665.html" target="_blank" rel="external">http://www.freebuf.com/news/108665.html</a><br><a href="http://www.wooyun.org/bugs/wooyun-2010-226888" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-226888</a><br><a href="https://github.com/spring-projects/spring-boot/issues/4763" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/issues/4763</a></p>
 
       
     </div>
@@ -374,15 +378,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/06/29/面试一年前的自己/" rel="next" title="面试一年前的自己">
+                <i class="fa fa-chevron-left"></i> 面试一年前的自己
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/06/28/About-the-Blog/" rel="prev" title="About the Blog">
-                About the Blog <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -493,7 +497,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#受影响的版本"><span class="nav-number">1.</span> <span class="nav-text">受影响的版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不受影响的版本"><span class="nav-number">2.</span> <span class="nav-text">不受影响的版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#漏洞分析"><span class="nav-number">3.</span> <span class="nav-text">漏洞分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#漏洞利用"><span class="nav-number">4.</span> <span class="nav-text">漏洞利用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#补丁分析"><span class="nav-number">5.</span> <span class="nav-text">补丁分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修复方法"><span class="nav-number">6.</span> <span class="nav-text">修复方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考链接"><span class="nav-number">7.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
             
 
           </div>
