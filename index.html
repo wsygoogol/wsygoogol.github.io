@@ -200,7 +200,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            Accueil
           </a>
         </li>
       
@@ -282,7 +282,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Posté le</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-28T19:48:25+08:00">
                 2017-06-28
@@ -324,7 +324,9 @@
             <p>平时在浏览博客的时候发现好多人喜欢利用Hexo + Github搭建个人博客，正好一直也想搭建一个博客去记录和分享。在此过程中，折腾各种配置花了一些时间，所以详细记录一下遇到的相关问题。</p>
 <h3 id="1-安装Git"><a href="#1-安装Git" class="headerlink" title="1.安装Git"></a>1.安装Git</h3><p>下载<a href="https://git-scm.com/download/win" target="_blank" rel="external">git</a>,安装很简单，一路next下去</p>
 <h3 id="2-安装Node-js"><a href="#2-安装Node-js" class="headerlink" title="2.安装Node.js"></a>2.安装Node.js</h3><p>下载<a href="https://nodejs.org/en/" target="_blank" rel="external">node.js</a>，安装也是一路next</p>
-<h3 id="Github配置"><a href="#Github配置" class="headerlink" title="Github配置"></a>Github配置</h3><p>登陆github后点击new repository，Repository name填写自己的名称 + .github.io，<br><img src="/upload_image/1.jpg" alt=""></p>
+<h3 id="3-Github配置"><a href="#3-Github配置" class="headerlink" title="3.Github配置"></a>3.Github配置</h3><p>登陆github后点击new repository，Repository name填写自己的名称 + .github.io，<br><img src="/upload_image/1.jpg" alt=""><br>直接点Create repository就可以了。</p>
+<h3 id="4-配置Github-SSH密钥"><a href="#4-配置Github-SSH密钥" class="headerlink" title="4.配置Github SSH密钥"></a>4.配置Github SSH密钥</h3><p>在桌面空白处鼠标右键选择Git Bash Here<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -C <span class="string">"your's emaill address"</span></div></pre></td></tr></table></figure></p>
+<p>引号里面的内容输入你的邮箱地址，然后回车，会提示你文件保存的路径，按回车键确认<br>然后会提示你输入密码，然后会确认输入一次，就可以在刚刚的路径看到生成了两个文件，一个是id_rsa，另一个是id_rsa.pub，用notepadd++打开id_rsa.pub然后选中里面的全部内容，复制下来。<br>登陆github，点击头像进入setting选项<br><img src="/upload_image/2.jpg" alt=""></p>
 
           
         
@@ -397,7 +399,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Posté le</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-28T18:54:05+08:00">
                 2017-06-28
@@ -509,7 +511,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Posté le</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-27T19:57:51+08:00">
                 2017-06-27
@@ -637,7 +639,7 @@
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
                 <span class="site-state-item-count">3</span>
-                <span class="site-state-item-name">posts</span>
+                <span class="site-state-item-name">articles</span>
               </a>
             </div>
           
@@ -695,7 +697,7 @@
 </div>
 
 <div class="theme-info">
-  Theme -
+  Thème -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
     NexT.Muse
   </a>
