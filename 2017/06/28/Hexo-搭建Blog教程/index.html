@@ -93,18 +93,18 @@
 
 
 
-<meta name="description" content="平时在浏览博客的时候发现好多人喜欢利用Hexo + Github搭建个人博客，正好一直也想搭建一个博客去记录和分享。在此过程中，折腾各种配置花了一些时间，所以详细记录一下遇到的相关问题。 1.安装Git下载git,安装很简单，一路next下去 2.安装Node.js下载node.js，安装也是一路next 3.Github配置登陆github后点击new repository，Repository">
+<meta name="description" content="平时在浏览博客的时候发现好多人喜欢利用Hexo + Github搭建个人博客，正好一直也想搭建一个博客去记录和分享。在此过程中，折腾各种配置花了一些时间，所以详细记录一下遇到的相关问题。 1.安装Git下载git,安装很简单，一路next下去 2.安装Node.js下载node.js，安装也是一路next 3.本地搭建hexo博客安装hexo1$ npm install -g hexo-cli 测">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo 搭建Blog教程">
 <meta property="og:url" content="http://yoursite.com/2017/06/28/Hexo-搭建Blog教程/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
-<meta property="og:description" content="平时在浏览博客的时候发现好多人喜欢利用Hexo + Github搭建个人博客，正好一直也想搭建一个博客去记录和分享。在此过程中，折腾各种配置花了一些时间，所以详细记录一下遇到的相关问题。 1.安装Git下载git,安装很简单，一路next下去 2.安装Node.js下载node.js，安装也是一路next 3.Github配置登陆github后点击new repository，Repository">
+<meta property="og:description" content="平时在浏览博客的时候发现好多人喜欢利用Hexo + Github搭建个人博客，正好一直也想搭建一个博客去记录和分享。在此过程中，折腾各种配置花了一些时间，所以详细记录一下遇到的相关问题。 1.安装Git下载git,安装很简单，一路next下去 2.安装Node.js下载node.js，安装也是一路next 3.本地搭建hexo博客安装hexo1$ npm install -g hexo-cli 测">
 <meta property="og:image" content="http://yoursite.com/upload_image/1.jpg">
 <meta property="og:image" content="http://yoursite.com/upload_image/2.jpg">
-<meta property="og:updated_time" content="2017-06-29T03:37:53.974Z">
+<meta property="og:updated_time" content="2017-06-29T06:14:25.790Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo 搭建Blog教程">
-<meta name="twitter:description" content="平时在浏览博客的时候发现好多人喜欢利用Hexo + Github搭建个人博客，正好一直也想搭建一个博客去记录和分享。在此过程中，折腾各种配置花了一些时间，所以详细记录一下遇到的相关问题。 1.安装Git下载git,安装很简单，一路next下去 2.安装Node.js下载node.js，安装也是一路next 3.Github配置登陆github后点击new repository，Repository">
+<meta name="twitter:description" content="平时在浏览博客的时候发现好多人喜欢利用Hexo + Github搭建个人博客，正好一直也想搭建一个博客去记录和分享。在此过程中，折腾各种配置花了一些时间，所以详细记录一下遇到的相关问题。 1.安装Git下载git,安装很简单，一路next下去 2.安装Node.js下载node.js，安装也是一路next 3.本地搭建hexo博客安装hexo1$ npm install -g hexo-cli 测">
 <meta name="twitter:image" content="http://yoursite.com/upload_image/1.jpg">
 
 
@@ -205,7 +205,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Accueil
+            Startseite
           </a>
         </li>
       
@@ -215,7 +215,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archives
+            Archiv
           </a>
         </li>
       
@@ -285,7 +285,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posté le</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-28T19:48:25+08:00">
                 2017-06-28
@@ -325,9 +325,18 @@
         <p>平时在浏览博客的时候发现好多人喜欢利用Hexo + Github搭建个人博客，正好一直也想搭建一个博客去记录和分享。在此过程中，折腾各种配置花了一些时间，所以详细记录一下遇到的相关问题。</p>
 <h3 id="1-安装Git"><a href="#1-安装Git" class="headerlink" title="1.安装Git"></a>1.安装Git</h3><p>下载<a href="https://git-scm.com/download/win" target="_blank" rel="external">git</a>,安装很简单，一路next下去</p>
 <h3 id="2-安装Node-js"><a href="#2-安装Node-js" class="headerlink" title="2.安装Node.js"></a>2.安装Node.js</h3><p>下载<a href="https://nodejs.org/en/" target="_blank" rel="external">node.js</a>，安装也是一路next</p>
+<h3 id="3-本地搭建hexo博客"><a href="#3-本地搭建hexo博客" class="headerlink" title="3.本地搭建hexo博客"></a>3.本地搭建hexo博客</h3><p>安装hexo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install -g hexo-cli</div></pre></td></tr></table></figure></p>
+<p>测试hexo是否安装成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo version</div></pre></td></tr></table></figure></p>
+<p>新建一个文件夹，如MyBlog<br>进入该文件夹内，右击运行git，依次输入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ hexo init</div><div class="line">$ npm install</div><div class="line">$ hexo g</div><div class="line">$ hexo s</div></pre></td></tr></table></figure></p>
+<p>这时候在浏览器输入<a href="http://localhost:4000/" target="_blank" rel="external">http://localhost:4000/</a> 就可以看到hexo已经成功生成了博客，当然这只是我们本地可以看到的</p>
 <h3 id="3-Github配置"><a href="#3-Github配置" class="headerlink" title="3.Github配置"></a>3.Github配置</h3><p>登陆github后点击new repository，Repository name填写自己的名称 + .github.io，<br><img src="/upload_image/1.jpg" alt=""><br>直接点Create repository就可以了。</p>
 <h3 id="4-配置Github-SSH密钥"><a href="#4-配置Github-SSH密钥" class="headerlink" title="4.配置Github SSH密钥"></a>4.配置Github SSH密钥</h3><p>在桌面空白处鼠标右键选择Git Bash Here<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -C <span class="string">"your's emaill address"</span></div></pre></td></tr></table></figure></p>
 <p>引号里面的内容输入你的邮箱地址，然后回车，会提示你文件保存的路径，按回车键确认<br>然后会提示你输入密码，然后会确认输入一次，就可以在刚刚的路径看到生成了两个文件，一个是id_rsa，另一个是id_rsa.pub，用notepadd++打开id_rsa.pub然后选中里面的全部内容，复制下来。<br>登陆github，点击头像进入setting选项<br><img src="/upload_image/2.jpg" alt=""></p>
+<h3 id="5-将hexo博客与Github关联"><a href="#5-将hexo博客与Github关联" class="headerlink" title="5.将hexo博客与Github关联"></a>5.将hexo博客与Github关联</h3><p>修改_config.yml<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">  <span class="built_in">type</span>: git</div><div class="line">  repository: http://github.com/yourname/yourname.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure></p>
+<p>打开Git bash here<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo g</div><div class="line">$ hexo d</div></pre></td></tr></table></figure></p>
+<p>如果出现如下异常<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ERROR Deployer not found: git</div></pre></td></tr></table></figure></p>
+<p>输入以下命令，然后重新执行上面两条命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-deployer-git --save</div></pre></td></tr></table></figure></p>
+<p>这时候如果弹出一个对话框，输入在guthub上面的用户名和密码即可<br>这时候我们就可以在浏览器输入<a href="http://yourname.github.io（yourname替换成github上的名称）就可以看到博客已经搭建成功了。" target="_blank" rel="external">http://yourname.github.io（yourname替换成github上的名称）就可以看到博客已经搭建成功了。</a></p>
 
       
     </div>
@@ -421,10 +430,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Table Des Matières
+            Inhaltsverzeichnis
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Ensemble
+            Übersicht
           </li>
         </ul>
       
@@ -445,7 +454,7 @@
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
                 <span class="site-state-item-count">3</span>
-                <span class="site-state-item-name">articles</span>
+                <span class="site-state-item-name">Artikel</span>
               </a>
             </div>
           
@@ -483,7 +492,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-安装Git"><span class="nav-number">1.</span> <span class="nav-text">1.安装Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-安装Node-js"><span class="nav-number">2.</span> <span class="nav-text">2.安装Node.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Github配置"><span class="nav-number">3.</span> <span class="nav-text">3.Github配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-配置Github-SSH密钥"><span class="nav-number">4.</span> <span class="nav-text">4.配置Github SSH密钥</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-安装Git"><span class="nav-number">1.</span> <span class="nav-text">1.安装Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-安装Node-js"><span class="nav-number">2.</span> <span class="nav-text">2.安装Node.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-本地搭建hexo博客"><span class="nav-number">3.</span> <span class="nav-text">3.本地搭建hexo博客</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Github配置"><span class="nav-number">4.</span> <span class="nav-text">3.Github配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-配置Github-SSH密钥"><span class="nav-number">5.</span> <span class="nav-text">4.配置Github SSH密钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-将hexo博客与Github关联"><span class="nav-number">6.</span> <span class="nav-text">5.将hexo博客与Github关联</span></a></li></ol></div>
             
 
           </div>
@@ -515,11 +524,11 @@
 
 
 <div class="powered-by">
-  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
-  Thème -
+  Theme -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
     NexT.Muse
   </a>
