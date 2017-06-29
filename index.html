@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -91,7 +91,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/28/About-the-Blog/" data-id="cj4idxu990002lw1bp73isdts" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/28/About-the-Blog/" data-id="cj4ie06lk0000ns1b52a1buy4" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -132,7 +132,7 @@
 <ol>
 <li>在oracle之中，没有专门的内置时间函数，但是它有一个向远端服务器发送http请求的内置函数，UTL_HTTP,如果发送一个不存在的远端主机请 求，它就会尝试去连接，这样势必会造成一定程度的延迟。</li>
 <li>在ms-sql之中，可以使用waitfor delay ‘0:0:10’注入参数之中，造成一定的延迟然后和预期的正常请求时间相比较，如果符合自己的预期，那么就可以确定数据库的类型</li>
-<li>在mysql之中，可以使用sleep(5)注入参数之中，造成延迟来判断数据库类型<br>b)  基于错误类型的<br>众所周知对于不同的数据库，如果sql语句触发了错误，它们所爆出来的错误信息是不一样的，当然我们可以试探的形式去发现，例如我们用单引号，双引号，宽字节等有效手段，或者引发除零错之类的触发sql语句的错误，然后从错误信息之中寻找信息<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line"></div><div class="line">ORA-01756:quoted string not properly terminated</div><div class="line">ORA-00933:SQLcommand not properly ended</div><div class="line"></div><div class="line">2.  MS-SQL</div><div class="line"></div><div class="line">Msg 170,level 15, State 1,Line 1</div><div class="line">Line 1:Incorrect syntax near ‘foo</div><div class="line">Msg 105,level 15,state 1,Line 1</div><div class="line">Unclose quotation mark before the character string ‘foo</div><div class="line"></div><div class="line">3.  MYSQL</div><div class="line">you have an error <span class="keyword">in</span> your SQL syntax,check the manual that corresponds to you mysql server version <span class="keyword">for</span> the right stntax to use near ‘’foo’ at line x</div></pre></td></tr></table></figure>
+<li>在mysql之中，可以使用sleep(5)注入参数之中，造成延迟来判断数据库类型<br>b)  基于错误类型的<br>众所周知对于不同的数据库，如果sql语句触发了错误，它们所爆出来的错误信息是不一样的，当然我们可以试探的形式去发现，例如我们用单引号，双引号，宽字节等有效手段，或者引发除零错之类的触发sql语句的错误，然后从错误信息之中寻找信息<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">ORA-01756:quoted string not properly terminated</div><div class="line">ORA-00933:SQLcommand not properly ended</div><div class="line">2.  MS-SQL</div><div class="line">Msg 170,level 15, State 1,Line 1</div><div class="line">Line 1:Incorrect syntax near ‘foo</div><div class="line">Msg 105,level 15,state 1,Line 1</div><div class="line">Unclose quotation mark before the character string ‘foo</div><div class="line">3.  MYSQL</div><div class="line">you have an error <span class="keyword">in</span> your SQL syntax,check the manual that corresponds to you mysql server version <span class="keyword">for</span> the right stntax to use near ‘’foo’ at line x</div></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>c)  根据注释也可以初步判断数据库类型，但是注释一般可以被程序过滤，所以严格意义上讲，不在考虑范围之内<br>       这里举例就先这些，其实错误信息很多，如果个事实三者中的任意一个，那么就可以确定是哪一种数据库.</p>
@@ -147,7 +147,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/sql注入之数据库识别/" data-id="cj4idxu9f0006lw1bcycii9vo" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/sql注入之数据库识别/" data-id="cj4ie06lu0005ns1be5x1oqb1" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -191,7 +191,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cj4idxu9c0003lw1bfq36dgf0" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cj4ie06lo0001ns1b798evrq0" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -293,7 +293,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/面试一年前的自己/" data-id="cj4idxu9e0005lw1b1ur5toub" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/面试一年前的自己/" data-id="cj4ie06ls0004ns1bs0n1mey2" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -347,7 +347,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/28/Hexo-搭建Blog教程/" data-id="cj4idxu930000lw1bh96j85vh" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/28/Hexo-搭建Blog教程/" data-id="cj4ie06lq0002ns1bys550wcj" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -392,7 +392,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/27/hello-world/" data-id="cj4idxu9d0004lw1bu33ux906" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/27/hello-world/" data-id="cj4ie06lr0003ns1bfm1mylo0" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -427,7 +427,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
         
@@ -465,7 +465,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 SY0U<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
