@@ -53,7 +53,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -91,7 +91,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/28/About-the-Blog/" data-id="cj4jgrfq80000ao1ba6secl6b" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/28/About-the-Blog/" data-id="cj4jh1hy50000jg1bohm3rt5b" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -124,11 +124,16 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="waf分类"><a href="#waf分类" class="headerlink" title="waf分类"></a>waf分类</h4><p>掌握绕过各类WAF可以说是渗透测试人员的一项基本技能，本文将WAF分为云WAF、硬件WAF、软件WAF、代码级WAF，分别从各自的特性来谈一些相关的绕过技巧，更侧重于针对基于规则类的WAF绕过技巧。<br><strong>云WAF</strong><br>Eg:加速乐<br>目前CDN服务的功能是越来越多，安全性也越加强悍，用户的每个请求都会被发送到指定的CDN节点上，最后转发给真实站点。这个过程就好像加了一道关卡，这个关卡提供了缓存、加速、防御的特点。<br>绕过关键：查询真实IP，若是直接访问服务器的IP就不经过CDN了。<br>以下四点有助于绕过。<br>1.查询历史DNS（在2016年加入到了cnd节点里面，可以通过查询2016年之前的dns记录）<br>2.查看子域名解析地址是否和主域名的IP地址相近。（有些网站只会将主站加入到CDN节点里面，这时可以查看其二级、三级域名的IP地址信息，进而猜到主站的IP地址）<br>3.CDN节点分发缺陷，通过国外IP访问网站可能会出现真实IP，因为有的CDN服务商可能只做了国内节点，没做国外的，这样访问请求是直接被转发到真实服务器地址上。<br>4.让服务器主动连接你。比如rss订阅服务或则是向邮箱服务器发送个错误的邮件比如地址不存在 通过抓包观察返回的头来,查找IP地址信息。<br><strong>硬件waf</strong><br>Eg:绿盟WAF<br><strong>软件waf</strong><br>Eg:安全狗</p>
+<h4 id="基于规则的WAF工作原理"><a href="#基于规则的WAF工作原理" class="headerlink" title="基于规则的WAF工作原理"></a>基于规则的WAF工作原理</h4><p>数据获取(注意 get post等方法以及 post体方式)———数据清洗(去除多余数据比如编码,mssql支持unicode编码)———规则匹配———二次校验</p>
+<h6 id="1-绕注入"><a href="#1-绕注入" class="headerlink" title="1.绕注入"></a>1.绕注入</h6><p>关键字替换<br>原理：<br>部分WAF是通过黑名单来起到拦截的作用，这种情况可以用关键字替换来实现绕过。比如在mysql中，waf将sleep()函数列入了黑名单，可以通过具备相同功能的benchmark()函数来实现绕过。以下是部分相同功能的替代函数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt; &gt; 等价于 BETWEEN</div><div class="line">= 等价于 like</div><div class="line">Hex() bin() 等价于ascii()</div><div class="line">Sleep() 等价于 benchmark()</div><div class="line">Mid()substring() 等价于 substr(）</div><div class="line">@@user 等价于 User()</div><div class="line">@@Version 等价于 version()</div><div class="line">(mysql支持&amp;&amp;  || ,oracle不支持 &amp;&amp; ||）</div></pre></td></tr></table></figure></p>
+<h6 id="2-特殊符号"><a href="#2-特殊符号" class="headerlink" title="2.特殊符号"></a>2.特殊符号</h6><p>原理：结合不同数据库的特性来实现绕过。(最好是可以找到waf开发者都不了解的某些特性),以下是两个广为流传的小特性：<br>比如 “+” select+password+from+mysql.user 相当于是一个空格的作用“`”放在mysql的末尾会起到注释符的作用</p>
+<h6 id="3-编码"><a href="#3-编码" class="headerlink" title="3.编码"></a>3.编码</h6><p>可以结合各种编码方式来绕过,比如url编码，url双重编码,十六进制编码，unicode编码，数据库编码等。<br>Eg：mysql默认的字符集是latin,因此在php代码里面设置的字符集为 utf-8,这只是客户端的字符集，因此存在字符集装换的问题utf-8—&gt;latin,若传进来的字符集不是完整的字符，则会导致不完整的字符自动会忽略的问题，比如username=admin%c2 ,   由于%c2不是一个完整的utf-8字符  因此传到Mysql  里面  自动忽略了，导致查出的是admin用户的数据，可以利用这个特性绕过。</p>
+<h6 id="4-注释符"><a href="#4-注释符" class="headerlink" title="4.注释符"></a>4.注释符</h6><p>/<em>xxx</em>/是注释，也可以充当空白符。因为 /<strong>/可使得MySQL对sql语句(union/</strong>/select)词法解析成功。事实上许多WAF都考虑到/<strong>/可以作为空白分，但是waf检测 “/*.<em>\</em>/”很消耗性能，工程师会折中，可能在检测中间引入一些特殊字符，例如：/<em>\w+</em>/。或者，WAF可能只中间检查n个字符“/*.{,n}*/”。根据以上想法，可以逐步测试绕过方法：<br>先测试最基本的：union/</strong>/select再测试中间引入特殊字：union/<em>aaaa%01bbs</em>/select最后测试注释长度：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">union/*aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/select</div></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/WAF-Bypass-技巧总结/" data-id="cj4jgrfqi0004ao1bt0yc3q1x" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/WAF-Bypass-技巧总结/" data-id="cj4jh1hyd0004jg1bp5i0c2jm" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -184,7 +189,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/sql注入之数据库识别/" data-id="cj4jgrfqk0005ao1bhic7o9qu" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/sql注入之数据库识别/" data-id="cj4jh1hyj0006jg1blbl97sc1" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -228,7 +233,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cj4jgrfqm0006ao1bs4f5k3ch" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cj4jh1hy90002jg1bm4bk0y8r" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -330,7 +335,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/面试一年前的自己/" data-id="cj4jgrfqm0007ao1bbo1hmzrg" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/面试一年前的自己/" data-id="cj4jh1hyk0007jg1bv40ejh8h" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -384,7 +389,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/28/Hexo-搭建Blog教程/" data-id="cj4jgrfqe0002ao1bezuj6t27" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/28/Hexo-搭建Blog教程/" data-id="cj4jh1hyc0003jg1bshxw7d8s" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -429,7 +434,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/27/hello-world/" data-id="cj4jgrfqh0003ao1b7ksu8q2o" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/27/hello-world/" data-id="cj4jh1hyf0005jg1booidyjfc" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -454,7 +459,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Archieven</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li></ul>
     </div>
@@ -464,7 +469,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Recente berichten</h3>
     <div class="widget">
       <ul>
         
