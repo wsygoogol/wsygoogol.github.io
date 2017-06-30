@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://wsygoogol.github.io/2017/06/29/WAF-Bypass-技巧总结/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
 <meta property="og:description" content="waf分类掌握绕过各类WAF可以说是渗透测试人员的一项基本技能，本文将WAF分为云WAF、硬件WAF、软件WAF、代码级WAF，分别从各自的特性来谈一些相关的绕过技巧，更侧重于针对基于规则类的WAF绕过技巧。云WAFEg:加速乐目前CDN服务的功能是越来越多，安全性也越加强悍，用户的每个请求都会被发送到指定的CDN节点上，最后转发给真实站点。这个过程就好像加了一道关卡，这个关卡提供了缓存、加速、防">
-<meta property="og:updated_time" content="2017-06-30T05:58:23.271Z">
+<meta property="og:updated_time" content="2017-06-30T06:09:39.133Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WAF Bypass 技巧总结">
 <meta name="twitter:description" content="waf分类掌握绕过各类WAF可以说是渗透测试人员的一项基本技能，本文将WAF分为云WAF、硬件WAF、软件WAF、代码级WAF，分别从各自的特性来谈一些相关的绕过技巧，更侧重于针对基于规则类的WAF绕过技巧。云WAFEg:加速乐目前CDN服务的功能是越来越多，安全性也越加强悍，用户的每个请求都会被发送到指定的CDN节点上，最后转发给真实站点。这个过程就好像加了一道关卡，这个关卡提供了缓存、加速、防">
@@ -85,14 +85,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="waf分类"><a href="#waf分类" class="headerlink" title="waf分类"></a>waf分类</h4><p>掌握绕过各类WAF可以说是渗透测试人员的一项基本技能，本文将WAF分为云WAF、硬件WAF、软件WAF、代码级WAF，分别从各自的特性来谈一些相关的绕过技巧，更侧重于针对基于规则类的WAF绕过技巧。<br><em>云WAF</em><br>Eg:加速乐<br>目前CDN服务的功能是越来越多，安全性也越加强悍，用户的每个请求都会被发送到指定的CDN节点上，最后转发给真实站点。这个过程就好像加了一道关卡，这个关卡提供了缓存、加速、防御的特点。<br>绕过关键：查询真实IP，若是直接访问服务器的IP就不经过CDN了。<br>以下四点有助于绕过。<br>1.查询历史DNS（在2016年加入到了cnd节点里面，可以通过查询2016年之前的dns记录）<br>2.查看子域名解析地址是否和主域名的IP地址相近。（有些网站只会将主站加入到CDN节点里面，这时可以查看其二级、三级域名的IP地址信息，进而猜到主站的IP地址）<br>3.CDN节点分发缺陷，通过国外IP访问网站可能会出现真实IP，因为有的CDN服务商可能只做了国内节点，没做国外的，这样访问请求是直接被转发到真实服务器地址上。</p>
+        <h4 id="waf分类"><a href="#waf分类" class="headerlink" title="waf分类"></a>waf分类</h4><p>掌握绕过各类WAF可以说是渗透测试人员的一项基本技能，本文将WAF分为云WAF、硬件WAF、软件WAF、代码级WAF，分别从各自的特性来谈一些相关的绕过技巧，更侧重于针对基于规则类的WAF绕过技巧。<br><strong>云WAF</strong><br>Eg:加速乐<br>目前CDN服务的功能是越来越多，安全性也越加强悍，用户的每个请求都会被发送到指定的CDN节点上，最后转发给真实站点。这个过程就好像加了一道关卡，这个关卡提供了缓存、加速、防御的特点。<br>绕过关键：查询真实IP，若是直接访问服务器的IP就不经过CDN了。<br>以下四点有助于绕过。<br>1.查询历史DNS（在2016年加入到了cnd节点里面，可以通过查询2016年之前的dns记录）<br>2.查看子域名解析地址是否和主域名的IP地址相近。（有些网站只会将主站加入到CDN节点里面，这时可以查看其二级、三级域名的IP地址信息，进而猜到主站的IP地址）<br>3.CDN节点分发缺陷，通过国外IP访问网站可能会出现真实IP，因为有的CDN服务商可能只做了国内节点，没做国外的，这样访问请求是直接被转发到真实服务器地址上。</p>
 <p>4.让服务器主动连接你。比如rss订阅服务或则是向邮箱服务器发送个错误的邮件比如地址不存在 通过抓包观察返回的头来,查找IP地址信息。</p>
-<p><em>硬件waf</em><br>Eg:绿盟WAF<br>软件waf<br>Eg:安全狗</p>
+<p><strong>硬件waf</strong><br>Eg:绿盟WAF<br><strong>软件waf</strong><br>Eg:安全狗</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/WAF-Bypass-技巧总结/" data-id="cj4jg7hax0006241bfkd7fha4" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/WAF-Bypass-技巧总结/" data-id="cj4jgll540002381bjn930xhx" class="article-share-link">Share</a>
       
       
     </footer>
