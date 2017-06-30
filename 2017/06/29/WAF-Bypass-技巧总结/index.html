@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="SY0U&#39;s Blog">
 <meta property="og:description" content="waf分类掌握绕过各类WAF可以说是渗透测试人员的一项基本技能，本文将WAF分为云WAF、硬件WAF、软件WAF、代码级WAF，分别从各自的特性来谈一些相关的绕过技巧，更侧重于针对基于规则类的WAF绕过技巧。 1.云WAFEg:加速乐目前CDN服务的功能是越来越多，安全性也越加强悍，用户的每个请求都会被发送到指定的CDN节点上，最后转发给真实站点。这个过程就好像加了一道关卡，这个关卡提供了缓存、加">
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/7.jpg">
-<meta property="og:updated_time" content="2017-06-30T07:29:16.525Z">
+<meta property="og:updated_time" content="2017-06-30T07:35:49.476Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WAF Bypass 技巧总结">
 <meta name="twitter:description" content="waf分类掌握绕过各类WAF可以说是渗透测试人员的一项基本技能，本文将WAF分为云WAF、硬件WAF、软件WAF、代码级WAF，分别从各自的特性来谈一些相关的绕过技巧，更侧重于针对基于规则类的WAF绕过技巧。 1.云WAFEg:加速乐目前CDN服务的功能是越来越多，安全性也越加强悍，用户的每个请求都会被发送到指定的CDN节点上，最后转发给真实站点。这个过程就好像加了一道关卡，这个关卡提供了缓存、加">
@@ -54,9 +54,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -106,8 +106,8 @@
 <h6 id="3-协议解析不正确-文件名覆盖"><a href="#3-协议解析不正确-文件名覆盖" class="headerlink" title="3.协议解析不正确-文件名覆盖"></a>3.协议解析不正确-文件名覆盖</h6><p>在multipart协议中，一个文件上传块存在多个Content-Disposition，将以最后一个Content-Disposition的filename值作为上传的文件名。许多WAF解析到第一个Content-Disposition就认为协议解析完毕，获得上传的文件名，从而导致被绕过。如图，加速乐的WAF解析得到文件名是”sp.pho”，但PHP解析结果是”sp.php”，导致被绕过。<br><img src="/upload_image/7.jpg" alt=""></p>
 <h6 id="4-变换位置"><a href="#4-变换位置" class="headerlink" title="4.变换位置"></a>4.变换位置</h6><p>因为WebServer获取参数的灵活性，所以我尝试把安全狗拦截的filename=”test.asp”换个位置。经过一番测试，发现filename=”test.asp”位于Content-Type: application/octet-stream<br>下一行时，安全狗的上传拦截便会失效。</p>
 <h6 id="5-文件名覆盖"><a href="#5-文件名覆盖" class="headerlink" title="5.文件名覆盖"></a>5.文件名覆盖</h6><p>在一个Content-Disposition 中，存在多个filename ，协议解析应该使用最后的filename值作为文件名。如果WAF解析到filename=”p3.txt”认为解析到文件名，结束解析，将导致被绕过。因为后端容器解析到的文件名是t3.jsp。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Content-Disposition: form-data;name=<span class="string">"myfile"</span>; filename=<span class="string">"p3.txt"</span>;filename=<span class="string">"t3.jsp"</span></div></pre></td></tr></table></figure></p>
-<h6 id="6-遗漏文件名"><a href="#6-遗漏文件名" class="headerlink" title="6.遗漏文件名"></a>6.遗漏文件名</h6><p>当WAF遇到“name=”myfile”;;”时，认为没有解析到filename。而后端容器继续解析到的文件名是t3.jsp，导致WAF被绕过。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Content-Disposition: form-data;name=”myfile”;; filename=”t3.jsp”</div></pre></td></tr></table></figure></p>
-<h6 id="7-任意文件下载"><a href="#7-任意文件下载" class="headerlink" title="7.任意文件下载"></a>7.任意文件下载</h6><p>（1）相对路径：所以WAF文件包含规则通常会检测连续的“../”。根据vfs解析路径的语法，解析到“//”文件路径不变，解析到“/./”文件路径依然。 通过避免连续的”../”，从而绕过WAF文件包含规则。Eg: ././..///./.././/../etc//passwd，它等价于../../../etc/passwd。<br>（2）绝对路径：例如 /etc/./passwd 与 /etc/passwd 是等价的。还可以通过组合“/./”、“//”进行绕过，<br>Eg.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/etc///.//././/passwd</div><div class="line">/etc/passwd   /etc././././passwd</div></pre></td></tr></table></figure></p>
+<h6 id="6-遗漏文件名"><a href="#6-遗漏文件名" class="headerlink" title="6.遗漏文件名"></a>6.遗漏文件名</h6><p>当WAF遇到”name=”myfile”;;”时，认为没有解析到filename。而后端容器继续解析到的文件名是t3.jsp，导致WAF被绕过。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Content-Disposition: form-data;name=<span class="string">"myfile"</span>;; filename=<span class="string">"t3.jsp"</span></div></pre></td></tr></table></figure></p>
+<h6 id="7-任意文件下载"><a href="#7-任意文件下载" class="headerlink" title="7.任意文件下载"></a>7.任意文件下载</h6><p>（1）相对路径：所以WAF文件包含规则通常会检测连续的”../“。根据vfs解析路径的语法，解析到”//“文件路径不变，解析到”/./“文件路径依然。 通过避免连续的”../“，从而绕过WAF文件包含规则。Eg: ././..///./.././/../etc//passwd，它等价于../../../etc/passwd。<br>（2）绝对路径：例如 /etc/./passwd 与 /etc/passwd 是等价的。还可以通过组合”/./“、”//“进行绕过，<br>Eg.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/etc///.//././/passwd</div><div class="line">/etc/passwd   /etc././././passwd</div></pre></td></tr></table></figure></p>
 <h4 id="代码级WAF"><a href="#代码级WAF" class="headerlink" title="代码级WAF"></a>代码级WAF</h4><p>所谓代码级的WAF是指程序员在程序内部，借助自身编写的过滤函数来保护应用程序的安全。以下是三种脚本语言通常会使用的过滤位置：</p>
 <h6 id="1-php"><a href="#1-php" class="headerlink" title="1. php"></a>1. php</h6><p>在php.ini中设置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">; Automatically add files before PHP document.; auto-prepend-fileauto_prepend_file =; Automatically add files after PHP document.; auto-append-fileauto_append_file =</div></pre></td></tr></table></figure></p>
 <p>配置指令，这些指令指向那些在每个请求的PHP脚本执行”之前”和”之后”才执行的PHP文件。这样就可以在各种HTTP请求集合(GET,POST,COOKIE)之前对数据进行一些前发处理。</p>
@@ -121,11 +121,12 @@
 <h6 id="5-替换关键字"><a href="#5-替换关键字" class="headerlink" title="5.替换关键字"></a>5.替换关键字</h6><p>需要考虑waf具体怎么拦截的，Seleselectct,倘若将中间的关键字删掉，则可以绕过。</p>
 <h6 id="6-webserver特性"><a href="#6-webserver特性" class="headerlink" title="6.webserver特性"></a>6.webserver特性</h6><p>iis 自动忽略%<br>我们知道asp有两个特性<br>1.会将Request中的不能编码部分的%去掉<br>2.Request中如果有unicode部分会将其进行解码<br>IIS6.0两个解析缺陷：目录名包含.asp、.asa、.cer的话，则该目录下的所有文件都将按照asp解析。<br>Apache1.X 2.X解析漏洞：<br>Apache在以上版本中，解析文件名的方式是从后向前识别扩展名，直到遇见Apache可识别的扩展名为止。<br>Nginx解析漏洞：</p>
 <p>Nginx 0.5.<em>Nginx 0.6.</em>Nginx 0.7 &lt;= 0.7.65Nginx 0.8 &lt;= 0.8.37，以上Nginx容器的版本下，上传一个在waf白名单之内扩展名的文件shell.jpg，然后以shell.jpg.php进行请求。<br>Nginx 0.8.41 – 1.5.6：以上Nginx容器的版本下，上传一个在waf白名单之内扩展名的文件shell.jpg，然后以shell.jpg%20.php进行请求。<br>PHP CGI解析漏洞 : IIS 7.0/7.5 和 Nginx &lt; 0.8.3 以上的容器版本中默认php配置文件cgi.fix_pathinfo=1时，上传一个存在于白名单的扩展名文件shell.jpg，在请求时以shell.jpg/shell.php请求，会将shell.jpg以php来解析。<br>参数污染：比如waf只接受前一个参数这意味着，通过注入: id=7&amp;id=[SQLi]WAF的网络层会解析 id=7 ,合法PHP应用层会解析 id=[SQLi] 注入语句成功执行。</p>
+<h6 id="7-数据库特性"><a href="#7-数据库特性" class="headerlink" title="7.数据库特性"></a>7.数据库特性</h6><p>mysql：<br>1.隐形类型转换<br>2.为了便利性 牺牲安全性。（select <em> from admin where user=”Admin”   可以执行，  mysql为了 使用的便利性 会允许一些 ‘错误’，比如 select </em> from admin where user=” À dmin” 依然可移执行。<br>3.MySQL文件读取<br>(5.5以上的版本  由于secure_file_priv这个变量为null 因此无法使用文件读取  文件写入的功能。)<br>总结：本文主要对基于规则的WAF的绕过技巧，基于规则的waf有着天然的缺陷型，构造出基于规则之外的特性就有可能绕过。或者干脆将WAF直接打挂，这时waf很有可能直接启用Bypass模式。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/WAF-Bypass-技巧总结/" data-id="cj4jjdonv0004no1bubpiqe5w" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/WAF-Bypass-技巧总结/" data-id="cj4jjgja30003dc1bzxywthle" class="article-share-link">Share</a>
       
       
     </footer>
@@ -136,7 +137,7 @@
   
   
     <a href="/2017/06/29/sql注入之数据库识别/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ancien</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">sql注入之数据库识别</div>
     </a>
   
@@ -169,7 +170,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
@@ -207,7 +208,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 SY0U<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
