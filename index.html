@@ -91,7 +91,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/28/About-the-Blog/" data-id="cj4jjgj9p0000dc1bppwekk82" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/28/About-the-Blog/" data-id="cj4jk4odb0002zw1b575c9kpj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -157,12 +157,13 @@
 <h6 id="5-替换关键字"><a href="#5-替换关键字" class="headerlink" title="5.替换关键字"></a>5.替换关键字</h6><p>需要考虑waf具体怎么拦截的，Seleselectct,倘若将中间的关键字删掉，则可以绕过。</p>
 <h6 id="6-webserver特性"><a href="#6-webserver特性" class="headerlink" title="6.webserver特性"></a>6.webserver特性</h6><p>iis 自动忽略%<br>我们知道asp有两个特性<br>1.会将Request中的不能编码部分的%去掉<br>2.Request中如果有unicode部分会将其进行解码<br>IIS6.0两个解析缺陷：目录名包含.asp、.asa、.cer的话，则该目录下的所有文件都将按照asp解析。<br>Apache1.X 2.X解析漏洞：<br>Apache在以上版本中，解析文件名的方式是从后向前识别扩展名，直到遇见Apache可识别的扩展名为止。<br>Nginx解析漏洞：</p>
 <p>Nginx 0.5.<em>Nginx 0.6.</em>Nginx 0.7 &lt;= 0.7.65Nginx 0.8 &lt;= 0.8.37，以上Nginx容器的版本下，上传一个在waf白名单之内扩展名的文件shell.jpg，然后以shell.jpg.php进行请求。<br>Nginx 0.8.41 – 1.5.6：以上Nginx容器的版本下，上传一个在waf白名单之内扩展名的文件shell.jpg，然后以shell.jpg%20.php进行请求。<br>PHP CGI解析漏洞 : IIS 7.0/7.5 和 Nginx &lt; 0.8.3 以上的容器版本中默认php配置文件cgi.fix_pathinfo=1时，上传一个存在于白名单的扩展名文件shell.jpg，在请求时以shell.jpg/shell.php请求，会将shell.jpg以php来解析。<br>参数污染：比如waf只接受前一个参数这意味着，通过注入: id=7&amp;id=[SQLi]WAF的网络层会解析 id=7 ,合法PHP应用层会解析 id=[SQLi] 注入语句成功执行。</p>
-<h6 id="7-数据库特性"><a href="#7-数据库特性" class="headerlink" title="7.数据库特性"></a>7.数据库特性</h6><p>mysql：<br>1.隐形类型转换<br>2.为了便利性 牺牲安全性。（select <em> from admin where user=”Admin”   可以执行，  mysql为了 使用的便利性 会允许一些 ‘错误’，比如 select </em> from admin where user=” À dmin” 依然可移执行。<br>3.MySQL文件读取<br>(5.5以上的版本  由于secure_file_priv这个变量为null 因此无法使用文件读取  文件写入的功能。)<br>总结：本文主要对基于规则的WAF的绕过技巧，基于规则的waf有着天然的缺陷型，构造出基于规则之外的特性就有可能绕过。或者干脆将WAF直接打挂，这时waf很有可能直接启用Bypass模式。</p>
+<h6 id="7-数据库特性"><a href="#7-数据库特性" class="headerlink" title="7.数据库特性"></a>7.数据库特性</h6><p>mysql：<br>1.隐形类型转换<br>2.为了便利性 牺牲安全性。（select <em> from admin where user=”Admin”   可以执行，  mysql为了 使用的便利性 会允许一些 ‘错误’，比如 select </em> from admin where user=” À dmin” 依然可移执行。<br>3.MySQL文件读取<br>(5.5以上的版本  由于secure_file_priv这个变量为null 因此无法使用文件读取  文件写入的功能。)</p>
+<h6 id="8-服务器特性"><a href="#8-服务器特性" class="headerlink" title="8.服务器特性"></a>8.服务器特性</h6><p>NTFS ADS特性：ADS是NTFS磁盘格式的一个特性，用于NTFS交换数据流。在上传文件时，如果waf对请求正文的filename匹配不当的话可能会导致绕过。<br>Windows在创建文件时，在文件名末尾不管加多少点都会自动去除，那么上传时filename可以这么写shell.php……也可以这么写shell.php::$DATA…….。<br>总结：本文主要对基于规则的WAF的绕过技巧，基于规则的waf有着天然的缺陷型，构造出基于规则之外的特性就有可能绕过。或者干脆将WAF直接打挂，这时waf很有可能直接启用Bypass模式。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/WAF-Bypass-技巧总结/" data-id="cj4jjgja30003dc1bzxywthle" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/WAF-Bypass-技巧总结/" data-id="cj4jk4odo0006zw1b058zaikk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -218,7 +219,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/sql注入之数据库识别/" data-id="cj4jjgja40004dc1butaz94eq" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/sql注入之数据库识别/" data-id="cj4jk4odl0004zw1b4t3grxd5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -262,7 +263,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cj4jjgja50005dc1bidmfgx61" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cj4jk4odd0003zw1bt6qyb8cm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -364,7 +365,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/29/面试一年前的自己/" data-id="cj4jjgja90007dc1b67cnoyi0" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/29/面试一年前的自己/" data-id="cj4jk4odp0007zw1bpem0he4n" class="article-share-link">Share</a>
       
       
     </footer>
@@ -418,7 +419,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/28/Hexo-搭建Blog教程/" data-id="cj4jjgj9u0002dc1bkhu2vpox" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/28/Hexo-搭建Blog教程/" data-id="cj4jk4od60000zw1b5o4tobdd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -463,7 +464,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/06/27/hello-world/" data-id="cj4jjgja70006dc1bl0gzvth8" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/06/27/hello-world/" data-id="cj4jk4odm0005zw1brnqo4txq" class="article-share-link">Share</a>
       
       
     </footer>
