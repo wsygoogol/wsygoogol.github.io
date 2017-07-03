@@ -114,7 +114,7 @@
 <meta property="og:url" content="http://wsygoogol.github.io/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
 <meta property="og:description" content="概述在MVC开发框架中，数据会在MVC各个模块中进行流转。而这种流转，也就会面临一些困境，就是由于数据在不同MVC层次中表现出不同的形式和状态而造成的： View层—表现为字符串展示数据在页面上是一个扁平的、不带数据类型的字符串，无论数据结构有多复杂，数据类型有多丰富，到了展示的时候，全都一视同仁的成为字符串在页面上展现出来。数据在传递时，任何数据都都被当作字符串或字符串数组来进行。 Contro">
-<meta property="og:updated_time" content="2017-06-30T09:41:23.643Z">
+<meta property="og:updated_time" content="2017-07-03T02:06:41.153Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OGNL机制和Struts2漏洞利用原理研究">
 <meta name="twitter:description" content="概述在MVC开发框架中，数据会在MVC各个模块中进行流转。而这种流转，也就会面临一些困境，就是由于数据在不同MVC层次中表现出不同的形式和状态而造成的： View层—表现为字符串展示数据在页面上是一个扁平的、不带数据类型的字符串，无论数据结构有多复杂，数据类型有多丰富，到了展示的时候，全都一视同仁的成为字符串在页面上展现出来。数据在传递时，任何数据都都被当作字符串或字符串数组来进行。 Contro">
@@ -217,7 +217,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            Startseite
           </a>
         </li>
       
@@ -227,7 +227,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archives
+            Archiv
           </a>
         </li>
       
@@ -297,7 +297,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-30T15:56:31+08:00">
                 2017-06-30
@@ -352,7 +352,9 @@
 <p>这里看到MemberAccess属性，在struts2漏洞利用中经常看到。转到OgnlContext类中查看。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public static final MemberAccess DEFAULT_MEMBER_ACCESS = new DefaultMemberAccess( <span class="literal">false</span> );</div></pre></td></tr></table></figure></p>
 <p>MemberAccess指定OGNL的对象属性、方法访问策略，这里初始默认情况下是flase，即默认不允许访问。在struts2中SecurityMemberAccess类封装了DefaultMeberAccess类并进行了扩展，指定是否支持访问静态方法以及通过指定正则表达式来规定某些属性是否能够被访问。其中allowStaticMethodAccess默认为flase，即默认禁止访问静态方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public SecurityMemberAccess(boolean method) &#123;</div><div class="line">    super(<span class="literal">false</span>);</div><div class="line">    allowStaticMethodAccess = method;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>另外在OGNL实现了MethodAccessor及PropertyAccessor类规定OGNL在访问方法和属性时的实现方式，详细可参考代码文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public interface MethodAccessor &#123;</div><div class="line">    callMethod(Map&lt;String,Object&gt; context, Object target, String methodName, Object[] args)</div><div class="line">    callStaticMethod(Map&lt;String,Object&gt; context, Class&lt;?&gt; targetClass, String methodName, Object[] args)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在struts2中，XWorkMethodAccessor类对MethodAccessor进行了封装，其中在callStaticMethod方法中可以看到，程序首先从上下文获取到DENY_METHOD_EXECUTION值并转换为布尔型，如果为false则可以执行静态方法，如果为true则不执行静态发放并返回null。</p>
+<p>在struts2中，XWorkMethodAccessor类对MethodAccessor进行了封装，其中在callStaticMethod方法中可以看到，程序首先从上下文获取到DENY_METHOD_EXECUTION值并转换为布尔型，如果为false则可以执行静态方法，如果为true则不执行静态发放并返回null。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public Object callStaticMethod(Map context, Class aClass, String string, Object[] objects) throws MethodFailedException &#123;</div><div class="line">    Boolean <span class="built_in">exec</span> = (Boolean) context.get(ReflectionContextState.DENY_METHOD_EXECUTION);</div><div class="line">    boolean e = ((<span class="built_in">exec</span> == null) ? <span class="literal">false</span> : exec.booleanValue());</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!e) &#123;</div><div class="line">        <span class="built_in">return</span> callStaticMethodWithDebugInfo(context, aClass, string, objects);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">return</span> null;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="Struts2漏洞利用原理"><a href="#Struts2漏洞利用原理" class="headerlink" title="Struts2漏洞利用原理"></a>Struts2漏洞利用原理</h4><p>上文已经详细介绍了OGNL引擎，因为OGNL过于强大，它也造成了诸多安全问题。恶意攻击者通过构造特定数据带入OGNL表达式即可能被解析并执行，而OGNL可以用来获取和设置Java对象的属性，同时也可以对服务端对象进行修改，所以只要绕过Struts2的一些安全策略，恶意攻击者甚至可以执行系统命令进行系统攻击。如struts2远程代码执行漏洞s2-005。<br>虽然Struts2出于安全考虑，在SecurityMemberAccess类中通过设置禁止静态方法访问及默认禁止执行静态方法来阻止代码执行。即上面提及的denyMethodExecution为true，MemberAccess为false。但这两个属性都可以被修改从而绕过安全限制执行任意命令。s2-005 POC如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://mydomain/MyStruts.action?(<span class="string">'\u0023_memberAccess[\'</span>allowStaticMethodAccess\<span class="string">']'</span>)(meh)=<span class="literal">true</span>&amp;(aaa)((<span class="string">'\u0023context[\'</span>xwork.MethodAccessor.denyMethodExecution\<span class="string">']\u003d\u0023foo'</span>)(\u0023foo\u003dnew%20java.lang.Boolean(<span class="string">"false"</span>)))&amp;(asdf)((<span class="string">'\u0023rt.exec(‘ipconfig’)'</span>)(\u0023rt\[email]u003d@java.lang.Runt[/email]ime@getRuntime()))=1</div></pre></td></tr></table></figure></p>
+<p>在POC中\u0023是因为S2-003对#号进行了过滤，但没有考虑到unicode编码情况，而通过#_memberAccess[\’allowStaticMethodAccess\’]’)(meh)=true，可以设置允许访问静态方法，因为getRuntime方法是静态的，通过context[\’xwork.MethodAccessor.denyMethodExecution\’]=#foo’)(#foo=new%20java.lang.Boolean(“false”)设置拒绝执行方法为false，也就是允许执行静态方法。最后调用rt.exec(‘ipconfig’)执行任意命令。</p>
 
       
     </div>
@@ -370,7 +372,7 @@
   <p><span>本文标题:</span><a href="/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/">OGNL机制和Struts2漏洞利用原理研究</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 SY0U 的个人博客">SY0U</a></p>
   <p><span>发布时间:</span>2017年06月30日 - 15:06</p>
-  <p><span>最后更新:</span>2017年06月30日 - 17:06</p>
+  <p><span>最后更新:</span>2017年07月03日 - 10:07</p>
   <p><span>原始链接:</span><a href="/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/" title="OGNL机制和Struts2漏洞利用原理研究">http://wsygoogol.github.io/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://wsygoogol.github.io/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/"  aria-label="复制成功！"></i></span>
   </p>
@@ -484,10 +486,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Table of Contents
+            Inhaltsverzeichnis
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Overview
+            Übersicht
           </li>
         </ul>
       
@@ -508,7 +510,7 @@
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
                 <span class="site-state-item-count">8</span>
-                <span class="site-state-item-name">posts</span>
+                <span class="site-state-item-name">Artikel</span>
               </a>
             </div>
           
@@ -546,7 +548,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#View层—表现为字符串展示"><span class="nav-number">1.0.1.</span> <span class="nav-text">View层—表现为字符串展示</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Controller层—表现为java对象"><span class="nav-number">1.0.2.</span> <span class="nav-text">Controller层—表现为java对象</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OGNL"><span class="nav-number">2.</span> <span class="nav-text">OGNL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#OGNL三要素"><span class="nav-number">2.1.</span> <span class="nav-text">OGNL三要素</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Expression-表达式-："><span class="nav-number">2.1.1.</span> <span class="nav-text">Expression(表达式)：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Root-根对象-："><span class="nav-number">2.1.2.</span> <span class="nav-text">Root(根对象)：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Context-上下文"><span class="nav-number">2.1.3.</span> <span class="nav-text">Context(上下文):</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OGNL基本操作"><span class="nav-number">2.2.</span> <span class="nav-text">OGNL基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#对root对象的访问："><span class="nav-number">2.2.1.</span> <span class="nav-text">对root对象的访问：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对上下文环境的访问"><span class="nav-number">2.2.2.</span> <span class="nav-text">对上下文环境的访问</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对静态变量、方法的访问"><span class="nav-number">2.2.3.</span> <span class="nav-text">对静态变量、方法的访问</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法调用"><span class="nav-number">2.2.4.</span> <span class="nav-text">方法调用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#构造对象"><span class="nav-number">2.2.5.</span> <span class="nav-text">构造对象</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深入OGNL实现类"><span class="nav-number">2.3.</span> <span class="nav-text">深入OGNL实现类</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#View层—表现为字符串展示"><span class="nav-number">1.0.1.</span> <span class="nav-text">View层—表现为字符串展示</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Controller层—表现为java对象"><span class="nav-number">1.0.2.</span> <span class="nav-text">Controller层—表现为java对象</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OGNL"><span class="nav-number">2.</span> <span class="nav-text">OGNL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#OGNL三要素"><span class="nav-number">2.1.</span> <span class="nav-text">OGNL三要素</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Expression-表达式-："><span class="nav-number">2.1.1.</span> <span class="nav-text">Expression(表达式)：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Root-根对象-："><span class="nav-number">2.1.2.</span> <span class="nav-text">Root(根对象)：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Context-上下文"><span class="nav-number">2.1.3.</span> <span class="nav-text">Context(上下文):</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OGNL基本操作"><span class="nav-number">2.2.</span> <span class="nav-text">OGNL基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#对root对象的访问："><span class="nav-number">2.2.1.</span> <span class="nav-text">对root对象的访问：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对上下文环境的访问"><span class="nav-number">2.2.2.</span> <span class="nav-text">对上下文环境的访问</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对静态变量、方法的访问"><span class="nav-number">2.2.3.</span> <span class="nav-text">对静态变量、方法的访问</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法调用"><span class="nav-number">2.2.4.</span> <span class="nav-text">方法调用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#构造对象"><span class="nav-number">2.2.5.</span> <span class="nav-text">构造对象</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深入OGNL实现类"><span class="nav-number">2.3.</span> <span class="nav-text">深入OGNL实现类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Struts2漏洞利用原理"><span class="nav-number">2.4.</span> <span class="nav-text">Struts2漏洞利用原理</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -578,7 +580,7 @@
 <!--
 
 <div class="powered-by">
-  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
