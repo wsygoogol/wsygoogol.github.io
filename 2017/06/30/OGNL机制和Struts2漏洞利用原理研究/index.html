@@ -13,6 +13,19 @@
 <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
 <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
 
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
 
 
 
@@ -101,7 +114,7 @@
 <meta property="og:url" content="http://wsygoogol.github.io/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
 <meta property="og:description" content="概述在MVC开发框架中，数据会在MVC各个模块中进行流转。而这种流转，也就会面临一些困境，就是由于数据在不同MVC层次中表现出不同的形式和状态而造成的： View层—表现为字符串展示数据在页面上是一个扁平的、不带数据类型的字符串，无论数据结构有多复杂，数据类型有多丰富，到了展示的时候，全都一视同仁的成为字符串在页面上展现出来。数据在传递时，任何数据都都被当作字符串或字符串数组来进行。 Contro">
-<meta property="og:updated_time" content="2017-06-30T09:27:11.550Z">
+<meta property="og:updated_time" content="2017-06-30T09:41:23.643Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OGNL机制和Struts2漏洞利用原理研究">
 <meta name="twitter:description" content="概述在MVC开发框架中，数据会在MVC各个模块中进行流转。而这种流转，也就会面临一些困境，就是由于数据在不同MVC层次中表现出不同的形式和状态而造成的： View层—表现为字符串展示数据在页面上是一个扁平的、不带数据类型的字符串，无论数据结构有多复杂，数据类型有多丰富，到了展示的时候，全都一视同仁的成为字符串在页面上展现出来。数据在传递时，任何数据都都被当作字符串或字符串数组来进行。 Contro">
@@ -337,7 +350,9 @@
 <h5 id="构造对象"><a href="#构造对象" class="headerlink" title="构造对象"></a>构造对象</h5><p>OGNL支持直接通过表达式来构造对象，构造的方式主要包括三种：<br>1．构造List：使用{}，中间使用逗号隔开元素的方式表达列表<br>2．构造map：使用#{},中间使用逗号隔开键值对，并使用冒号隔开key和value<br>3．构造对象：直接使用已知的对象构造函数来构造对象<br>可以看到OGNL在语法层面上所表现出来的强大之处，不仅能够直接对容器对象构造提供语法层面支持，还能够对任意java对象提供支持。然而正因为OGNL过于强大，它也造成了诸多安全问题。恶意攻击者通过构造特定数据带入OGNL表达式解析并执行，而OGNL可以用来获取和设置Java对象的属性，同时也可以对服务端对象进行修改，所以只要绕过沙盒恶意攻击者甚至可以执行系统命令进行系统攻击。</p>
 <h4 id="深入OGNL实现类"><a href="#深入OGNL实现类" class="headerlink" title="深入OGNL实现类"></a>深入OGNL实现类</h4><p>在OGNL三要素中，context上下文环境为OGNL提供计算运行的环境，这个运行环境在OGNL内部由OgnlContext类实现，它是一个map结构。在OGNL.java中可以看到OgnlContext会在OGNL计算时动态创建，同时传入map结构的context，并根据传入的参数设定OGNL计算的一些默认行为以及设置root对象。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">public static Map addDefaultContext(Object root, ClassResolver classResolver, TypeConverter converter, MemberAccess memberAccess, Map context)</div><div class="line">&#123;</div><div class="line">    OgnlContext result;</div><div class="line">    <span class="keyword">if</span> (!(context instanceof OgnlContext))</div><div class="line">    &#123;</div><div class="line">        result = new OgnlContext();</div><div class="line">        result.setValues(context);</div><div class="line">    &#125; <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">        result = (OgnlContext) context;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (classResolver != null)</div><div class="line">    &#123;</div><div class="line">        result.setClassResolver(classResolver);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (converter != null)</div><div class="line">    &#123;</div><div class="line">        result.setTypeConverter(converter);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (memberAccess != null)</div><div class="line">    &#123;</div><div class="line">        result.setMemberAccess(memberAccess);</div><div class="line">    &#125;</div><div class="line">    result.setRoot(root);</div><div class="line">    <span class="built_in">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>这里看到MemberAccess属性，在struts2漏洞利用中经常看到。转到OgnlContext类中查看。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public static final MemberAccess DEFAULT_MEMBER_ACCESS = new DefaultMemberAccess( <span class="literal">false</span> );</div></pre></td></tr></table></figure></p>
-<p>MemberAccess指定OGNL的对象属性、方法访问策略，这里初始默认情况下是flase，即默认不允许访问。在struts2中SecurityMemberAccess类封装了DefaultMeberAccess类并进行了扩展，指定是否支持访问静态方法以及通过指定正则表达式来规定某些属性是否能够被访问。其中allowStaticMethodAccess默认为flase，即默认禁止访问静态方法。</p>
+<p>MemberAccess指定OGNL的对象属性、方法访问策略，这里初始默认情况下是flase，即默认不允许访问。在struts2中SecurityMemberAccess类封装了DefaultMeberAccess类并进行了扩展，指定是否支持访问静态方法以及通过指定正则表达式来规定某些属性是否能够被访问。其中allowStaticMethodAccess默认为flase，即默认禁止访问静态方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public SecurityMemberAccess(boolean method) &#123;</div><div class="line">    super(<span class="literal">false</span>);</div><div class="line">    allowStaticMethodAccess = method;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>另外在OGNL实现了MethodAccessor及PropertyAccessor类规定OGNL在访问方法和属性时的实现方式，详细可参考代码文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public interface MethodAccessor &#123;</div><div class="line">    callMethod(Map&lt;String,Object&gt; context, Object target, String methodName, Object[] args)</div><div class="line">    callStaticMethod(Map&lt;String,Object&gt; context, Class&lt;?&gt; targetClass, String methodName, Object[] args)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在struts2中，XWorkMethodAccessor类对MethodAccessor进行了封装，其中在callStaticMethod方法中可以看到，程序首先从上下文获取到DENY_METHOD_EXECUTION值并转换为布尔型，如果为false则可以执行静态方法，如果为true则不执行静态发放并返回null。</p>
 
       
     </div>
