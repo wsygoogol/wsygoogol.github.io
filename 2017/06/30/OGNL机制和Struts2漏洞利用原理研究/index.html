@@ -1,114 +1,11 @@
-<!doctype html>
-
-
-
-  
-
-
-<html class="theme-next mist use-motion" lang="">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
-
-<style>
-    .pace .pace-progress {
-        background: #1E92FB; /*进度条颜色*/
-        height: 3px;
-    }
-    .pace .pace-progress-inner {
-         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
-    }
-    .pace .pace-activity {
-        border-top-color: #1E92FB;    /*上边框颜色*/
-        border-left-color: #1E92FB;    /*左边框颜色*/
-    }
-</style>
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <meta charset="utf-8">
   
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-  
-  
-  
-  
-
-  
-    
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    
-    
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="Hexo, NexT" />
-
-
-
-
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
-
-
-
-
-
-
-<meta name="description" content="概述在MVC开发框架中，数据会在MVC各个模块中进行流转。而这种流转，也就会面临一些困境，就是由于数据在不同MVC层次中表现出不同的形式和状态而造成的： View层—表现为字符串展示数据在页面上是一个扁平的、不带数据类型的字符串，无论数据结构有多复杂，数据类型有多丰富，到了展示的时候，全都一视同仁的成为字符串在页面上展现出来。数据在传递时，任何数据都都被当作字符串或字符串数组来进行。 Contro">
+  <title>OGNL机制和Struts2漏洞利用原理研究 | SY0U&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概述在MVC开发框架中，数据会在MVC各个模块中进行流转。而这种流转，也就会面临一些困境，就是由于数据在不同MVC层次中表现出不同的形式和状态而造成的： View层—表现为字符串展示数据在页面上是一个扁平的、不带数据类型的字符串，无论数据结构有多复杂，数据类型有多丰富，到了展示的时候，全都一视同仁的成为字符串在页面上展现出来。数据在传递时，任何数据都都被当作字符串或字符串数组来进行。 Contro">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OGNL机制和Struts2漏洞利用原理研究">
 <meta property="og:url" content="http://wsygoogol.github.io/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/index.html">
@@ -118,222 +15,253 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OGNL机制和Struts2漏洞利用原理研究">
 <meta name="twitter:description" content="概述在MVC开发框架中，数据会在MVC各个模块中进行流转。而这种流转，也就会面临一些困境，就是由于数据在不同MVC层次中表现出不同的形式和状态而造成的： View层—表现为字符串展示数据在页面上是一个扁平的、不带数据类型的字符串，无论数据结构有多复杂，数据类型有多丰富，到了展示的时候，全都一视同仁的成为字符串在页面上展现出来。数据在传递时，任何数据都都被当作字符串或字符串数组来进行。 Contro">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
-    fancybox: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: 'Author'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="http://wsygoogol.github.io/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/"/>
-
-
-
-
-
-  <title>OGNL机制和Struts2漏洞利用原理研究 | SY0U's Blog</title>
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <link rel="alternative" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
 </head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail ">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">SY0U's Blog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-      
-        <p class="site-subtitle"></p>
-      
-  </div>
-
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
-  </div>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            <img lazy-src="/img/head.jpg" class="js-avatar">
             
-            Home
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            Archives
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            Tags
-          </a>
-        </li>
-      
+        </a>
 
-      
-    </ul>
-  
-
-  
-</nav>
-
-
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
-    
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://wsygoogol.github.io/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="SY0U">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SY0U's Blog">
-    </span>
-
-    
-      <header class="post-header">
+        <hgroup>
+          <h1 class="header-author"><a href="/" title="Hi Mate">SY0U</a></h1>
+        </hgroup>
 
         
         
-          <h1 class="post-title" itemprop="name headline">OGNL机制和Struts2漏洞利用原理研究</h1>
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
         
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-30T15:56:31+08:00">
-                2017-06-30
-              </time>
-            
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/Home">博客首页</a></li>
+                        
+                            <li><a href="/works">作品展示</a></li>
+                        
+                            <li><a href="/about">留言打卡</a></li>
+                        
+                            <li><a href="/FrontEndGuide">前端导航</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=PAkNDgsKBQ4MCnxNTRJfU1E" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/luuman" title="github">github</a>
+                            
+                                <a class="fl zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+                            
+                                <a class="fl weibo" target="_blank" href="#" title="weibo">weibo</a>
+                            
+                                <a class="fl google" target="_blank" href="#" title="google">google</a>
+                            
+                                <a class="fl twitter" target="_blank" href="#" title="twitter">twitter</a>
+                            
+                                <a class="fl linkedin" target="_blank" href="#" title="linkedin">linkedin</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://luuman.github.io/">name</a>
+                    
+                    </div>
+                </section>
+                
 
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">纯海迷、爱运动、爱交友、爱旅行、喜欢接触新鲜事物、迎接新的挑战，更爱游离于错综复杂的编码与逻辑中</div>
+                </section>
+                
+            </div>
         </div>
-      </header>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">SY0U</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/head.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">SY0U</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/Home">博客首页</a></li>
+                
+                    <li><a href="/works">作品展示</a></li>
+                
+                    <li><a href="/about">留言打卡</a></li>
+                
+                    <li><a href="/FrontEndGuide">前端导航</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=PAkNDgsKBQ4MCnxNTRJfU1E" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/luuman" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+                    
+                        <a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+                    
+                        <a class="google" target="_blank" href="#" title="google">google</a>
+                    
+                        <a class="twitter" target="_blank" href="#" title="twitter">twitter</a>
+                    
+                        <a class="linkedin" target="_blank" href="#" title="linkedin">linkedin</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-OGNL机制和Struts2漏洞利用原理研究" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/" class="article-date">
+      <time datetime="2017-06-30T07:56:31.000Z" itemprop="datePublished">2017-06-30</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
     
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      OGNL机制和Struts2漏洞利用原理研究
+    </h1>
+  
 
-    <div class="post-body" itemprop="articleBody">
+      </header>
+      
+      <div class="article-info article-info-post">
+        
 
+        
+        <div class="clearfix"></div>
+      </div>
       
+    
+    <div class="article-entry" itemprop="articleBody">
       
-
-      
+          
         <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>在MVC开发框架中，数据会在MVC各个模块中进行流转。而这种流转，也就会面临一些困境，就是由于数据在不同MVC层次中表现出不同的形式和状态而造成的：</p>
 <h5 id="View层—表现为字符串展示"><a href="#View层—表现为字符串展示" class="headerlink" title="View层—表现为字符串展示"></a>View层—表现为字符串展示</h5><p>数据在页面上是一个扁平的、不带数据类型的字符串，无论数据结构有多复杂，数据类型有多丰富，到了展示的时候，全都一视同仁的成为字符串在页面上展现出来。数据在传递时，任何数据都都被当作字符串或字符串数组来进行。</p>
 <h5 id="Controller层—表现为java对象"><a href="#Controller层—表现为java对象" class="headerlink" title="Controller层—表现为java对象"></a>Controller层—表现为java对象</h5><p>在控制层，数据模型遵循java的语法和数据结构，所有的数据载体在Java世界中可以表现为丰富的数据结构和数据类型，你可以自行定义你喜欢的类，在类与类之间进行继承、嵌套。我们通常会把这种模型称之为复杂的对象树。数据在传递时，将以对象的形式进行。<br>可以看到，数据在不同的MVC层次上，扮演的角色和表现形式不同，这是由于HTTP协议与java的面向对象性之间的不匹配造成的。如果数据在页面和Java世界中互相传递，就会显得不匹配。所以也就引出了几个需要解决的问题：<br>1．当数据从View层传递到Controller层时，我们应该保证一个扁平而分散在各处的数据集合能以一定的规则设置到Java世界中的对象树中去。同时，能够灵活的进行由字符串类型到Java中各个类型的转化。<br>2．当数据从Controller层传递到View层时，我们应该保证在View层能够以某些简易的规则对对象树进行访问。同时，在一定程度上控制对象树中的数据的显示格式。<br>我们稍微深入思考这个问题就会发现，解决数据由于表现形式的不同而发生流转不匹配的问题对我们来说其实并不陌生。同样的问题会发生在Java世界与数据库世界中，面对这种对象与关系模型的不匹配，我们采用的解决方法是使用如hibernate，iBatis等框架来处理java对象与关系数据库的匹配。<br>现在在Web层同样也发生了不匹配，所以我们也需要使用一些工具来帮助我们解决问题。为了解决数据从View层传递到Controller层时的不匹配性，Struts2采纳了XWork的一套完美方案。并且在此的基础上，构建了一个完美的机制，从而比较完美的解决了数据流转中的不匹配性。就是表达式引擎OGNL。它的作用就是帮助我们完成这种规则化的表达式与java对象的互相转化(以上内容参考自Struts2 技术内幕)。</p>
@@ -357,383 +285,297 @@
 <p>在POC中\u0023是因为S2-003对#号进行了过滤，但没有考虑到unicode编码情况，而通过#_memberAccess[\’allowStaticMethodAccess\’]’)(meh)=true，可以设置允许访问静态方法，因为getRuntime方法是静态的，通过context[\’xwork.MethodAccessor.denyMethodExecution\’]=#foo’)(#foo=new%20java.lang.Boolean(“false”)设置拒绝执行方法为false，也就是允许执行静态方法。最后调用rt.exec(‘ipconfig’)执行任意命令。</p>
 
       
+      
+        <div class="page-reward">
+          <p><a href="javascript:void(0)" onclick="dashangToggle()" class="dashang">赏</a></p>
+          <div class="hide_box"></div>
+          <div class="shang_box">
+            <a class="shang_close" href="javascript:void(0)" onclick="dashangToggle()">×</a>
+            <div class="shang_tit">
+              <p>纯属好玩</p>
+            </div>
+            <div class="shang_payimg">
+              <img src="/img/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+            </div>
+              <div class="pay_explain">扫码打赏，你说多少就多少</div>
+            <div class="shang_payselect">
+              
+                <div class="pay_item checked" data-id="alipay">
+                  <span class="radiobox"></span>
+                  <span class="pay_logo"><img src="/img/alipay.png" alt="支付宝" /></span>
+                </div>
+              
+              
+                <div class="pay_item" data-id="wechat">
+                  <span class="radiobox"></span>
+                  <span class="pay_logo"><img src="/img/weixin.png" alt="微信" /></span>
+                </div>
+              
+            </div>
+            <div class="shang_info">
+              <p>打开<span id="shang_pay_txt">支付宝</span>扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+        <script type="text/javascript">
+          $(".pay_item").click(function(){
+            $(this).addClass('checked').siblings('.pay_item').removeClass('checked');
+            var dataid=$(this).attr('data-id');
+            $(".shang_payimg img").attr("src","/img/"+dataid+"img.jpg");
+            $("#shang_pay_txt").text(dataid=="alipay"?"支付宝":"微信");
+          });
+          function dashangToggle(){
+            
+            $(".hide_box").fadeToggle();
+            $(".shang_box").fadeToggle();
+          }
+        </script>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/">OGNL机制和Struts2漏洞利用原理研究</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 SY0U 的个人博客">SY0U</a></p>
+        <p><span>发布时间:</span>2017年06月30日 - 15时56分</p>
+        <p><span>最后更新:</span>2017年07月03日 - 10时06分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/" title="OGNL机制和Struts2漏洞利用原理研究">http://wsygoogol.github.io/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://wsygoogol.github.io/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/　　作者: SY0U" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
     </div>
 
 
-    <div>
-          
-            
-<div class="my_post_copyright">
-  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-  <!-- JS库 sweetalert 可修改路径 -->
-  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
-  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
-  <p><span>本文标题:</span><a href="/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/">OGNL机制和Struts2漏洞利用原理研究</a></p>
-  <p><span>文章作者:</span><a href="/" title="访问 SY0U 的个人博客">SY0U</a></p>
-  <p><span>发布时间:</span>2017年06月30日 - 15:06</p>
-  <p><span>最后更新:</span>2017年07月03日 - 10:07</p>
-  <p><span>原始链接:</span><a href="/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/" title="OGNL机制和Struts2漏洞利用原理研究">http://wsygoogol.github.io/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://wsygoogol.github.io/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/"  aria-label="复制成功！"></i></span>
-  </p>
-  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>
+
+<nav id="article-nav">
+  
+    <a href="/2017/07/04/序列化和反序列化/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          序列化和反序列化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/06/29/WAF-Bypass-技巧总结/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">WAF Bypass 技巧总结</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#概述"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#View层—表现为字符串展示"><span class="toc-number">1.0.1.</span> <span class="toc-text">View层—表现为字符串展示</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Controller层—表现为java对象"><span class="toc-number">1.0.2.</span> <span class="toc-text">Controller层—表现为java对象</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OGNL"><span class="toc-number">2.</span> <span class="toc-text">OGNL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#OGNL三要素"><span class="toc-number">2.1.</span> <span class="toc-text">OGNL三要素</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Expression-表达式-："><span class="toc-number">2.1.1.</span> <span class="toc-text">Expression(表达式)：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Root-根对象-："><span class="toc-number">2.1.2.</span> <span class="toc-text">Root(根对象)：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Context-上下文"><span class="toc-number">2.1.3.</span> <span class="toc-text">Context(上下文):</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#OGNL基本操作"><span class="toc-number">2.2.</span> <span class="toc-text">OGNL基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#对root对象的访问："><span class="toc-number">2.2.1.</span> <span class="toc-text">对root对象的访问：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#对上下文环境的访问"><span class="toc-number">2.2.2.</span> <span class="toc-text">对上下文环境的访问</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#对静态变量、方法的访问"><span class="toc-number">2.2.3.</span> <span class="toc-text">对静态变量、方法的访问</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#方法调用"><span class="toc-number">2.2.4.</span> <span class="toc-text">方法调用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#构造对象"><span class="toc-number">2.2.5.</span> <span class="toc-text">构造对象</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#深入OGNL实现类"><span class="toc-number">2.3.</span> <span class="toc-text">深入OGNL实现类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Struts2漏洞利用原理"><span class="toc-number">2.4.</span> <span class="toc-text">Struts2漏洞利用原理</span></a></li></ol></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <div id="gitments"></div>
+<script src="/js/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+      id: window.location.pathname,
+      owner: 'luuman',
+      repo: 'luuman.github.io',
+      oauth: {
+        client_id: 'null',
+        client_secret: 'null',
+      },
+    })
+    gitment.render('gitments')
+</script>
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/07/04/序列化和反序列化/" title="上一篇: 序列化和反序列化">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/2017/06/29/WAF-Bypass-技巧总结/" title="下一篇: WAF Bypass 技巧总结">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/07/04/甲乙方安全需求与痛点/">甲乙方安全需求与痛点</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/04/序列化和反序列化/">序列化和反序列化</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/30/OGNL机制和Struts2漏洞利用原理研究/">OGNL机制和Struts2漏洞利用原理研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/29/WAF-Bypass-技巧总结/">WAF Bypass 技巧总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/29/sql注入之数据库识别/">sql注入之数据库识别</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/29/Spring-Boot框架SPEL表达式注入漏洞/">Spring Boot框架SPEL表达式注入漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/29/面试一年前的自己/">面试一年前的自己</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/28/Hexo-搭建Blog教程/">Hexo 搭建Blog教程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/28/About-the-Blog/">About the Blog</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/06/27/hello-world/">Hello World</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 SY0U
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >海贼到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
 </div>
 <script>
-    var clipboard = new Clipboard('.fa-clipboard');
-    clipboard.on('success', $(function(){
-      $(".fa-clipboard").click(function(){
-        swal({
-          title: "",
-          text: '复制成功',
-          html: false,
-          timer: 500,
-          showConfirmButton: false
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
         });
-      });
-    }));
+    });
 </script>
 
 
-          
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/06/29/WAF-Bypass-技巧总结/" rel="next" title="WAF Bypass 技巧总结">
-                <i class="fa fa-chevron-left"></i> WAF Bypass 技巧总结
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/04/序列化和反序列化/" rel="prev" title="序列化和反序列化">
-                序列化和反序列化 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
   </div>
-
-
-          </div>
-          
-
-
-          
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            Overview
-          </li>
-        </ul>
-      
-
-      <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/images/avatar.gif"
-               alt="SY0U" />
-          <p class="site-author-name" itemprop="name">SY0U</p>
-           
-              <p class="site-description motion-element" itemprop="description">一半技术 一半生活</p>
-          
-        </div>
-        <nav class="site-state motion-element">
-
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/archives/">
-                <span class="site-state-item-count">10</span>
-                <span class="site-state-item-name">posts</span>
-              </a>
-            </div>
-          
-
-          
-
-          
-
-        </nav>
-
-        
-
-        <div class="links-of-author motion-element">
-          
-        </div>
-
-        
-        
-
-        
-        
-
-        
-
-
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#View层—表现为字符串展示"><span class="nav-number">1.0.1.</span> <span class="nav-text">View层—表现为字符串展示</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Controller层—表现为java对象"><span class="nav-number">1.0.2.</span> <span class="nav-text">Controller层—表现为java对象</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OGNL"><span class="nav-number">2.</span> <span class="nav-text">OGNL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#OGNL三要素"><span class="nav-number">2.1.</span> <span class="nav-text">OGNL三要素</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Expression-表达式-："><span class="nav-number">2.1.1.</span> <span class="nav-text">Expression(表达式)：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Root-根对象-："><span class="nav-number">2.1.2.</span> <span class="nav-text">Root(根对象)：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Context-上下文"><span class="nav-number">2.1.3.</span> <span class="nav-text">Context(上下文):</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OGNL基本操作"><span class="nav-number">2.2.</span> <span class="nav-text">OGNL基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#对root对象的访问："><span class="nav-number">2.2.1.</span> <span class="nav-text">对root对象的访问：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对上下文环境的访问"><span class="nav-number">2.2.2.</span> <span class="nav-text">对上下文环境的访问</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对静态变量、方法的访问"><span class="nav-number">2.2.3.</span> <span class="nav-text">对静态变量、方法的访问</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法调用"><span class="nav-number">2.2.4.</span> <span class="nav-text">方法调用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#构造对象"><span class="nav-number">2.2.5.</span> <span class="nav-text">构造对象</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深入OGNL实现类"><span class="nav-number">2.3.</span> <span class="nav-text">深入OGNL实现类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Struts2漏洞利用原理"><span class="nav-number">2.4.</span> <span class="nav-text">Struts2漏洞利用原理</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright" >
-  
-  &copy; 
-  <span itemprop="copyrightYear">2017</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">SY0U</span>
-</div>
-<!--
-
-<div class="powered-by">
-  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
-</div>
-
-<div class="theme-info">
-  Theme -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
-  </a>
-</div>
-
--->
-
-        
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-
-  
-  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
 </body>
 </html>
