@@ -114,7 +114,7 @@
 <meta property="og:url" content="http://wsygoogol.github.io/2017/07/04/序列化和反序列化/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
 <meta property="og:description" content="定义及相关概念互联网的产生带来了机器间通讯的需求，而互联通讯的双方需要采用约定的协议，序列化和反序列化属于通讯协议的一部分。通讯协议往往采用分层模型，不同模型每层的功能定义以及颗粒度不同，例如：TCP/IP协议是一个四层协议，而OSI模型却是七层协议模型。在OSI七层协议模型中展现层（Presentation Layer）的主要功能是把应用层的对象转换成一段连续的二进制串，或者反过来，把二进制串转">
-<meta property="og:updated_time" content="2017-07-04T05:50:35.924Z">
+<meta property="og:updated_time" content="2017-07-04T07:20:14.067Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="序列化和反序列化">
 <meta name="twitter:description" content="定义及相关概念互联网的产生带来了机器间通讯的需求，而互联通讯的双方需要采用约定的协议，序列化和反序列化属于通讯协议的一部分。通讯协议往往采用分层模型，不同模型每层的功能定义以及颗粒度不同，例如：TCP/IP协议是一个四层协议，而OSI模型却是七层协议模型。在OSI七层协议模型中展现层（Presentation Layer）的主要功能是把应用层的对象转换成一段连续的二进制串，或者反过来，把二进制串转">
@@ -338,11 +338,6 @@
 <p>序列化： 将数据结构或对象转换成二进制串的过程。<br>反序列化：将在序列化过程中所生成的二进制串转换成数据结构或者对象的过程。</p>
 <h5 id="数据结构、对象与二进制串"><a href="#数据结构、对象与二进制串" class="headerlink" title="数据结构、对象与二进制串"></a>数据结构、对象与二进制串</h5><p>不同的计算机语言中，数据结构，对象以及二进制串的表示方式并不相同。</p>
 <p>数据结构和对象：对于类似Java这种完全面向对象的语言，工程师所操作的一切都是对象（Object），来自于类的实例化。在Java语言中最接近数据结构的概念，就是POJO（Plain Old Java Object）或者Javabean－－那些只有setter/getter方法的类。而在C二进制串：序列化所生成的二进制串指的是存储在内存中的一块数据。C语言的字符串可以直接被传输层使用，因为其本质上就是以’0’结尾的存储在内存中的二进制串。在Java语言里面，二进制串的概念容易和String混淆。实际上String 是Java的一等公民，是一种特殊对象（Object）。对于跨语言间的通讯，序列化后的数据当然不能是某种语言的特殊数据类型。二进制串在Java里面所指的是byte[]，byte是Java的8中原生数据类型之一（Primitive data types）。</p>
-<h4 id="序列化协议特性"><a href="#序列化协议特性" class="headerlink" title="序列化协议特性"></a>序列化协议特性</h4><p>每种序列化协议都有优点和缺点，它们在设计之初有自己独特的应用场景。在系统设计的过程中，需要考虑序列化需求的方方面面，综合对比各种序列化协议的特性，最终给出一个折衷的方案。</p>
-<h5 id="通用性"><a href="#通用性" class="headerlink" title="通用性"></a>通用性</h5><p>通用性有两个层面的意义。</p>
-<p>技术层面，序列化协议是否支持跨平台、跨语言。如果不支持，在技术层面上的通用性就大大降低了。<br>流行程度，序列化和反序列化需要多方参与，很少人使用的协议往往意味着昂贵的学习成本；另一方面，流行度低的协议，往往缺乏稳定而成熟的跨语言、跨平台的公共包。</p>
-<h5 id="鲁棒性"><a href="#鲁棒性" class="headerlink" title="鲁棒性"></a>鲁棒性</h5><p>以下两个方面的原因会导致协议不够强健。</p>
-<p>成熟度不够，一个协议从制定到实施，到最后成熟往往是一个漫长的阶段。协议的强健性依赖于大量而全面的测试，对于致力于提供高质量服务的系统，采用处于测试阶段的序列化协议会带来很高的风险。<br>语言/平台的不公平性。为了支持跨语言、跨平台的功能，序列化协议的制定者需要做大量的工作；但是，当所支持的语言或者平台之间存在难以调和的特性的时候，协议制定者需要做一个艰难的决定–支持更多人使用的语言/平台，亦或支持更多的语言/平台而放弃某个特性。当协议的制定者决定为某种语言或平台提供更多支持的时候，对于使用者而言，协议的强健性就被牺牲了。</p>
 
       
     </div>
@@ -396,6 +391,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/04/甲乙方安全需求与痛点/" rel="prev" title="甲乙方安全需求与痛点">
+                甲乙方安全需求与痛点 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -467,7 +466,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -506,7 +505,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义及相关概念"><span class="nav-number">1.</span> <span class="nav-text">定义及相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#数据结构、对象与二进制串"><span class="nav-number">1.1.</span> <span class="nav-text">数据结构、对象与二进制串</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#序列化协议特性"><span class="nav-number">2.</span> <span class="nav-text">序列化协议特性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#通用性"><span class="nav-number">2.1.</span> <span class="nav-text">通用性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#鲁棒性"><span class="nav-number">2.2.</span> <span class="nav-text">鲁棒性</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义及相关概念"><span class="nav-number">1.</span> <span class="nav-text">定义及相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#数据结构、对象与二进制串"><span class="nav-number">1.1.</span> <span class="nav-text">数据结构、对象与二进制串</span></a></li></ol></li></ol></div>
             
 
           </div>
