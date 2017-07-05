@@ -114,7 +114,7 @@
 <meta property="og:url" content="http://wsygoogol.github.io/2017/07/04/序列化和反序列化/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
 <meta property="og:description" content="定义及相关概念互联网的产生带来了机器间通讯的需求，而互联通讯的双方需要采用约定的协议，序列化和反序列化属于通讯协议的一部分。通讯协议往往采用分层模型，不同模型每层的功能定义以及颗粒度不同，例如：TCP/IP协议是一个四层协议，而OSI模型却是七层协议模型。在OSI七层协议模型中展现层（Presentation Layer）的主要功能是把应用层的对象转换成一段连续的二进制串，或者反过来，把二进制串转">
-<meta property="og:updated_time" content="2017-07-05T09:18:08.033Z">
+<meta property="og:updated_time" content="2017-07-05T11:25:24.997Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="序列化和反序列化">
 <meta name="twitter:description" content="定义及相关概念互联网的产生带来了机器间通讯的需求，而互联通讯的双方需要采用约定的协议，序列化和反序列化属于通讯协议的一部分。通讯协议往往采用分层模型，不同模型每层的功能定义以及颗粒度不同，例如：TCP/IP协议是一个四层协议，而OSI模型却是七层协议模型。在OSI七层协议模型中展现层（Presentation Layer）的主要功能是把应用层的对象转换成一段连续的二进制串，或者反过来，把二进制串转">
@@ -217,7 +217,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Home
+            Startseite
           </a>
         </li>
       
@@ -227,7 +227,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archives
+            Archiv
           </a>
         </li>
       
@@ -297,7 +297,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-04T09:46:54+08:00">
                 2017-07-04
@@ -344,6 +344,9 @@
 <h4 id="JDK类库中的序列化API"><a href="#JDK类库中的序列化API" class="headerlink" title="JDK类库中的序列化API"></a>JDK类库中的序列化API</h4><p>java.io.ObjectOutputStream代表对象输出流，它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。<br>　　java.io.ObjectInputStream代表对象输入流，它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。<br>　　只有实现了Serializable和Externalizable接口的类的对象才能被序列化。Externalizable接口继承自 Serializable接口，实现Externalizable接口的类完全由自身来控制序列化的行为，而仅实现Serializable接口的类可以 采用默认的序列化方式 。<br>　　对象序列化包括如下步骤：<br>　　1） 创建一个对象输出流，它可以包装一个其他类型的目标输出流，如文件输出流；<br>　　2） 通过对象输出流的writeObject()方法写对象。</p>
 <p>　　对象反序列化的步骤如下：<br>　　1） 创建一个对象输入流，它可以包装一个其他类型的源输入流，如文件输入流；<br>　　2） 通过对象输入流的readObject()方法读取对象。</p>
 <p><strong>在Java中，对象的序列化与反序列化被广泛应用到RMI(远程方法调用)及网络传输中。</strong></p>
+<h5 id="序列化ID"><a href="#序列化ID" class="headerlink" title="序列化ID"></a>序列化ID</h5><p>虚拟机是否允许反序列化，不仅取决于类路径和功能代码是否一致，一个非常重要的一点是两个类的序列化 ID 是否一致（就是 private static final long serialVersionUID)</p>
+<p>序列化 ID 在 Eclipse 下提供了两种生成策略，一个是固定的 1L，一个是随机生成一个不重复的 long 类型数据（实际上是使用 JDK 工具生成），在这里有一个建议，如果没有特殊需求，就是用默认的 1L 就可以，这样可以确保代码一致时反序列化成功。那么随机生成的序列化 ID 有什么作用呢，有些时候，通过改变序列化 ID 可以用来限制某些用户的使用。</p>
+<h5 id="Transient-关键字"><a href="#Transient-关键字" class="headerlink" title="Transient 关键字"></a>Transient 关键字</h5><p>Transient关键字的作用是控制变量的序列化，在变量声明前加上该关键字，可以阻止该变量被序列化到文件中，在被反序列化后，transient 变量的值被设为初始值，如 int 型的是 0，对象型的是 null。</p>
 
       
     </div>
@@ -449,10 +452,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Table of Contents
+            Inhaltsverzeichnis
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Overview
+            Übersicht
           </li>
         </ul>
       
@@ -473,7 +476,7 @@
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
                 <span class="site-state-item-count">10</span>
-                <span class="site-state-item-name">posts</span>
+                <span class="site-state-item-name">Artikel</span>
               </a>
             </div>
           
@@ -511,7 +514,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义及相关概念"><span class="nav-number">1.</span> <span class="nav-text">定义及相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#数据结构、对象与二进制串"><span class="nav-number">1.1.</span> <span class="nav-text">数据结构、对象与二进制串</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JDK类库中的序列化API"><span class="nav-number">2.</span> <span class="nav-text">JDK类库中的序列化API</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义及相关概念"><span class="nav-number">1.</span> <span class="nav-text">定义及相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#数据结构、对象与二进制串"><span class="nav-number">1.1.</span> <span class="nav-text">数据结构、对象与二进制串</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JDK类库中的序列化API"><span class="nav-number">2.</span> <span class="nav-text">JDK类库中的序列化API</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#序列化ID"><span class="nav-number">2.1.</span> <span class="nav-text">序列化ID</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Transient-关键字"><span class="nav-number">2.2.</span> <span class="nav-text">Transient 关键字</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -543,7 +546,7 @@
 <!--
 
 <div class="powered-by">
-  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
