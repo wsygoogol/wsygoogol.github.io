@@ -130,7 +130,7 @@
     motion: true,
     duoshuo: {
       userId: '0',
-      author: 'Author'
+      author: 'Penulis'
     },
     algolia: {
       applicationID: '',
@@ -218,7 +218,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            Beranda
           </a>
         </li>
       
@@ -228,7 +228,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            Arsip
           </a>
         </li>
       
@@ -271,6 +271,140 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://wsygoogol.github.io/2016/06/18/Hexo-搭建Blog教程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="SY0U">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SY0U's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/06/18/Hexo-搭建Blog教程/" itemprop="url">Hexo 搭建Blog教程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Diposting di</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-06-18T19:48:25+08:00">
+                2016-06-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>平时在浏览博客的时候发现好多人喜欢利用Hexo + Github搭建个人博客，正好一直也想搭建一个博客去记录和分享。在此过程中，折腾各种配置花了一些时间，所以详细记录一下遇到的相关问题。</p>
+<h3 id="1-安装Git"><a href="#1-安装Git" class="headerlink" title="1.安装Git"></a>1.安装Git</h3><p>下载<a href="https://git-scm.com/download/win" target="_blank" rel="external">git</a>,安装很简单，一路next下去</p>
+<h3 id="2-安装Node-js"><a href="#2-安装Node-js" class="headerlink" title="2.安装Node.js"></a>2.安装Node.js</h3><p>下载<a href="https://nodejs.org/en/" target="_blank" rel="external">node.js</a>，安装也是一路next</p>
+<h3 id="3-本地搭建hexo博客"><a href="#3-本地搭建hexo博客" class="headerlink" title="3.本地搭建hexo博客"></a>3.本地搭建hexo博客</h3><p>安装hexo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install -g hexo-cli</div></pre></td></tr></table></figure></p>
+<p>测试hexo是否安装成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo version</div></pre></td></tr></table></figure></p>
+<p>新建一个文件夹，如MyBlog<br>进入该文件夹内，右击运行git，依次输入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ hexo init</div><div class="line">$ npm install</div><div class="line">$ hexo g</div><div class="line">$ hexo s</div></pre></td></tr></table></figure></p>
+<p>这时候在浏览器输入<a href="http://localhost:4000/" target="_blank" rel="external">http://localhost:4000/</a> 就可以看到hexo已经成功生成了博客，当然这只是我们本地可以看到的</p>
+<h3 id="3-Github配置"><a href="#3-Github配置" class="headerlink" title="3.Github配置"></a>3.Github配置</h3><p>登陆github后点击new repository，Repository name填写自己的名称 + .github.io，<br><img src="/upload_image/1.jpg" alt=""><br>直接点Create repository就可以了。</p>
+<h3 id="4-配置Github-SSH密钥"><a href="#4-配置Github-SSH密钥" class="headerlink" title="4.配置Github SSH密钥"></a>4.配置Github SSH密钥</h3><p>在桌面空白处鼠标右键选择Git Bash Here<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -C <span class="string">"your's emaill address"</span></div></pre></td></tr></table></figure></p>
+<p>引号里面的内容输入你的邮箱地址，然后回车，会提示你文件保存的路径，按回车键确认<br>然后会提示你输入密码，然后会确认输入一次，就可以在刚刚的路径看到生成了两个文件，一个是id_rsa，另一个是id_rsa.pub，用notepadd++打开id_rsa.pub然后选中里面的全部内容，复制下来。<br>登陆github，点击头像进入setting选项<br><img src="/upload_image/2.jpg" alt=""></p>
+<h3 id="5-将hexo博客与Github关联"><a href="#5-将hexo博客与Github关联" class="headerlink" title="5.将hexo博客与Github关联"></a>5.将hexo博客与Github关联</h3><p>修改_config.yml<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">  <span class="built_in">type</span>: git</div><div class="line">  repository: http://github.com/yourname/yourname.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure></p>
+<p>打开Git bash here<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo g</div><div class="line">$ hexo d</div></pre></td></tr></table></figure></p>
+<p>如果出现如下异常<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ERROR Deployer not found: git</div></pre></td></tr></table></figure></p>
+<p>输入以下命令，然后重新执行上面两条命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-deployer-git --save</div></pre></td></tr></table></figure></p>
+<p>这时候如果弹出一个对话框，输入在guthub上面的用户名和密码即可<br>这时候我们就可以在浏览器输入<a href="http://yourname.github.io（yourname替换成github上的名称）就可以看到博客已经搭建成功了。" target="_blank" rel="external">http://yourname.github.io（yourname替换成github上的名称）就可以看到博客已经搭建成功了。</a></p>
+<h3 id="更新博客内容"><a href="#更新博客内容" class="headerlink" title="更新博客内容"></a>更新博客内容</h3><p>在MyBlog目录下执行：hexo new “我的第一篇文章”，会在source-&gt;_posts文件夹内生成一个.md文件。<br>编辑该文件（遵循Markdown规则）<br>修改起始字段<br>title 文章的标题<br>date 创建日期 （文件的创建日期 ）<br>updated 修改日期 （ 文件的修改日期）<br>comments 是否开启评论 true<br>tags 标签<br>categories 分类<br>permalink url中的名字（文件名）<br>编写正文内容（MakeDown）<br>hexo clean 删除本地静态文件（Public目录），可不执行。<br>hexo g 生成本地静态文件（Public目录）<br>hexo deploy 将本地静态文件推送至github（hexo d）</p>
+<h4 id="MarkDown语法"><a href="#MarkDown语法" class="headerlink" title="MarkDown语法"></a>MarkDown语法</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[hexo](http://www.baidu.com)  表示超链接</div><div class="line"><span class="comment">##大标题</span></div><div class="line"><span class="comment">###小标题</span></div><div class="line">&lt;!-- more --&gt;</div><div class="line">&lt;!-- 标签别名 --&gt;</div><div class="line">&#123;% cq %&#125;blah blah blah&#123;% endcq %&#125;</div><div class="line">空格  中文全角空格表示</div><div class="line">---</div><div class="line">文章标题</div><div class="line">---</div><div class="line">&gt;内容     区块引用</div><div class="line">*1</div><div class="line">*2</div><div class="line">*3</div><div class="line">列表</div><div class="line">*内容*     表示强调内容</div><div class="line">![Alt text](/path/to/img.jpg)  图片</div><div class="line">![](/upload_image/20161012/1.png)</div></pre></td></tr></table></figure>
+<blockquote class="blockquote-center"></blockquote>
+
+          
+        
+      
+    </div>
+
+
+    <div>
+          
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://wsygoogol.github.io/2016/06/08/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -300,7 +434,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Diposting di</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-06-08T09:46:54+08:00">
                 2016-06-08
@@ -436,8 +570,8 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">11</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">posting</span>
               </a>
             </div>
           
@@ -491,11 +625,11 @@
 <!--
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
-  Theme -
+  Tema -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
     NexT.Mist
   </a>
