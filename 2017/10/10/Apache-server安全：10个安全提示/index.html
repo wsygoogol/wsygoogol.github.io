@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>About the Blog | SY0U&#39;s Blog</title>
+  <title>Apache server安全：10个安全提示 | SY0U&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前的用wordpress + mysql在阿里云搭建了一套博客，域名是( http://wsygoogol.cn )维护成本比较高，被人用扫描器扫一下直接被阿里云下线。加上也懒得去写博客了，域名和主机都因为未续费被回收了。最近两年的漏洞分析和技术分享文章都发在公司博客、公司内网论坛、公司公众号上，比较乱。平时看文章看到好多人都在用Hexo，一直想弄一个，因为一些事情耽搁了，最近试了一下还真不错。">
+  <meta name="description" content="Apache是​​最流行的Web服务器之一。截至2014年9月，排名前100w的网站有55.7%托管于Apache。它也经常被描述为最安全的Web服务器之一。在本文中，我将介绍一些配置更改，以加强Apache的配置。 ####确保 Apache server-info被禁用如果httpd.conf配置文件中的指令已启用，则会在从http://www.example.com/server-info访">
 <meta property="og:type" content="article">
-<meta property="og:title" content="About the Blog">
-<meta property="og:url" content="http://wsygoogol.github.io/2016/06/08/About-the-Blog/index.html">
+<meta property="og:title" content="Apache server安全：10个安全提示">
+<meta property="og:url" content="http://wsygoogol.github.io/2017/10/10/Apache-server安全：10个安全提示/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
-<meta property="og:description" content="之前的用wordpress + mysql在阿里云搭建了一套博客，域名是( http://wsygoogol.cn )维护成本比较高，被人用扫描器扫一下直接被阿里云下线。加上也懒得去写博客了，域名和主机都因为未续费被回收了。最近两年的漏洞分析和技术分享文章都发在公司博客、公司内网论坛、公司公众号上，比较乱。平时看文章看到好多人都在用Hexo，一直想弄一个，因为一些事情耽搁了，最近试了一下还真不错。">
-<meta property="og:updated_time" content="2017-11-15T07:05:20.990Z">
+<meta property="og:description" content="Apache是​​最流行的Web服务器之一。截至2014年9月，排名前100w的网站有55.7%托管于Apache。它也经常被描述为最安全的Web服务器之一。在本文中，我将介绍一些配置更改，以加强Apache的配置。 ####确保 Apache server-info被禁用如果httpd.conf配置文件中的指令已启用，则会在从http://www.example.com/server-info访">
+<meta property="og:updated_time" content="2017-10-12T07:02:28.694Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="About the Blog">
-<meta name="twitter:description" content="之前的用wordpress + mysql在阿里云搭建了一套博客，域名是( http://wsygoogol.cn )维护成本比较高，被人用扫描器扫一下直接被阿里云下线。加上也懒得去写博客了，域名和主机都因为未续费被回收了。最近两年的漏洞分析和技术分享文章都发在公司博客、公司内网论坛、公司公众号上，比较乱。平时看文章看到好多人都在用Hexo，一直想弄一个，因为一些事情耽搁了，最近试了一下还真不错。">
+<meta name="twitter:title" content="Apache server安全：10个安全提示">
+<meta name="twitter:description" content="Apache是​​最流行的Web服务器之一。截至2014年9月，排名前100w的网站有55.7%托管于Apache。它也经常被描述为最安全的Web服务器之一。在本文中，我将介绍一些配置更改，以加强Apache的配置。 ####确保 Apache server-info被禁用如果httpd.conf配置文件中的指令已启用，则会在从http://www.example.com/server-info访">
   
     <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
   
@@ -63,10 +63,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-About-the-Blog" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Apache-server安全：10个安全提示" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/06/08/About-the-Blog/" class="article-date">
-  <time datetime="2016-06-08T10:54:05.000Z" itemprop="datePublished">2016-06-08</time>
+    <a href="/2017/10/10/Apache-server安全：10个安全提示/" class="article-date">
+  <time datetime="2017-10-10T08:07:18.000Z" itemprop="datePublished">2017-10-10</time>
 </a>
     
   </div>
@@ -77,7 +77,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      About the Blog
+      Apache server安全：10个安全提示
     </h1>
   
 
@@ -85,12 +85,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>之前的用wordpress + mysql在阿里云搭建了一套博客，域名是( <a href="http://wsygoogol.cn" target="_blank" rel="external">http://wsygoogol.cn</a> )维护成本比较高，被人用扫描器扫一下直接被阿里云下线。加上也懒得去写博客了，域名和主机都因为未续费被回收了。<br>最近两年的漏洞分析和技术分享文章都发在公司博客、公司内网论坛、公司公众号上，比较乱。平时看文章看到好多人都在用Hexo，一直想弄一个，因为一些事情耽搁了，最近试了一下还真不错。就在github上搭一个，虽然由于大家都懂的的原因有点慢。但是流量应该不会太大，需求也没那么多，暂时先用着，如果有需求再迁移吧。<br>我决定用这个博客，记录工作和学习中的踩过的坑，把学到的知识和经验分享出来。我也经常在知乎上回答一些问题，写一些生活的感悟和读书笔记。如果好的，以后也会同步过来。</p>
+        <p>Apache是​​最流行的Web服务器之一。截至2014年9月，排名前100w的网站有55.7%托管于Apache。它也经常被描述为最安全的Web服务器之一。在本文中，我将介绍一些配置更改，以加强Apache的配置。</p>
+<p>####确保 Apache server-info被禁用<br>如果httpd.conf配置文件中的<location server-info="">指令已启用，则会在从<a href="http://www.example.com/server-info访问/" target="_blank" rel="external">http://www.example.com/server-info访问/</a> server-info页面时显示有关Apache配置的信息。</location></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cja0q26e30000u41bbjn52nxe" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/10/10/Apache-server安全：10个安全提示/" data-id="cja0q26ev0003u41bypjpju55" class="article-share-link">Share</a>
       
       
     </footer>
@@ -99,19 +100,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2016/06/18/Hexo-搭建Blog教程/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Hexo 搭建Blog教程
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/06/08/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Hello World</div>
+      <div class="article-nav-title">Java反序列化漏洞利用的学习与实践</div>
     </a>
   
 </nav>

