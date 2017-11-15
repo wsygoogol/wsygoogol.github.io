@@ -17,7 +17,7 @@
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/Dashuju-4.jpg">
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/Dashuju-5.jpg">
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/Dashuju-6.jpg">
-<meta property="og:updated_time" content="2017-11-15T11:38:06.291Z">
+<meta property="og:updated_time" content="2017-11-15T11:41:37.160Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="利用大数据进行攻击">
 <meta name="twitter:description" content="0x00 简介我们在日常的威胁响应中，常常需要定义当前漏洞的危害程度，通常我们是通过某漏洞应用的使用量来判定。但是使用量怎么判断也没有一个准确的说法，一般来说我们通过构造语法去搜索引擎搜索该应用的搜索结果数，并以此为根据来判断一个漏洞是否严重。 不仅如此，试想，假如我们手握一个0day或者刚公开的1day漏洞的exp时，如何最大化这个漏洞的价值呢？ 这个时候我们就需要利用该漏洞去批量检测或利用，批">
@@ -59,9 +59,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -97,9 +97,9 @@
 <p>这个时候我们就需要利用该漏洞去批量检测或利用，批量的数据一般来自搜索引擎（Google、Bing、Baidu）、开放的网络信息搜索引擎（FOFA、ZoomEye、Shodan）等。</p>
 <p>下面将就这几个方法一个个分析数据获取和利用方式。</p>
 <h3 id="0x01-利用Google"><a href="#0x01-利用Google" class="headerlink" title="0x01 利用Google"></a>0x01 利用Google</h3><p>如果我们能够掌握一个应用的具体搜索语法，则可以利用该语法去搜索引擎中批量检索匹配的应用，再从中提取出URL，放入扫描器里批量扫描，检测是否存在漏洞：</p>
-<p><img src="/upload_image/Dashuju-1.jpg" alt="1"></p>
+<p><img src="/upload_image/Dashuju-1.jpg" alt=""></p>
 <p>但是搜索引擎也有其缺点，当我们的扫描器批量检索时，可能会触发恶意搜索检查。比如Google会对同一IP的批量搜索报警，报警后必须通过验证码验证才能继续搜索：</p>
-<p><img src="/upload_image/Dashuju-2.jpg" alt="1"></p>
+<p><img src="/upload_image/Dashuju-2.jpg" alt=""></p>
 <p>因此想要批量利用搜索引擎，只有先想办法逃避搜索引擎的恶意搜索检查。在Google里，我能想到的绕过方法有两个：</p>
 <ol>
 <li>利用代理出口，通过更换IP的方式逃避Google的源IP检查</li>
@@ -112,7 +112,7 @@
 <p>这样我们就能够批量从google中获取搜索结果了</p>
 <hr>
 <h2 id="0x02-利用Shodan"><a href="#0x02-利用Shodan" class="headerlink" title="0x02 利用Shodan"></a>0x02 利用Shodan</h2><p><a href="https://www.shodan.io/" target="_blank" rel="external">Shodan</a>（撒旦）可以说是一款“黑暗”谷歌，一刻不停的在寻找着所有和互联网关联的服务器、摄像头、打印机、路由器等等。每个月Shodan都会在大约5亿个服务器上日夜不停地搜集信息。</p>
-<p><img src="/upload_image/Dashuju-3.jpg" alt="1"></p>
+<p><img src="/upload_image/Dashuju-3.jpg" alt=""></p>
 <p>与谷歌不同的是，Shodan不是在网上搜索网址，而是直接进入互联网的背后通道。</p>
 <p>Shodan所搜集到的信息是极其惊人的。凡是链接到互联网的红绿灯、安全摄像头、家庭自动化设备以及加热系统等等都会被轻易的搜索到。</p>
 <p>Shodan的使用者曾发现过一个水上公园的控制系统，一个加油站，甚至一个酒店的葡萄酒冷却器。而网站的研究者也曾使用Shodan定位到了核电站的指挥和控制系统及一个粒子回旋加速器。</p>
@@ -120,9 +120,9 @@
 <p>Shodan的开发者给我们带来大量数据的同时，也提供了友好的接口供我们查询，比如Ruby就有一个gem包名为Shodan，通过这个包，我们可以方便的查询Shodan的数据。</p>
 <p>具体的开发文档可以看<a href="https://developer.shodan.io/" target="_blank" rel="external">这里</a></p>
 <p>这里说一下API，默认用户的API KEY只能有100次查询限制，每次查询最多只能获得100个结果，除非去购买付费计划：</p>
-<p><img src="/upload_image/Dashuju-4.jpg" alt="1"></p>
+<p><img src="/upload_image/Dashuju-4.jpg" alt=""></p>
 <p>下面我们同样以mirapoint邮件网关来搜索下：</p>
-<p><img src="/upload_image/Dashuju-5.jpg" alt="1"></p>
+<p><img src="/upload_image/Dashuju-5.jpg" alt=""></p>
 <p>Shodan按国家和地区将搜索结果进行分类。</p>
 <p>我们调用接口来试试：</p>
 <p>它的使用方法很简单，首先创建一个<strong>Shodan::Shodan</strong>的实例对象：</p>
@@ -144,7 +144,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/01/15/利用大数据进行攻击/" data-id="cja0z3s140007mw1bg5ku6y45" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/01/15/利用大数据进行攻击/" data-id="cja0z85x4000ct01bagoc1jaf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -154,7 +154,7 @@
 <nav id="article-nav">
   
     <a href="/2017/07/18/解密Struts2-POC/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Récent</strong>
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
           解密Struts2 POC
@@ -164,7 +164,7 @@
   
   
     <a href="/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ancien</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">Discuz7 faq.php Sqli 漏漏洞分析</div>
     </a>
   
@@ -197,7 +197,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
@@ -235,7 +235,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 SY0U<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
