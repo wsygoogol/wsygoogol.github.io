@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>机器学习在信息安全中的应用 | SY0U&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前段时间听了一个”机器学习在信息安全中的应用”的讲座，后来自己又做了一些思考，在此做一个总结。在和黑客对抗的过程中，面对的威胁有3个不同的认知程度：1.已知的威胁。2.已知的未知的威胁。3.未知的未知的威胁。很多时候，在做产品、做运营和做研究的时，最大的恐惧是面对一个最未知的恐惧；因为只要知道这个情况是已知的，又很多技术手段都是可以解决的。首先我们说一下如何定义和衡量已知和未知。从安全角度来说比较">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习在信息安全中的应用">
+<meta property="og:url" content="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/index.html">
+<meta property="og:site_name" content="SY0U&#39;s Blog">
+<meta property="og:description" content="前段时间听了一个”机器学习在信息安全中的应用”的讲座，后来自己又做了一些思考，在此做一个总结。在和黑客对抗的过程中，面对的威胁有3个不同的认知程度：1.已知的威胁。2.已知的未知的威胁。3.未知的未知的威胁。很多时候，在做产品、做运营和做研究的时，最大的恐惧是面对一个最未知的恐惧；因为只要知道这个情况是已知的，又很多技术手段都是可以解决的。首先我们说一下如何定义和衡量已知和未知。从安全角度来说比较">
+<meta property="og:updated_time" content="2017-08-17T11:59:23.238Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习在信息安全中的应用">
+<meta name="twitter:description" content="前段时间听了一个”机器学习在信息安全中的应用”的讲座，后来自己又做了一些思考，在此做一个总结。在和黑客对抗的过程中，面对的威胁有3个不同的认知程度：1.已知的威胁。2.已知的未知的威胁。3.未知的未知的威胁。很多时候，在做产品、做运营和做研究的时，最大的恐惧是面对一个最未知的恐惧；因为只要知道这个情况是已知的，又很多技术手段都是可以解决的。首先我们说一下如何定义和衡量已知和未知。从安全角度来说比较">
+  
+    <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">SY0U&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-机器学习再信息安全中的应用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/08/11/机器学习再信息安全中的应用/" class="article-date">
+  <time datetime="2017-08-11T08:44:31.000Z" itemprop="datePublished">2017-08-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      机器学习在信息安全中的应用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前段时间听了一个”机器学习在信息安全中的应用”的讲座，后来自己又做了一些思考，在此做一个总结。<br>在和黑客对抗的过程中，面对的威胁有3个不同的认知程度：<br>1.已知的威胁。<br>2.已知的未知的威胁。<br>3.未知的未知的威胁。<br>很多时候，在做产品、做运营和做研究的时，最大的恐惧是面对一个最未知的恐惧；因为只要知道这个情况是已知的，又很多技术手段都是可以解决的。<br>首先我们说一下如何定义和衡量已知和未知。从安全角度来说比较容易：<br>已知的已知就是我如果在做一个产品，我自己每天能看见的，能检测到的；<br>已知的未知就是我自己看不见，也检测不到，但是友商们都有检测；<br>未知的未知确实就是我不知道，除非它发生了，被通过某些机缘巧合的情况下暴露了出来，这个情况下，才会换成我们所谓的已知的未知。<br>做安全的，不管是甲方还是乙方，面临同样的挑战，就是一个事情只要我知道，我所有的分析，所有的IOC，所有的威胁情报都能跟上去，但如果这个事情我不知道，那真是无从下手。<br>其实在每一个层次上面，我们也可以横向定义到我们的产品，我们的运营上面去，我们怎么样去衡量你是不是在这个层次上做得比较好。<br>1.要解决的是效果问题。<br>这些效果包括我的检出率、召回率、误报率，就是这些不同的指标。但是更重要的是运营的，我怎么去衡量。不管你做任何的系统，你如果一天摔给我1000个报警，那我绝对不可能响应的过来的，所以运营就是事件可响应的数量不能太多。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjajc04rt000e781bowbczqxc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Java反序列化漏洞利用的学习与实践
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/07/18/解密Struts2-POC/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">解密Struts2 POC</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/">Java反序列化漏洞利用的学习与实践</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/11/机器学习再信息安全中的应用/">机器学习在信息安全中的应用</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/18/解密Struts2-POC/">解密Struts2 POC</a>
+          </li>
+        
+          <li>
+            <a href="/2017/01/15/利用大数据进行攻击/">利用大数据进行攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/">Discuz7 faq.php Sqli 漏漏洞分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <!--
+<footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 SY0U<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+-->
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
