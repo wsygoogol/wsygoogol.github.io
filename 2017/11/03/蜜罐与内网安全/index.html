@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>蜜罐与内网安全 | SY0U&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="###0x01 蜜罐定义、分类及功能研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络正在被攻击并">
+<meta property="og:type" content="article">
+<meta property="og:title" content="蜜罐与内网安全">
+<meta property="og:url" content="http://wsygoogol.github.io/2017/11/03/蜜罐与内网安全/index.html">
+<meta property="og:site_name" content="SY0U&#39;s Blog">
+<meta property="og:description" content="###0x01 蜜罐定义、分类及功能研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络正在被攻击并">
+<meta property="og:image" content="http://wsygoogol.github.io/upload_image/Miwang-1.png">
+<meta property="og:image" content="http://wsygoogol.github.io/upload_image/Miwang-2.png">
+<meta property="og:updated_time" content="2017-12-04T10:34:34.529Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="蜜罐与内网安全">
+<meta name="twitter:description" content="###0x01 蜜罐定义、分类及功能研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络正在被攻击并">
+<meta name="twitter:image" content="http://wsygoogol.github.io/upload_image/Miwang-1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">SY0U&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-蜜罐与内网安全" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/11/03/蜜罐与内网安全/" class="article-date">
+  <time datetime="2017-11-03T06:37:51.000Z" itemprop="datePublished">2017-11-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      蜜罐与内网安全
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>###0x01 蜜罐定义、分类及功能<br>研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。<br>内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络正在被攻击并且能够定位攻击源进而采取措施，而不至于当重要信息资产被侵害后还不自知。<br>蜜罐简单说来，是一种存在漏洞的、 暴露在网络中的一个虚假的服务（器），其价值在于被扫描、 攻击和攻陷。</p>
+<p>if 系统没有对外开放任何真实的服务<br>then 任何一个对它的连接尝试都是可疑的</p>
+<p>相比传统的防火墙技术和入侵检测技术，蜜罐技术更加主动和隐蔽，蜜罐的主要优势在于能诱导和记录网络攻击行为，阻止或延缓其对真正目标的攻击，而且能记录攻击日志，便于审计和回溯。<br>如果将蜜罐部署到外网，每天都能收到记录大量的攻击日志，很多只是批量的扫描，并不是针对性的攻击，这些行为说明不了什么问题。但是在内网不一样，因为默认情况下我们认为内网正常用户不会去扫描或者攻击，那么一旦内网的蜜罐捕获到可疑连接尝试，那就可以认为出现了攻击行为。<br>因此，我觉得将蜜罐技术应用到内网的攻击感知，天生就不用太考虑误报的问题，问题更聚焦。<br>通常将蜜罐(honeypot)定义为一种安全资源，它不需要提供实际的应用，蜜罐的存在价值就是诱导和记录攻击行为，从而了解攻击者的入侵方法和手段，并能够延缓其攻击进程，进而根据捕获的攻击行为数据，分析攻击者使用的攻击方法和工具，从而让防御方针对性地增强系统的安全防护能力。<br>蜜罐通常具备数据捕获、数据分析和数据控制方面的功能。数据捕获主要收集主机数据或者网络数据，主机上可以捕获攻击者的TCP连接情况、执行的命令、各种日志信息等，网络数据包括防护系统日志、网络流量数据等。但蜜罐的价值通常需要对捕获的数据进行分析后才能体现，主要包括网络协议类型分析、攻击行为分析和攻击数据包内容分析等。数据控制主要是指通过对蜜罐的对外数据发送和网络进行限制，使得当蜜罐系统被攻击者攻破时，也不会造成更多的危害。数据控制主要用来保障蜜罐本身的安全。<br>按交互程度分类：（1）低交互蜜罐（2）高交互蜜罐<br>按具体实现分类：（1）物理蜜罐（2）虚拟蜜罐<br>蜜罐技术(honeypot)就是为了改变这种被动的防护状况而出现的一种更加主动的防护技术。<br>蜜罐技术也从蜜罐发展到蜜网(honeynet)、再到分布式蜜网(distributed honeynet)和蜜场(honeyfarm)。蜜罐技术也不断应用到恶意样本捕获、入侵检测、攻击手法分析、网络取证、僵尸网络调查等安全方向。</p>
+<p>###常见的内网攻击类型及检测<br>端口扫描是一种攻击初期的信息收集技术，主要用来判断目标主机是否开放相应的端口和服务，通过向目标主机发送端口连接请求，然后根据目标主机的回应信息判断目标对应端口是否开放。<br>在内网重要信息系统分布区的相邻网址部署多个被动式蜜罐可以提高内网攻击的检测覆盖率。在内网中部署两台以上的被动式蜜罐，还可以避免单点故障，以及检测蜜罐被控的情况。</p>
+<h5 id="ARP攻击"><a href="#ARP攻击" class="headerlink" title="ARP攻击"></a>ARP攻击</h5><p>ARP欺骗的攻击过程可简要描述如下：<br>（1）攻击者在局域网段发送构造好的包含虚假IP-MAC对应信息的ARP应答包，使局域网的其他设备认为攻击者的机器是网关，从而充当假网关。<br>（2）被攻击者的将数据包发送给虚假网关。<br>（3）假网关（攻击者）分析接收到的数据包，把有价值的数据包记录下来（如邮箱、电商登录数据包）。<br>（4）假网关（攻击者）再把数据转发给真正的网关，充当中间人。<br>在内网渗透中可以通过ARP攻击嗅探到管理员的帐号密码等敏感信息。<br>通过”arp -a”命令获取到的IP-MAC对应表并非包括局域网内的全部设备，通常只包括和本机发生过数据通信的主机，但是列表中一定会包含网关，和试图攻击本机的局域网内主机，因此通过此种方法可以获取到需要的IP-MAC对应信息。</p>
+<p>###多款开源蜜罐数据样例与应用分析<br>了解不同蜜罐能采集的原始数据字段与内容，可以更直观地看到蜜罐的采集能力，便于我们结合应用场景解决实际问题的时候去选择和组合不同的开源蜜罐技术。</p>
+<p>#####现代密网(MHN)<br>现代密网（MHN，Modern Honey Network，以下简称MHN）是一个开源项目，它简化了蜜罐的部署并支持多种蜜罐软件作为数据终端。该项目用ThreatStream开源软件程序来部署，MHN支持将收集的数据汇总处理后保存在MongoDB数据库中，数据库的内容支持通过定制Web接口展示和存取。MHN系统功能示意如下图所示。<br><img src="/upload_image/Miwang-1.png" alt=""><br>MHN能够支持连接多种类型的蜜罐软件，添加和部署蜜罐过程相对自动化，部署完成后，蜜罐和MHN中心数据库支持通过开源的发布订阅协议hpfeeds来同步数据。</p>
+<p>MHN依赖多个蜜罐终端作为探测器Sensors去探测和收集攻击数据，并通过一种基于订阅者与发布者关系的传输协议hpfeeds将蜜罐终端的数据传输到MHN中心服务器，并存储到MongoDB数据库中，再通过honeymap和Webapp模块进行展示，示例页面如下图所示。<br><img src="/upload_image/Miwang-2.png" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/11/03/蜜罐与内网安全/" data-id="cjas2avcc000a681btl1m9zyk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Java反序列化漏洞利用的学习与实践</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/11/03/蜜罐与内网安全/">蜜罐与内网安全</a>
+          </li>
+        
+          <li>
+            <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/">Java反序列化漏洞利用的学习与实践</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/11/机器学习再信息安全中的应用/">机器学习在信息安全中的应用</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/18/解密Struts2-POC/">解密Struts2 POC</a>
+          </li>
+        
+          <li>
+            <a href="/2017/01/15/利用大数据进行攻击/">利用大数据进行攻击</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <!--
+<footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 SY0U<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+-->
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

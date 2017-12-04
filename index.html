@@ -91,7 +91,51 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjajcfuvo0001h81b6za61ejt" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjas2avc10004681bw6kwylia" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-蜜罐与内网安全" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/11/03/蜜罐与内网安全/" class="article-date">
+  <time datetime="2017-11-03T06:37:51.000Z" itemprop="datePublished">2017-11-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/03/蜜罐与内网安全/">蜜罐与内网安全</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>###0x01 蜜罐定义、分类及功能<br>研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。<br>内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络正在被攻击并且能够定位攻击源进而采取措施，而不至于当重要信息资产被侵害后还不自知。<br>蜜罐简单说来，是一种存在漏洞的、 暴露在网络中的一个虚假的服务（器），其价值在于被扫描、 攻击和攻陷。</p>
+<p>if 系统没有对外开放任何真实的服务<br>then 任何一个对它的连接尝试都是可疑的</p>
+<p>相比传统的防火墙技术和入侵检测技术，蜜罐技术更加主动和隐蔽，蜜罐的主要优势在于能诱导和记录网络攻击行为，阻止或延缓其对真正目标的攻击，而且能记录攻击日志，便于审计和回溯。<br>如果将蜜罐部署到外网，每天都能收到记录大量的攻击日志，很多只是批量的扫描，并不是针对性的攻击，这些行为说明不了什么问题。但是在内网不一样，因为默认情况下我们认为内网正常用户不会去扫描或者攻击，那么一旦内网的蜜罐捕获到可疑连接尝试，那就可以认为出现了攻击行为。<br>因此，我觉得将蜜罐技术应用到内网的攻击感知，天生就不用太考虑误报的问题，问题更聚焦。<br>通常将蜜罐(honeypot)定义为一种安全资源，它不需要提供实际的应用，蜜罐的存在价值就是诱导和记录攻击行为，从而了解攻击者的入侵方法和手段，并能够延缓其攻击进程，进而根据捕获的攻击行为数据，分析攻击者使用的攻击方法和工具，从而让防御方针对性地增强系统的安全防护能力。<br>蜜罐通常具备数据捕获、数据分析和数据控制方面的功能。数据捕获主要收集主机数据或者网络数据，主机上可以捕获攻击者的TCP连接情况、执行的命令、各种日志信息等，网络数据包括防护系统日志、网络流量数据等。但蜜罐的价值通常需要对捕获的数据进行分析后才能体现，主要包括网络协议类型分析、攻击行为分析和攻击数据包内容分析等。数据控制主要是指通过对蜜罐的对外数据发送和网络进行限制，使得当蜜罐系统被攻击者攻破时，也不会造成更多的危害。数据控制主要用来保障蜜罐本身的安全。<br>按交互程度分类：（1）低交互蜜罐（2）高交互蜜罐<br>按具体实现分类：（1）物理蜜罐（2）虚拟蜜罐<br>蜜罐技术(honeypot)就是为了改变这种被动的防护状况而出现的一种更加主动的防护技术。<br>蜜罐技术也从蜜罐发展到蜜网(honeynet)、再到分布式蜜网(distributed honeynet)和蜜场(honeyfarm)。蜜罐技术也不断应用到恶意样本捕获、入侵检测、攻击手法分析、网络取证、僵尸网络调查等安全方向。</p>
+<p>###常见的内网攻击类型及检测<br>端口扫描是一种攻击初期的信息收集技术，主要用来判断目标主机是否开放相应的端口和服务，通过向目标主机发送端口连接请求，然后根据目标主机的回应信息判断目标对应端口是否开放。<br>在内网重要信息系统分布区的相邻网址部署多个被动式蜜罐可以提高内网攻击的检测覆盖率。在内网中部署两台以上的被动式蜜罐，还可以避免单点故障，以及检测蜜罐被控的情况。</p>
+<h5 id="ARP攻击"><a href="#ARP攻击" class="headerlink" title="ARP攻击"></a>ARP攻击</h5><p>ARP欺骗的攻击过程可简要描述如下：<br>（1）攻击者在局域网段发送构造好的包含虚假IP-MAC对应信息的ARP应答包，使局域网的其他设备认为攻击者的机器是网关，从而充当假网关。<br>（2）被攻击者的将数据包发送给虚假网关。<br>（3）假网关（攻击者）分析接收到的数据包，把有价值的数据包记录下来（如邮箱、电商登录数据包）。<br>（4）假网关（攻击者）再把数据转发给真正的网关，充当中间人。<br>在内网渗透中可以通过ARP攻击嗅探到管理员的帐号密码等敏感信息。<br>通过”arp -a”命令获取到的IP-MAC对应表并非包括局域网内的全部设备，通常只包括和本机发生过数据通信的主机，但是列表中一定会包含网关，和试图攻击本机的局域网内主机，因此通过此种方法可以获取到需要的IP-MAC对应信息。</p>
+<p>###多款开源蜜罐数据样例与应用分析<br>了解不同蜜罐能采集的原始数据字段与内容，可以更直观地看到蜜罐的采集能力，便于我们结合应用场景解决实际问题的时候去选择和组合不同的开源蜜罐技术。</p>
+<p>#####现代密网(MHN)<br>现代密网（MHN，Modern Honey Network，以下简称MHN）是一个开源项目，它简化了蜜罐的部署并支持多种蜜罐软件作为数据终端。该项目用ThreatStream开源软件程序来部署，MHN支持将收集的数据汇总处理后保存在MongoDB数据库中，数据库的内容支持通过定制Web接口展示和存取。MHN系统功能示意如下图所示。<br><img src="/upload_image/Miwang-1.png" alt=""><br>MHN能够支持连接多种类型的蜜罐软件，添加和部署蜜罐过程相对自动化，部署完成后，蜜罐和MHN中心数据库支持通过开源的发布订阅协议hpfeeds来同步数据。</p>
+<p>MHN依赖多个蜜罐终端作为探测器Sensors去探测和收集攻击数据，并通过一种基于订阅者与发布者关系的传输协议hpfeeds将蜜罐终端的数据传输到MHN中心服务器，并存储到MongoDB数据库中，再通过honeymap和Webapp模块进行展示，示例页面如下图所示。<br><img src="/upload_image/Miwang-2.png" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/11/03/蜜罐与内网安全/" data-id="cjas2avcc000a681btl1m9zyk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -170,7 +214,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cjajcfuw30005h81bgm6pe9tb" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cjas2avc60006681b6fncm3vd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -207,7 +251,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjajcfuwk000eh81bib30njs7" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjas2avci000g681bhxdlvr6c" class="article-share-link">Share</a>
       
       
     </footer>
@@ -275,7 +319,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjajcfuwl000gh81b8w8zoy46" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjas2avck000h681b4qxuc2xl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -359,7 +403,47 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/01/15/利用大数据进行攻击/" data-id="cjajcfuwj000dh81btndm05q9" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/01/15/利用大数据进行攻击/" data-id="cjas2avcb0009681bq198ezhj" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-端口大集合" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/12/04/端口大集合/" class="article-date">
+  <time datetime="2016-12-04T02:24:31.000Z" itemprop="datePublished">2016-12-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/04/端口大集合/">端口大集合</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>###1,web类(web漏洞/敏感目录)<br>第三方通用组件漏洞struts thinkphp jboss ganglia zabbix<br>80 web<br>80-89 web<br>8000-9090 web</p>
+<p>###2,数据库类(扫描弱口令)<br>1433 MSSQL<br>1521 Oracle<br>3306 MySQL<br>5432 PostgreSQL</p>
+<p>###3,特殊服务类(未授权/命令执行类/漏洞)<br>443 SSL心脏滴血<br>873 Rsync未授权<br>5984 CouchDB <a href="http://xxx:5984/_utils/" target="_blank" rel="external">http://xxx:5984/_utils/</a><br>6379 redis未授权<br>7001,7002 WebLogic默认弱口令，反序列<br>9200,9300 elasticsearch 参考WooYun: 多玩某服务器ElasticSearch命令执行漏洞<br>11211 memcache未授权访问<br>27017,27018 Mongodb未授权访问<br>50000 SAP命令执行<br>50070,50030 hadoop默认端口未授权访问</p>
+<p>###4,常用端口类(扫描弱口令/端口爆破)<br>21 ftp<br>22 SSH<br>23 Telnet<br>2601,2604 zebra路由，默认密码zebra<br>3389 远程桌面<br>端口合计详情<br>21 ftp<br>22 SSH<br>23 Telnet<br>80 web<br>80-89 web<br>161 SNMP<br>389 LDAP<br>443 SSL心脏滴血以及一些web漏洞测试<br>445 SMB<br>512,513,514 Rexec<br>873 Rsync未授权<br>1025,111 NFS<br>1433 MSSQL<br>1521 Oracle:(iSqlPlus Port:5560,7778)<br>2082/2083 cpanel主机管理系统登陆 （国外用较多）<br>2222 DA虚拟主机管理系统登陆 （国外用较多）<br>2601,2604 zebra路由，默认密码zebra<br>3128 squid代理默认端口，如果没设置口令很可能就直接漫游内网了<br>3306 MySQL<br>3312/3311 kangle主机管理系统登陆<br>3389 远程桌面<br>4440 rundeck 参考WooYun: 借用新浪某服务成功漫游新浪内网<br>5432 PostgreSQL<br>5900 vnc<br>5984 CouchDB <a href="http://xxx:5984/_utils/" target="_blank" rel="external">http://xxx:5984/_utils/</a><br>6082 varnish 参考WooYun: Varnish HTTP accelerator CLI 未授权访问易导致网站被直接篡改或者作为代理进入内网<br>6379 redis未授权<br>7001,7002 WebLogic默认弱口令，反序列<br>7778 Kloxo主机控制面板登录<br>8000-9090 都是一些常见的web端口，有些运维喜欢把管理后台开在这些非80的端口上<br>8080 tomcat/WDCP主机管理系统，默认弱口令<br>8080,8089,9090 JBOSS<br>8083 Vestacp主机管理系统 （国外用较多）<br>8649 ganglia<br>8888 amh/LuManager 主机管理系统默认端口<br>9200,9300 elasticsearch 参考WooYun: 多玩某服务器ElasticSearch命令执行漏洞<br>10000 Virtualmin/Webmin 服务器虚拟主机管理系统<br>11211 memcache未授权访问<br>27017,27018 Mongodb未授权访问<br>28017 mongodb统计页面<br>50000 SAP命令执行<br>50070,50030 hadoop默认端口未授权访问</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2016/12/04/端口大集合/" data-id="cjas2avcd000b681buxk1qk9x" class="article-share-link">Share</a>
       
       
     </footer>
@@ -423,7 +507,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjajcfuvy0002h81buzc9g3er" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjas2avc50005681b5jezc5f6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -513,7 +597,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjajcfuw10004h81brk5hehmq" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjas2avby0002681bgo8jhcup" class="article-share-link">Share</a>
       
       
     </footer>
@@ -565,123 +649,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/10/10/Java反序列化漏洞/" data-id="cjajcfuw10003h81bkf1vaihr" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-WAF-Bypass-技巧总结" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/09/18/WAF-Bypass-技巧总结/" class="article-date">
-  <time datetime="2016-09-18T12:11:51.000Z" itemprop="datePublished">2016-09-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/18/WAF-Bypass-技巧总结/">WAF Bypass 技巧总结</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="waf分类"><a href="#waf分类" class="headerlink" title="waf分类"></a>waf分类</h4><p>掌握绕过各类WAF可以说是渗透测试人员的一项基本技能，本文将WAF分为云WAF、硬件WAF、软件WAF、代码级WAF，分别从各自的特性来谈一些相关的绕过技巧，更侧重于针对基于规则类的WAF绕过技巧。</p>
-<h6 id="1-云WAF"><a href="#1-云WAF" class="headerlink" title="1.云WAF"></a>1.云WAF</h6><p>Eg:加速乐<br>目前CDN服务的功能是越来越多，安全性也越加强悍，用户的每个请求都会被发送到指定的CDN节点上，最后转发给真实站点。这个过程就好像加了一道关卡，这个关卡提供了缓存、加速、防御的特点。<br>绕过关键：查询真实IP，若是直接访问服务器的IP就不经过CDN了。<br>以下四点有助于绕过。<br>1.查询历史DNS（在2016年加入到了cnd节点里面，可以通过查询2016年之前的dns记录）<br>2.查看子域名解析地址是否和主域名的IP地址相近。（有些网站只会将主站加入到CDN节点里面，这时可以查看其二级、三级域名的IP地址信息，进而猜到主站的IP地址）<br>3.CDN节点分发缺陷，通过国外IP访问网站可能会出现真实IP，因为有的CDN服务商可能只做了国内节点，没做国外的，这样访问请求是直接被转发到真实服务器地址上。<br>4.让服务器主动连接你。比如rss订阅服务或则是向邮箱服务器发送个错误的邮件比如地址不存在 通过抓包观察返回的头来,查找IP地址信息。</p>
-<h6 id="2-硬件waf"><a href="#2-硬件waf" class="headerlink" title="2.硬件waf"></a>2.硬件waf</h6><p>Eg:绿盟WAF</p>
-<h6 id="3-软件waf"><a href="#3-软件waf" class="headerlink" title="3.软件waf"></a>3.软件waf</h6><p>Eg:安全狗</p>
-<h4 id="基于规则的WAF工作原理"><a href="#基于规则的WAF工作原理" class="headerlink" title="基于规则的WAF工作原理"></a>基于规则的WAF工作原理</h4><p>数据获取(注意 get post等方法以及 post体方式)———数据清洗(去除多余数据比如编码,mssql支持unicode编码)———规则匹配———二次校验</p>
-<h5 id="绕注入"><a href="#绕注入" class="headerlink" title="绕注入"></a>绕注入</h5><h6 id="1-关键字替换"><a href="#1-关键字替换" class="headerlink" title="1.关键字替换"></a>1.关键字替换</h6><p>原理：<br>部分WAF是通过黑名单来起到拦截的作用，这种情况可以用关键字替换来实现绕过。比如在mysql中，waf将sleep()函数列入了黑名单，可以通过具备相同功能的benchmark()函数来实现绕过。以下是部分相同功能的替代函数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt; &gt; 等价于 BETWEEN</div><div class="line">= 等价于 like</div><div class="line">Hex() bin() 等价于ascii()</div><div class="line">Sleep() 等价于 benchmark()</div><div class="line">Mid()substring() 等价于 substr(）</div><div class="line">@@user 等价于 User()</div><div class="line">@@Version 等价于 version()</div><div class="line">(mysql支持&amp;&amp;  || ,oracle不支持 &amp;&amp; ||）</div></pre></td></tr></table></figure></p>
-<h6 id="2-特殊符号"><a href="#2-特殊符号" class="headerlink" title="2.特殊符号"></a>2.特殊符号</h6><p>原理：结合不同数据库的特性来实现绕过。(最好是可以找到waf开发者都不了解的某些特性),以下是两个广为流传的小特性：<br>比如 “+” select+password+from+mysql.user 相当于是一个空格的作用”`”放在mysql的末尾会起到注释符的作用</p>
-<h6 id="3-编码"><a href="#3-编码" class="headerlink" title="3.编码"></a>3.编码</h6><p>可以结合各种编码方式来绕过,比如url编码，url双重编码,十六进制编码，unicode编码，数据库编码等。<br>Eg：mysql默认的字符集是latin,因此在php代码里面设置的字符集为 utf-8,这只是客户端的字符集，因此存在字符集装换的问题utf-8—&gt;latin,若传进来的字符集不是完整的字符，则会导致不完整的字符自动会忽略的问题，比如username=admin%c2 ,   由于%c2不是一个完整的utf-8字符  因此传到Mysql  里面  自动忽略了，导致查出的是admin用户的数据，可以利用这个特性绕过。</p>
-<h6 id="4-注释符"><a href="#4-注释符" class="headerlink" title="4.注释符"></a>4.注释符</h6><p>/<em>xxx</em>/是注释，也可以充当空白符。因为 /<strong>/可使得MySQL对sql语句(union/</strong>/select)词法解析成功。事实上许多WAF都考虑到/<strong>/可以作为空白分，但是waf检测 “/*.<em>\</em>/“很消耗性能，工程师会折中，可能在检测中间引入一些特殊字符，例如：/<em>\w+</em>/。或者，WAF可能只中间检查n个字符”/*.{,n}*/“。根据以上想法，可以逐步测试绕过方法：<br>先测试最基本的：union/</strong>/select再测试中间引入特殊字：union/<em>aaaa%01bbs</em>/select最后测试注释长度：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">union/*aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/select</div></pre></td></tr></table></figure></p>
-<h6 id="5-空白符绕过"><a href="#5-空白符绕过" class="headerlink" title="5.空白符绕过"></a>5.空白符绕过</h6><p>基于正则表达式的WAF， SQL注入规则使用正则表达式的”\s”匹配空格，例如”select\s+union”。<br>利用空白符进行绕过，测试WAF时尽可能减少其他原因的影响，例如”union select”被拦截，只需把中间空白符替换为”%250C”, “%25A0”进行绕过测试。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">union%250Cselect</div><div class="line">union%25A0select</div></pre></td></tr></table></figure></p>
-<p>函数分隔符对基于正则表达式的WAF，我们猜测安全工程师写WAF规则时，可能不知道函数名与左括号之间可以存在特殊字符，或者遗漏可以存在特殊字符。例如匹配函数”concat()”的规则写法，”concat(“或者”concat\s*(“，就没有考虑到一些特殊字符。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">concat%2520(</div><div class="line">concat/**/(</div><div class="line">concat%250c(</div><div class="line">concat%25a0(</div></pre></td></tr></table></figure></p>
-<h6 id="6-浮点数词法解析"><a href="#6-浮点数词法解析" class="headerlink" title="6.浮点数词法解析"></a>6.浮点数词法解析</h6><p>利用MySQL解析浮点数的特点，正则表达式无法匹配出单词union，但是MySQL词法解析成功解析出浮点数、sql关键字union。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">select * from users <span class="built_in">where</span> id=8E0union select 1,2,3,4,5,6,7,8,9,0</div><div class="line">select * from users <span class="built_in">where</span> id=8.0union select 1,2,3,4,5,6,7,8,9,0</div></pre></td></tr></table></figure></p>
-<h6 id="7-报错注入"><a href="#7-报错注入" class="headerlink" title="7.报错注入"></a>7.报错注入</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">extractvalue(1, concat(0x5c,md5(3)));</div><div class="line">updatexml(1, concat(0x5d,md5(3)),1);</div><div class="line">GeometryCollection((select*from(select*from(select@@version)f)x))</div><div class="line">polygon((select*from(select name_const(version(),1))x))</div><div class="line">linestring()</div><div class="line">multipoint()</div><div class="line">multilinestring()</div><div class="line">multipolygon()</div></pre></td></tr></table></figure>
-<h5 id="绕上传"><a href="#绕上传" class="headerlink" title="绕上传"></a>绕上传</h5><p>关键是：waf与webserver的差异（waf的局限性与webserver的灵活性）。</p>
-<h6 id="1-协议解析不一致-文件名解析兼容性"><a href="#1-协议解析不一致-文件名解析兼容性" class="headerlink" title="1.协议解析不一致-文件名解析兼容性"></a>1.协议解析不一致-文件名解析兼容性</h6><p>multipart协议中，文件名的形式为”filename=”abc.php””。但是Tomcat、PHP等容器解析协议时会做一些兼容，能正确解析 “filename=”abc.php”、”filename=abc.php”、 “filename=’abc.php’”。而WAF只按照协议标准去解析，无法解析文件名，但是后端容器能正确获得文件名，从而导致被绕过。场景的绕过形式：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Content-Disposition: form-data; name=<span class="string">"file"</span>; filename=bc.php</div><div class="line">Content-Disposition: form-data; name=<span class="string">"file"</span>; filename=<span class="string">"abc.php</span></div><div class="line">Content-Disposition: form-data; name="file<span class="string">"; filename='abc.php'</span></div></pre></td></tr></table></figure></p>
-<h6 id="2-协议解析不正确-未解析所有文件"><a href="#2-协议解析不正确-未解析所有文件" class="headerlink" title="2.协议解析不正确-未解析所有文件"></a>2.协议解析不正确-未解析所有文件</h6><p>multipart协议中，一个POST请求可以同时上传多个文件。如图，许多WAF只检查第一个上传文件，没有检查上传的所有文件，而实际后端容器会解析所有上传的文件名，攻击者只需把paylaod放在后面的文件PART，即可绕过。</p>
-<h6 id="3-协议解析不正确-文件名覆盖"><a href="#3-协议解析不正确-文件名覆盖" class="headerlink" title="3.协议解析不正确-文件名覆盖"></a>3.协议解析不正确-文件名覆盖</h6><p>在multipart协议中，一个文件上传块存在多个Content-Disposition，将以最后一个Content-Disposition的filename值作为上传的文件名。许多WAF解析到第一个Content-Disposition就认为协议解析完毕，获得上传的文件名，从而导致被绕过。如图，加速乐的WAF解析得到文件名是”sp.pho”，但PHP解析结果是”sp.php”，导致被绕过。<br><img src="/upload_image/7.jpg" alt=""></p>
-<h6 id="4-变换位置"><a href="#4-变换位置" class="headerlink" title="4.变换位置"></a>4.变换位置</h6><p>因为WebServer获取参数的灵活性，所以我尝试把安全狗拦截的filename=”test.asp”换个位置。经过一番测试，发现filename=”test.asp”位于Content-Type: application/octet-stream<br>下一行时，安全狗的上传拦截便会失效。</p>
-<h6 id="5-文件名覆盖"><a href="#5-文件名覆盖" class="headerlink" title="5.文件名覆盖"></a>5.文件名覆盖</h6><p>在一个Content-Disposition 中，存在多个filename ，协议解析应该使用最后的filename值作为文件名。如果WAF解析到filename=”p3.txt”认为解析到文件名，结束解析，将导致被绕过。因为后端容器解析到的文件名是t3.jsp。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Content-Disposition: form-data;name=<span class="string">"myfile"</span>; filename=<span class="string">"p3.txt"</span>;filename=<span class="string">"t3.jsp"</span></div></pre></td></tr></table></figure></p>
-<h6 id="6-遗漏文件名"><a href="#6-遗漏文件名" class="headerlink" title="6.遗漏文件名"></a>6.遗漏文件名</h6><p>当WAF遇到”name=”myfile”;;”时，认为没有解析到filename。而后端容器继续解析到的文件名是t3.jsp，导致WAF被绕过。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Content-Disposition: form-data;name=<span class="string">"myfile"</span>;; filename=<span class="string">"t3.jsp"</span></div></pre></td></tr></table></figure></p>
-<h6 id="7-任意文件下载"><a href="#7-任意文件下载" class="headerlink" title="7.任意文件下载"></a>7.任意文件下载</h6><p>（1）相对路径：所以WAF文件包含规则通常会检测连续的”../“。根据vfs解析路径的语法，解析到”//“文件路径不变，解析到”/./“文件路径依然。 通过避免连续的”../“，从而绕过WAF文件包含规则。Eg: ././..///./.././/../etc//passwd，它等价于../../../etc/passwd。<br>（2）绝对路径：例如 /etc/./passwd 与 /etc/passwd 是等价的。还可以通过组合”/./“、”//“进行绕过，<br>Eg.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/etc///.//././/passwd</div><div class="line">/etc/passwd   /etc././././passwd</div></pre></td></tr></table></figure></p>
-<h4 id="代码级WAF"><a href="#代码级WAF" class="headerlink" title="代码级WAF"></a>代码级WAF</h4><p>所谓代码级的WAF是指程序员在程序内部，借助自身编写的过滤函数来保护应用程序的安全。以下是三种脚本语言通常会使用的过滤位置：</p>
-<h6 id="1-php"><a href="#1-php" class="headerlink" title="1. php"></a>1. php</h6><p>在php.ini中设置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">; Automatically add files before PHP document.; auto-prepend-fileauto_prepend_file =; Automatically add files after PHP document.; auto-append-fileauto_append_file =</div></pre></td></tr></table></figure></p>
-<p>配置指令，这些指令指向那些在每个请求的PHP脚本执行”之前”和”之后”才执行的PHP文件。这样就可以在各种HTTP请求集合(GET,POST,COOKIE)之前对数据进行一些前发处理。</p>
-<h6 id="2-asp-net"><a href="#2-asp-net" class="headerlink" title="2.asp.net"></a>2.asp.net</h6><p>通过ASP.NET的System.Web.IHttpModule接口来实现</p>
-<h6 id="3-java"><a href="#3-java" class="headerlink" title="3.java"></a>3.java</h6><p>通过filter来实现。比如tomcat会在web.xml的配置文件中配置过滤类。</p>
-<h4 id="绕过基于规则的WAF"><a href="#绕过基于规则的WAF" class="headerlink" title="绕过基于规则的WAF"></a>绕过基于规则的WAF</h4><p>目前市面的大部分WAF是通过规则来实现的，既然是规则，就一定存在不全面、不准确的情况。下面举几个例子帮助大家拓展一下思路：</p>
-<h6 id="1-封禁IP"><a href="#1-封禁IP" class="headerlink" title="1.封禁IP"></a>1.封禁IP</h6><p>比如有些waf会对重复的IP访问进行封锁,这时可以用在请求包体中加入  “X-Originating-IP:127.0.0.1”，因为waf不会拦截他自己。</p>
-<h6 id="2-前端waf"><a href="#2-前端waf" class="headerlink" title="2.前端waf"></a>2.前端waf</h6><p>针对于前端的waf,可以直接通过burp抓包绕过</p>
-<h6 id="3-改变user-agent"><a href="#3-改变user-agent" class="headerlink" title="3.改变user-agent"></a>3.改变user-agent</h6><p>我们在写网站防火墙规则的时候可能都会做一件事:永远不屏蔽那些主流搜索引擎机器人的爬取(如,Google,Bing,Yahoo,Baidu等).这时我们就可以在USER-Agent伪造自己是搜索引擎的爬虫，绕过waf.</p>
-<h6 id="4-缓冲区溢出"><a href="#4-缓冲区溢出" class="headerlink" title="4.缓冲区溢出"></a>4.缓冲区溢出</h6><p>比如waf只允许长度是2M的包体，而服务器则可以接受8M的包体，这种情况 可以通过发送2M-8M的包体将WAF溢出死。</p>
-<h6 id="5-替换关键字"><a href="#5-替换关键字" class="headerlink" title="5.替换关键字"></a>5.替换关键字</h6><p>需要考虑waf具体怎么拦截的，Seleselectct,倘若将中间的关键字删掉，则可以绕过。</p>
-<h6 id="6-webserver特性"><a href="#6-webserver特性" class="headerlink" title="6.webserver特性"></a>6.webserver特性</h6><p>iis 自动忽略%<br>我们知道asp有两个特性<br>1.会将Request中的不能编码部分的%去掉<br>2.Request中如果有unicode部分会将其进行解码<br>IIS6.0两个解析缺陷：目录名包含.asp、.asa、.cer的话，则该目录下的所有文件都将按照asp解析。<br>Apache1.X 2.X解析漏洞：<br>Apache在以上版本中，解析文件名的方式是从后向前识别扩展名，直到遇见Apache可识别的扩展名为止。<br>Nginx解析漏洞：</p>
-<p>Nginx 0.5.<em>Nginx 0.6.</em>Nginx 0.7 &lt;= 0.7.65Nginx 0.8 &lt;= 0.8.37，以上Nginx容器的版本下，上传一个在waf白名单之内扩展名的文件shell.jpg，然后以shell.jpg.php进行请求。<br>Nginx 0.8.41 – 1.5.6：以上Nginx容器的版本下，上传一个在waf白名单之内扩展名的文件shell.jpg，然后以shell.jpg%20.php进行请求。<br>PHP CGI解析漏洞 : IIS 7.0/7.5 和 Nginx &lt; 0.8.3 以上的容器版本中默认php配置文件cgi.fix_pathinfo=1时，上传一个存在于白名单的扩展名文件shell.jpg，在请求时以shell.jpg/shell.php请求，会将shell.jpg以php来解析。<br>参数污染：比如waf只接受前一个参数这意味着，通过注入: id=7&amp;id=[SQLi]WAF的网络层会解析 id=7 ,合法PHP应用层会解析 id=[SQLi] 注入语句成功执行。</p>
-<h6 id="7-数据库特性"><a href="#7-数据库特性" class="headerlink" title="7.数据库特性"></a>7.数据库特性</h6><p>mysql：<br>1.隐形类型转换<br>2.为了便利性 牺牲安全性。（select <em> from admin where user=”Admin”   可以执行，  mysql为了 使用的便利性 会允许一些 ‘错误’，比如 select </em> from admin where user=” À dmin” 依然可移执行。<br>3.MySQL文件读取<br>(5.5以上的版本  由于secure_file_priv这个变量为null 因此无法使用文件读取  文件写入的功能。)</p>
-<h6 id="8-服务器特性"><a href="#8-服务器特性" class="headerlink" title="8.服务器特性"></a>8.服务器特性</h6><p>NTFS ADS特性：ADS是NTFS磁盘格式的一个特性，用于NTFS交换数据流。在上传文件时，如果waf对请求正文的filename匹配不当的话可能会导致绕过。<br>Windows在创建文件时，在文件名末尾不管加多少点都会自动去除，那么上传时filename可以这么写shell.php……也可以这么写shell.php::$DATA…….。<br>总结：本文主要对基于规则的WAF的绕过技巧，基于规则的waf有着天然的缺陷型，构造出基于规则之外的特性就有可能绕过。或者干脆将WAF直接打挂，这时waf很有可能直接启用Bypass模式。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/09/18/WAF-Bypass-技巧总结/" data-id="cjajcfuw60007h81bd9tv4smu" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-sqlmap-使用" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/08/11/sqlmap-使用/" class="article-date">
-  <time datetime="2016-08-11T03:28:48.000Z" itemprop="datePublished">2016-08-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/11/sqlmap-使用/">sqlmap 使用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>sqlmap 是进行sql注入首选的工具，它可以帮助你快速的验证和利用一个sql注入漏洞。你可以在sqlmap的帮助下轻松的利用sql注入漏洞获取数据库数据甚至是getshell。<br>下载安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/sqlmapproject/sqlmap.git</div></pre></td></tr></table></figure></p>
-<p>当然，你也可以下载zip包直接解压，地址<a href="https://codeload.github.com/sqlmapproject/sqlmap/legacy.zip/master" target="_blank" rel="external">https://codeload.github.com/sqlmapproject/sqlmap/legacy.zip/master</a><br>然后解压出来目录其实就可以直接使用了。<br>大部分人只需要这么用<br>直接对一个url进行注入检测,-u参数指定检测的url<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php?user=jack&amp;id=1"</span></div></pre></td></tr></table></figure></p>
-<p>如果是post的参数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span></div></pre></td></tr></table></figure></p>
-<p>ok，如果输入的参数过多，你可以使用-p来指定具体存在注入的参数，比如指定参数id注入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id</div></pre></td></tr></table></figure></p>
-<p>下一步，获取数据库列表<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --dbs</div></pre></td></tr></table></figure></p>
-<p>获取指定数据库的表名<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --D mysql --tables</div></pre></td></tr></table></figure></p>
-<p>获取指定数据库及指定表的列名<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --D mysql -T user --columns</div></pre></td></tr></table></figure></p>
-<p>dump数据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --D mysql -T user --dump</div></pre></td></tr></table></figure></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cjajcfuwc000ah81bfjn8bmzh" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/10/10/Java反序列化漏洞/" data-id="cjas2avc10003681b1kvq4d0x" class="article-share-link">Share</a>
       
       
     </footer>
@@ -712,7 +680,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
   </div>
 
@@ -723,6 +691,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2017/11/03/蜜罐与内网安全/">蜜罐与内网安全</a>
+          </li>
         
           <li>
             <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/">Java反序列化漏洞利用的学习与实践</a>
@@ -738,10 +710,6 @@
         
           <li>
             <a href="/2017/01/15/利用大数据进行攻击/">利用大数据进行攻击</a>
-          </li>
-        
-          <li>
-            <a href="/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/">Discuz7 faq.php Sqli 漏漏洞分析</a>
           </li>
         
       </ul>
