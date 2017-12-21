@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>About the Blog | SY0U&#39;s Blog</title>
+  <title>web日志分析 | SY0U&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前的用wordpress + mysql在阿里云搭建了一套博客，域名是( http://wsygoogol.cn )维护成本比较高，被人用扫描器扫一下直接被阿里云下线。加上也懒得去写博客了，域名和主机都因为未续费被回收了。最近两年的漏洞分析和技术分享文章都发在公司博客、公司内网论坛、公司公众号上，比较乱。平时看文章看到好多人都在用Hexo，一直想弄一个，因为一些事情耽搁了，最近试了一下还真不错。">
+  <meta name="description" content="https://xianzhi.aliyun.com/forum/topic/1121/?accounttraceid=9fa2fa1c-0930-4085-941f-ef6ec871a331 0x01为什么对日志进行分析1.网站安全自检查，了解服务器上正在发生的安全事件；2.应急事件中的分析取证。 0x02 怎么分析先看一下web日志长什么样，能给我们提供哪些信息以Nginx容器为例：161.1">
 <meta property="og:type" content="article">
-<meta property="og:title" content="About the Blog">
-<meta property="og:url" content="http://wsygoogol.github.io/2016/06/08/About-the-Blog/index.html">
+<meta property="og:title" content="web日志分析">
+<meta property="og:url" content="http://wsygoogol.github.io/2017/12/13/web日志分析/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
-<meta property="og:description" content="之前的用wordpress + mysql在阿里云搭建了一套博客，域名是( http://wsygoogol.cn )维护成本比较高，被人用扫描器扫一下直接被阿里云下线。加上也懒得去写博客了，域名和主机都因为未续费被回收了。最近两年的漏洞分析和技术分享文章都发在公司博客、公司内网论坛、公司公众号上，比较乱。平时看文章看到好多人都在用Hexo，一直想弄一个，因为一些事情耽搁了，最近试了一下还真不错。">
-<meta property="og:updated_time" content="2017-11-15T07:05:20.990Z">
+<meta property="og:description" content="https://xianzhi.aliyun.com/forum/topic/1121/?accounttraceid=9fa2fa1c-0930-4085-941f-ef6ec871a331 0x01为什么对日志进行分析1.网站安全自检查，了解服务器上正在发生的安全事件；2.应急事件中的分析取证。 0x02 怎么分析先看一下web日志长什么样，能给我们提供哪些信息以Nginx容器为例：161.1">
+<meta property="og:updated_time" content="2017-12-13T02:41:13.649Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="About the Blog">
-<meta name="twitter:description" content="之前的用wordpress + mysql在阿里云搭建了一套博客，域名是( http://wsygoogol.cn )维护成本比较高，被人用扫描器扫一下直接被阿里云下线。加上也懒得去写博客了，域名和主机都因为未续费被回收了。最近两年的漏洞分析和技术分享文章都发在公司博客、公司内网论坛、公司公众号上，比较乱。平时看文章看到好多人都在用Hexo，一直想弄一个，因为一些事情耽搁了，最近试了一下还真不错。">
+<meta name="twitter:title" content="web日志分析">
+<meta name="twitter:description" content="https://xianzhi.aliyun.com/forum/topic/1121/?accounttraceid=9fa2fa1c-0930-4085-941f-ef6ec871a331 0x01为什么对日志进行分析1.网站安全自检查，了解服务器上正在发生的安全事件；2.应急事件中的分析取证。 0x02 怎么分析先看一下web日志长什么样，能给我们提供哪些信息以Nginx容器为例：161.1">
   
     <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
   
@@ -63,10 +63,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-About-the-Blog" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-web日志分析" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/06/08/About-the-Blog/" class="article-date">
-  <time datetime="2016-06-08T10:54:05.000Z" itemprop="datePublished">2016-06-08</time>
+    <a href="/2017/12/13/web日志分析/" class="article-date">
+  <time datetime="2017-12-13T02:01:39.000Z" itemprop="datePublished">2017-12-13</time>
 </a>
     
   </div>
@@ -77,7 +77,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      About the Blog
+      web日志分析
     </h1>
   
 
@@ -85,12 +85,17 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>之前的用wordpress + mysql在阿里云搭建了一套博客，域名是( <a href="http://wsygoogol.cn" target="_blank" rel="external">http://wsygoogol.cn</a> )维护成本比较高，被人用扫描器扫一下直接被阿里云下线。加上也懒得去写博客了，域名和主机都因为未续费被回收了。<br>最近两年的漏洞分析和技术分享文章都发在公司博客、公司内网论坛、公司公众号上，比较乱。平时看文章看到好多人都在用Hexo，一直想弄一个，因为一些事情耽搁了，最近试了一下还真不错。就在github上搭一个，虽然由于大家都懂的的原因有点慢。但是流量应该不会太大，需求也没那么多，暂时先用着，如果有需求再迁移吧。<br>我决定用这个博客，记录工作和学习中的踩过的坑，把学到的知识和经验分享出来。我也经常在知乎上回答一些问题，写一些生活的感悟和读书笔记。如果好的，以后也会同步过来。</p>
+        <p><a href="https://xianzhi.aliyun.com/forum/topic/1121/?accounttraceid=9fa2fa1c-0930-4085-941f-ef6ec871a331" target="_blank" rel="external">https://xianzhi.aliyun.com/forum/topic/1121/?accounttraceid=9fa2fa1c-0930-4085-941f-ef6ec871a331</a></p>
+<h3 id="0x01为什么对日志进行分析"><a href="#0x01为什么对日志进行分析" class="headerlink" title="0x01为什么对日志进行分析"></a>0x01为什么对日志进行分析</h3><p>1.网站安全自检查，了解服务器上正在发生的安全事件；<br>2.应急事件中的分析取证。</p>
+<h4 id="0x02-怎么分析"><a href="#0x02-怎么分析" class="headerlink" title="0x02 怎么分析"></a>0x02 怎么分析</h4><p>先看一下web日志长什么样，能给我们提供哪些信息<br>以Nginx容器为例：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">61.144.119.65 - - [29/May/2017:22:01:32 +0800] <span class="string">"GET /page/1 HTTP/1.1"</span> 200 6403 <span class="string">"http://www.baidu.com"</span> <span class="string">"Scrapy/1.1.2 (+http://scrapy.org)"</span></div></pre></td></tr></table></figure></p>
+<p>这个格式是在nginx.conf配置的：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">remote_addr - remote_user [time_local] <span class="string">"request"</span> <span class="string">'status body_bytes_sent "http_referer" '</span>http_user_agent<span class="string">" "</span><span class="variable">$http_x_forwarded_for</span><span class="string">"';</span></div></pre></td></tr></table></figure></p>
+<p>各个字段翻译过来为：<br>远程IP - 远程用户  服务器时间 请求主体 响应状态 响应体大小 请求来源 客户端信息 客户端代理IP<br>那么我们如何区分正常请求和恶意攻击请求呢？<br>站在攻击者的角度，攻击者对网站进行渗透时，其中包含大量的扫描请求和执行恶意操作的请求，而这两者在日志中都有各自的特征，如扫描请求会访问大量不存在的地址，在日志中体现则为大量的响应状态码为404，而不同的恶意请求都有各自相应的特征。<br>在常规应急响应常见中，一般客户会有这几种被黑情况：<br>1.带宽被占满，导致网站响应速度变慢，用户无法正常访问<br>2.造成已知经济损失，客户被恶意转账、对账发现金额无端流失<br>3.网站被篡改或者添加暗链，常见为黑客黑页、博彩链接等<br>..<br>对于这些情况，按照经验，我们会先建议对已知被黑的服务器进行断网，然后开始进行日志分析操作。假设我们面对的是一个相对初级的黑客，一般我们直接到服务器检查是否存有明显的webshell即可。检查方式也很简单：<br>1.搜索最近一周被创建、更新的脚本文件<br>2.根据网站所用语言，搜索对应webshell文件常见的关键字</p>
+<p>找到webshell后门文件后，通过查看日志中谁访问了webshell，然后得出攻击者IP，再通过IP提取出攻击者所有请求进行分析</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjbfxsl990004ps1bqekunr2s" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/12/13/web日志分析/" data-id="cjbfxsl9j0009ps1br6uj1zj1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -99,19 +104,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2016/06/18/Hexo-搭建Blog教程/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Hexo 搭建Blog教程
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/06/08/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/11/03/蜜罐与内网安全/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Hello World</div>
+      <div class="article-nav-title">蜜罐与内网安全</div>
     </a>
   
 </nav>
