@@ -91,62 +91,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjbot1wfr0003rk1bkq1tyie9" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/" class="article-date">
-  <time datetime="2017-12-27T08:15:13.000Z" itemprop="datePublished">2017-12-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/">vBulletin routestring Unauthenticated Remote Code Execution Vulnerability</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="0x01-漏洞描述"><a href="#0x01-漏洞描述" class="headerlink" title="0x01 漏洞描述"></a>0x01 漏洞描述</h4><p>vBulletin 是一款使用广泛的基于 PHP 和 MySQL 数据库服务器的专有互联网论坛软件包。意大利安全公司TRUEL IT的安全研究员和一名神秘的独立安全研究人员发现并披露了热门互联网论坛软件 vBulletin 中的两个未修复的紧急 0day 漏洞。其中一个漏洞可导致远程攻击者在最新版 vBulletin 应用服务器中执行恶意代码。</p>
-<p>####0x02 受影响产品</p>
-<p>在Windows Server上运行的vBulletin 5全版本</p>
-<h4 id="0x03-危害风险"><a href="#0x03-危害风险" class="headerlink" title="0x03 危害风险"></a>0x03 危害风险</h4><p>远程攻击者可利用vBulletin的漏洞在应用服务器中执行恶意代码</p>
-<h4 id="0x04漏洞原理"><a href="#0x04漏洞原理" class="headerlink" title="0x04漏洞原理"></a>0x04漏洞原理</h4><p>补丁分析</p>
-<p>Index.php页面中通过vB5_Frontend_Application::init初始化前端配置。<img src="F:\w.png" alt="w"></p>
-<p>跟入init函数。</p>
-<p><img src="C:\Users\wangshiyou\Pictures\w2.png" alt="w2"></p>
-<p>init函数创建router类，用于页面路由，调用setRoutes。在setRoutes内部获取routestring参数。</p>
-<p><img src="C:\Users\wangshiyou\Pictures\玩.png" alt="玩"></p>
-<p>如果routestring不以‘.gif’, ‘.png’, ‘.jpg’, ‘.css’ , ‘.js’结尾且不含‘/’号，则会调用relay controller中的legacy action。</p>
-<p><img src="C:\Users\wangshiyou\Pictures\w3.png" alt="w3"></p>
-<p>Legacy action调用时，routestring作为参数。<img src="C:\Users\wangshiyou\Pictures\ww.png" alt="ww"></p>
-<p>而我们可以看到relay最终会包含此路径的文件。所以存在文件包含漏洞。在Windows上“\”可以作为路径分割符，类似于“/”，所以routestring不含“/”可以轻松绕过。</p>
-<h4 id="0x05漏洞触发条件"><a href="#0x05漏洞触发条件" class="headerlink" title="0x05漏洞触发条件"></a>0x05漏洞触发条件</h4><p>Windows Server上发送“/index.php?routestring=.\..\filepath”请求。包含任意文件。</p>
-<h4 id="0x06漏洞利用"><a href="#0x06漏洞利用" class="headerlink" title="0x06漏洞利用"></a>0x06漏洞利用</h4><p>直接利用包含php文件执行php代码，也可以利用log文件执行php代码。</p>
-<p>先发送“/?LogINJ_START=&lt;?phpphpinfo();?&gt;LogINJ_END”请求，使它存留在access.log文件中。</p>
-<p>再利用此漏洞包含access.log文件，执行php代码。“/index.php?routestring=\..\..\..\..\..\..\..\..\..\..\xampp\apache\logs\access.log”<img src="C:\Users\wangshiyou\Pictures\www.png" alt="www"></p>
-<p>参考链接：<a href="https://blogs.securiteam.com/index.php/archives/3569" target="_blank" rel="external">https://blogs.securiteam.com/index.php/archives/3569</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/" data-id="cjbot1wga000hrk1b43jvs3hh" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjbot5lwy0003e81bgkddt3il" class="article-share-link">Share</a>
       
       
     </footer>
@@ -369,7 +314,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/12/27/大型互联网企业入侵检测实战总结/" data-id="cjbot1wgf000mrk1b2ty6if2q" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/12/27/大型互联网企业入侵检测实战总结/" data-id="cjbot5m9y000qe81btzndq9wy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -411,7 +356,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/11/27/Shodan-快速入门/" data-id="cjbot1wg6000drk1bixwaygio" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/11/27/Shodan-快速入门/" data-id="cjbot5m9j000de81b07yc7m8u" class="article-share-link">Share</a>
       
       
     </footer>
@@ -498,7 +443,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/11/18/洛克希德·马丁定义的“杀伤链模型/" data-id="cjbot1wgg000nrk1bk57labfr" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/11/18/洛克希德·马丁定义的“杀伤链模型/" data-id="cjbot5m9t000me81bi52l4eg9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -542,7 +487,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/11/03/蜜罐与内网安全/" data-id="cjbot1wgh000prk1bsjyw2obs" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/11/03/蜜罐与内网安全/" data-id="cjbot5m9v000ne81bf3hgw2hr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -580,7 +525,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/10/27/HTTP-fuzzing-List/" data-id="cjbot1wfl0001rk1bgdoly140" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/10/27/HTTP-fuzzing-List/" data-id="cjbot5lwd0002e81bvrizks62" class="article-share-link">Share</a>
       
       
     </footer>
@@ -659,7 +604,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cjbot1wg2000ark1btrpmcqvr" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cjbot5m9g000ae81b0cy24vu9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -701,7 +646,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjbot1wge000lrk1b4oqnuypm" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjbot5m9t000le81b1j5ri0wt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -769,7 +714,44 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjbot1wgi000rrk1bbxjmwon6" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjbot5m9w000oe81bf2l2mwl9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="w-各行业常见漏洞测试点总结" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/02/27/各行业常见漏洞测试点总结/" class="article-date">
+  <time datetime="2017-02-27T05:39:46.000Z" itemprop="datePublished">2017-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/27/各行业常见漏洞测试点总结/">各行业常见漏洞测试点总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://blkstone.github.io/2017/10/14/common-web-vulns/" target="_blank" rel="external">转</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/02/27/各行业常见漏洞测试点总结/" data-id="cjbot5m9p000ge81b47a8apcs" class="article-share-link">Share</a>
       
       
     </footer>
@@ -813,10 +795,6 @@
       <ul>
         
           <li>
-            <a href="/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/">vBulletin routestring Unauthenticated Remote Code Execution Vulnerability</a>
-          </li>
-        
-          <li>
             <a href="/2017/12/27/大型互联网企业入侵检测实战总结/">大型互联网企业入侵检测实战总结</a>
           </li>
         
@@ -830,6 +808,10 @@
         
           <li>
             <a href="/2017/11/03/蜜罐与内网安全/">蜜罐与内网安全</a>
+          </li>
+        
+          <li>
+            <a href="/2017/10/27/HTTP-fuzzing-List/">HTTP fuzzing List</a>
           </li>
         
       </ul>
