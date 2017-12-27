@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>端口大集合 | SY0U&#39;s Blog</title>
+  <title>Shodan 快速入门 | SY0U&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="###1,web类(web漏洞/敏感目录)第三方通用组件漏洞struts thinkphp jboss ganglia zabbix80 web80-89 web8000-9090 web ###2,数据库类(扫描弱口令)1433 MSSQL1521 Oracle3306 MySQL5432 PostgreSQL ###3,特殊服务类(未授权/命令执行类/漏洞)443 SSL心脏滴血873 Rsy">
+  <meta name="description" content="前几天黑五5$买了一个shodan Vip账号。找了几篇文章看了一些，在数据驱动安全的时代应该好好用起来 https://danielmiessler.com/study/shodan/A Shodan Tutorial and Primer Shodan在渗透测试及漏洞挖掘中的一些用法http://mp.weixin.qq.com/s?__biz=MzIzMTc1MjExOQ==&amp;amp;mid">
 <meta property="og:type" content="article">
-<meta property="og:title" content="端口大集合">
-<meta property="og:url" content="http://wsygoogol.github.io/2016/12/04/端口大集合/index.html">
+<meta property="og:title" content="Shodan 快速入门">
+<meta property="og:url" content="http://wsygoogol.github.io/2017/11/27/Shodan-快速入门/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
-<meta property="og:description" content="###1,web类(web漏洞/敏感目录)第三方通用组件漏洞struts thinkphp jboss ganglia zabbix80 web80-89 web8000-9090 web ###2,数据库类(扫描弱口令)1433 MSSQL1521 Oracle3306 MySQL5432 PostgreSQL ###3,特殊服务类(未授权/命令执行类/漏洞)443 SSL心脏滴血873 Rsy">
-<meta property="og:updated_time" content="2017-12-04T02:28:02.607Z">
+<meta property="og:description" content="前几天黑五5$买了一个shodan Vip账号。找了几篇文章看了一些，在数据驱动安全的时代应该好好用起来 https://danielmiessler.com/study/shodan/A Shodan Tutorial and Primer Shodan在渗透测试及漏洞挖掘中的一些用法http://mp.weixin.qq.com/s?__biz=MzIzMTc1MjExOQ==&amp;amp;mid">
+<meta property="og:updated_time" content="2017-12-27T04:28:59.487Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="端口大集合">
-<meta name="twitter:description" content="###1,web类(web漏洞/敏感目录)第三方通用组件漏洞struts thinkphp jboss ganglia zabbix80 web80-89 web8000-9090 web ###2,数据库类(扫描弱口令)1433 MSSQL1521 Oracle3306 MySQL5432 PostgreSQL ###3,特殊服务类(未授权/命令执行类/漏洞)443 SSL心脏滴血873 Rsy">
+<meta name="twitter:title" content="Shodan 快速入门">
+<meta name="twitter:description" content="前几天黑五5$买了一个shodan Vip账号。找了几篇文章看了一些，在数据驱动安全的时代应该好好用起来 https://danielmiessler.com/study/shodan/A Shodan Tutorial and Primer Shodan在渗透测试及漏洞挖掘中的一些用法http://mp.weixin.qq.com/s?__biz=MzIzMTc1MjExOQ==&amp;amp;mid">
   
     <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
   
@@ -63,10 +63,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-端口大集合" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Shodan-快速入门" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/12/04/端口大集合/" class="article-date">
-  <time datetime="2016-12-04T02:24:31.000Z" itemprop="datePublished">2016-12-04</time>
+    <a href="/2017/11/27/Shodan-快速入门/" class="article-date">
+  <time datetime="2017-11-27T04:25:57.000Z" itemprop="datePublished">2017-11-27</time>
 </a>
     
   </div>
@@ -77,7 +77,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      端口大集合
+      Shodan 快速入门
     </h1>
   
 
@@ -85,15 +85,17 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>###1,web类(web漏洞/敏感目录)<br>第三方通用组件漏洞struts thinkphp jboss ganglia zabbix<br>80 web<br>80-89 web<br>8000-9090 web</p>
-<p>###2,数据库类(扫描弱口令)<br>1433 MSSQL<br>1521 Oracle<br>3306 MySQL<br>5432 PostgreSQL</p>
-<p>###3,特殊服务类(未授权/命令执行类/漏洞)<br>443 SSL心脏滴血<br>873 Rsync未授权<br>5984 CouchDB <a href="http://xxx:5984/_utils/" target="_blank" rel="external">http://xxx:5984/_utils/</a><br>6379 redis未授权<br>7001,7002 WebLogic默认弱口令，反序列<br>9200,9300 elasticsearch 参考WooYun: 多玩某服务器ElasticSearch命令执行漏洞<br>11211 memcache未授权访问<br>27017,27018 Mongodb未授权访问<br>50000 SAP命令执行<br>50070,50030 hadoop默认端口未授权访问</p>
-<p>###4,常用端口类(扫描弱口令/端口爆破)<br>21 ftp<br>22 SSH<br>23 Telnet<br>2601,2604 zebra路由，默认密码zebra<br>3389 远程桌面<br>端口合计详情<br>21 ftp<br>22 SSH<br>23 Telnet<br>80 web<br>80-89 web<br>161 SNMP<br>389 LDAP<br>443 SSL心脏滴血以及一些web漏洞测试<br>445 SMB<br>512,513,514 Rexec<br>873 Rsync未授权<br>1025,111 NFS<br>1433 MSSQL<br>1521 Oracle:(iSqlPlus Port:5560,7778)<br>2082/2083 cpanel主机管理系统登陆 （国外用较多）<br>2222 DA虚拟主机管理系统登陆 （国外用较多）<br>2601,2604 zebra路由，默认密码zebra<br>3128 squid代理默认端口，如果没设置口令很可能就直接漫游内网了<br>3306 MySQL<br>3312/3311 kangle主机管理系统登陆<br>3389 远程桌面<br>4440 rundeck 参考WooYun: 借用新浪某服务成功漫游新浪内网<br>5432 PostgreSQL<br>5900 vnc<br>5984 CouchDB <a href="http://xxx:5984/_utils/" target="_blank" rel="external">http://xxx:5984/_utils/</a><br>6082 varnish 参考WooYun: Varnish HTTP accelerator CLI 未授权访问易导致网站被直接篡改或者作为代理进入内网<br>6379 redis未授权<br>7001,7002 WebLogic默认弱口令，反序列<br>7778 Kloxo主机控制面板登录<br>8000-9090 都是一些常见的web端口，有些运维喜欢把管理后台开在这些非80的端口上<br>8080 tomcat/WDCP主机管理系统，默认弱口令<br>8080,8089,9090 JBOSS<br>8083 Vestacp主机管理系统 （国外用较多）<br>8649 ganglia<br>8888 amh/LuManager 主机管理系统默认端口<br>9200,9300 elasticsearch 参考WooYun: 多玩某服务器ElasticSearch命令执行漏洞<br>10000 Virtualmin/Webmin 服务器虚拟主机管理系统<br>11211 memcache未授权访问<br>27017,27018 Mongodb未授权访问<br>28017 mongodb统计页面<br>50000 SAP命令执行<br>50070,50030 hadoop默认端口未授权访问</p>
+        <p>前几天黑五5$买了一个shodan Vip账号。找了几篇文章看了一些，在数据驱动安全的时代应该好好用起来</p>
+<p><a href="https://danielmiessler.com/study/shodan/" target="_blank" rel="external">https://danielmiessler.com/study/shodan/</a><br>A Shodan Tutorial and Primer</p>
+<p>Shodan在渗透测试及漏洞挖掘中的一些用法<br><a href="http://mp.weixin.qq.com/s?__biz=MzIzMTc1MjExOQ==&amp;mid=2247484401&amp;idx=1&amp;sn=1e975c58d6abf58f9c9f9050e169fd70&amp;chksm=e89e2b29dfe9a23fd3183ac0ce5e483a484ad32054e70dde152e86352e3e07126fac03dc4a21&amp;mpshare=1&amp;scene=1&amp;srcid=1126TL9FBisM1YL6AucAqw4i#rd" target="_blank" rel="external">http://mp.weixin.qq.com/s?__biz=MzIzMTc1MjExOQ==&amp;mid=2247484401&amp;idx=1&amp;sn=1e975c58d6abf58f9c9f9050e169fd70&amp;chksm=e89e2b29dfe9a23fd3183ac0ce5e483a484ad32054e70dde152e86352e3e07126fac03dc4a21&amp;mpshare=1&amp;scene=1&amp;srcid=1126TL9FBisM1YL6AucAqw4i#rd</a></p>
+<p>Shodan新手入坑指南<br><a href="http://www.freebuf.com/sectool/121339.html" target="_blank" rel="external">http://www.freebuf.com/sectool/121339.html</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">pip install shodan</div><div class="line">shodan init [api_key]</div><div class="line">shodan count [keyword]</div><div class="line">shodan download dstfile [keyword]</div><div class="line">shodan download dstfile </div><div class="line">shodan parse --fields ip_str,port,org --separator , microsoft-data.json.gz</div></pre></td></tr></table></figure>
+<p>利用Shodan和Censys进行信息侦查<br><a href="http://www.freebuf.com/articles/web/90887.html" target="_blank" rel="external">http://www.freebuf.com/articles/web/90887.html</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/12/04/端口大集合/" data-id="cjbok9s11000iog1b8rmfz7gz" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/11/27/Shodan-快速入门/" data-id="cjbok9s0k0007og1b7u0ps9mv" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -102,19 +104,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2016/12/23/HTTP-协议/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/12/27/大型互联网企业入侵检测实战总结/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Récent</strong>
       <div class="article-nav-title">
         
-          HTTP 协议
+          大型互联网企业入侵检测实战总结
         
       </div>
     </a>
   
   
-    <a href="/2016/10/10/Java反序列化漏洞/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2017/11/03/蜜罐与内网安全/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Ancien</strong>
-      <div class="article-nav-title">序列化和反序列化</div>
+      <div class="article-nav-title">蜜罐与内网安全</div>
     </a>
   
 </nav>
