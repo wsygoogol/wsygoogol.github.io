@@ -64,6 +64,50 @@
       <div class="outer">
         <section id="main">
   
+    <article id="w-Spring-Boot框架SPEL表达式注入漏洞" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" class="article-date">
+  <time datetime="2016-07-15T07:42:14.000Z" itemprop="datePublished">2016-07-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/">Spring Boot框架SPEL表达式注入漏洞</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>pring是2003年兴起的轻量级Java开发框架。任何Java应用都可以使用该框架的核心特性，在Java EE平台之上有可用于构建Web应用的扩展。Spring Boot是Spring 的一个核心子项目，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置国内包括百度、阿里巴巴、腾讯等诸多知名企业都在使用该框架。<br>最近Spring Boot框架的SpEL表达式注入通用漏洞曝光，利用该漏洞，远程攻击者在服务器上可执行任意命令。</p>
+<h4 id="受影响的版本"><a href="#受影响的版本" class="headerlink" title="受影响的版本"></a>受影响的版本</h4><p>Spring Boot 1.1 1.2 1.3.0版本</p>
+<h4 id="不受影响的版本"><a href="#不受影响的版本" class="headerlink" title="不受影响的版本"></a>不受影响的版本</h4><p>Spring Boot 1.3.1及以上版本</p>
+<h4 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h4><p>以下是官方给的漏洞说明：<br><img src="/upload_image/3.png" alt=""><br>查看spring boot1.3.0的源文件ErrorMvcAutoConfiguration.java，发现出问题的地方主要在SpelView类中：<br><img src="/upload_image/4.png" alt=""><br>经过分析得知在用户采用了Spring Boot启动Spring MVC项目后Spring Boot的默认异常模板在处理异常信息的时候递归解析SPEL表达式，可导致SPEL表达式注入并执行。主要问题是SpelView类中会对路径中或者名字中含有的表达式递归解析，所以在1.3.1修复时添加了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
+<h4 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h4><p>利用此漏洞，只需在SpringMVC的Controller中的参数触发一个异常，异常信息带有SPEL表达式就可以注入了。<br>POC：<br><a href="http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}" target="_blank" rel="external">http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}</a><br>漏洞证明：<br><img src="/upload_image/5.png" alt=""><br>利用表达式成功创建了字符串Nsfocus.</p>
+<h4 id="补丁分析"><a href="#补丁分析" class="headerlink" title="补丁分析"></a>补丁分析</h4><p>从spring-boot的github的项目中可以看到，这个漏洞是在这个commit中修复的：<br><a href="https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6</a><br>在修复的log里可以看到存着漏洞的1.3.0和1.3.1的差别：<br><img src="/upload_image/6.png" alt=""><br>1.3.1创建了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
+<h4 id="修复方法"><a href="#修复方法" class="headerlink" title="修复方法"></a>修复方法</h4><p>升级Spring Boot版本至1.3.1或以上版本</p>
+<h4 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h4><p><a href="http://www.freebuf.com/news/108665.html" target="_blank" rel="external">http://www.freebuf.com/news/108665.html</a><br><a href="http://www.wooyun.org/bugs/wooyun-2010-226888" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-226888</a><br><a href="https://github.com/spring-projects/spring-boot/issues/4763" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/issues/4763</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cjbonglch000a2o1blizyo07p" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="w-面试一年前的自己" class="article article-type-w" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/06/29/面试一年前的自己/" class="article-date">
@@ -156,7 +200,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/29/面试一年前的自己/" data-id="cjbomyhts000pz81bwtcdr38v" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/29/面试一年前的自己/" data-id="cjbonglcu000q2o1b7oatxmn9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -212,7 +256,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/18/sql注入之数据库识别/" data-id="cjbomyhtl000hz81b7no4i62y" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/18/sql注入之数据库识别/" data-id="cjbonglcm000f2o1b843r1yca" class="article-share-link">Share</a>
       
       
     </footer>
@@ -266,7 +310,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/18/Hexo-搭建Blog教程/" data-id="cjbomyht40006z81bfeyzx8ir" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/18/Hexo-搭建Blog教程/" data-id="cjbonglc800062o1bio4yt6ta" class="article-share-link">Share</a>
       
       
     </footer>
@@ -311,7 +355,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/hello-world/" data-id="cjbomyhth000dz81busa9cssd" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/hello-world/" data-id="cjbonglcl000e2o1bh3knt6fj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -363,15 +407,15 @@
           </li>
         
           <li>
+            <a href="/2017/11/18/洛克希德·马丁定义的“杀伤链模型/">洛克希德·马丁定义的“杀伤链模型</a>
+          </li>
+        
+          <li>
             <a href="/2017/11/03/蜜罐与内网安全/">蜜罐与内网安全</a>
           </li>
         
           <li>
             <a href="/2017/10/27/HTTP-fuzzing-List/">HTTP fuzzing List</a>
-          </li>
-        
-          <li>
-            <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/">Java反序列化漏洞利用的学习与实践</a>
           </li>
         
       </ul>

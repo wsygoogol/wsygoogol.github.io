@@ -64,6 +64,66 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-任意文件读取漏洞的利用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/01/27/任意文件读取漏洞的利用/" class="article-date">
+  <time datetime="2017-01-27T05:36:48.000Z" itemprop="datePublished">2017-01-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/27/任意文件读取漏洞的利用/">任意文件读取漏洞的利用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="任意文件读取的利用思路"><a href="#任意文件读取的利用思路" class="headerlink" title="任意文件读取的利用思路"></a>任意文件读取的利用思路</h1><p>有些文件需要高权限才能读取</p>
+<ol>
+<li><code>/etc/passwd</code> # 用户情况</li>
+<li><code>/etc/shadow</code> # 直接 John the Ripper</li>
+<li><code>/etc/hosts</code> # 主机信息</li>
+<li><code>/root/.bashrc</code> # 环境变量</li>
+<li><code>/root/.bash_history</code> # 还有root外的其他用户</li>
+<li><code>/root/.viminfo</code> # vim 信息</li>
+<li><code>/root/.ssh/id_rsa</code> # 拿私钥直接ssh</li>
+<li><code>/proc/xxxx/cmdline</code> # 进程状态枚举 xxxx 可以为0000-9999 使用burpsuite</li>
+<li>数据库 config 文件</li>
+<li>web 日志 <code>access.log, error.log</code></li>
+<li>ssh 日志</li>
+<li><code>/var/lib/php/sess_PHPSESSID</code> # 非常规问题 session 文件( 参考 平安科技的一道session包含 <a href="http://www.jianshu.com/p/2c24ea34566b" target="_blank" rel="external">http://www.jianshu.com/p/2c24ea34566b</a>)</li>
+</ol>
+<h1 id="进一步推断系统版本"><a href="#进一步推断系统版本" class="headerlink" title="进一步推断系统版本"></a>进一步推断系统版本</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">uname -a</div><div class="line">lsb_release -d</div><div class="line">cat /etc/issue</div><div class="line">cat /proc/version</div><div class="line">cat /etc/redhat-release </div><div class="line">cat /etc/debian_version</div><div class="line">cat /etc/slackware_version</div><div class="line">ls /etc/*version</div><div class="line">cat /proc/cpuinfo</div></pre></td></tr></table></figure>
+<h1 id="无痕反弹shell"><a href="#无痕反弹shell" class="headerlink" title="无痕反弹shell"></a>无痕反弹shell</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kill -9 $$</div></pre></td></tr></table></figure>
+<h1 id="常用默认路径整理"><a href="#常用默认路径整理" class="headerlink" title="常用默认路径整理"></a>常用默认路径整理</h1><p>可以开虚拟机看看默认路径是什么</p>
+<h2 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/root/.ssh/id_rsa</div><div class="line">/root/.ssh/id_rsa.pub</div><div class="line">/root/.ssh/authorized_keys</div><div class="line">/etc/ssh/sshd_config</div><div class="line">/var/log/secure</div></pre></td></tr></table></figure>
+<h2 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/etc/nginx/nginx.conf</div><div class="line">/var/www/html</div><div class="line">/usr/local/services/nginx-1.6.2/logs/access.log</div><div class="line">/usr/local/services/nginx-1.6.2/logs/error.log </div><div class="line">/usr/local/services/nginx-1.6.2/nginx.conf</div><div class="line">/usr/local/services/nginx-1.6.2/conf/nginx.conf</div><div class="line">/usr/local/services/nginx-1.6.2/conf/proxy.conf </div><div class="line">/usr/local/services/nginx-1.6.2/conf/extra/haolaiyao.conf</div></pre></td></tr></table></figure>
+<h2 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/home/httpd/</div><div class="line">/home/httpd/www/</div></pre></td></tr></table></figure>
+<h2 id="jetty"><a href="#jetty" class="headerlink" title="jetty"></a>jetty</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/usr/local/services/jetty-8.1.16/</div><div class="line">/usr/local/services/jetty-8.1.16/logs/stderrout.log</div><div class="line">/usr/local/services/jetty-8.1.16/etc/jetty.xml</div></pre></td></tr></table></figure>
+<h2 id="resin"><a href="#resin" class="headerlink" title="resin"></a>resin</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/usr/local/services/resin-4.0.44/</div><div class="line">/usr/local/services/resin-4.0.44/conf/resin.xml</div><div class="line">/usr/local/services/resin-4.0.44/conf/resin.properties</div></pre></td></tr></table></figure>
+<h2 id="tomcat"><a href="#tomcat" class="headerlink" title="tomcat"></a>tomcat</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/usr/local/services/apache-tomcat-8.0.23/logs</div><div class="line">/usr/local/services/apache-tomcat-8.0.23/logs/catalina.out</div></pre></td></tr></table></figure>
+<h2 id="svn"><a href="#svn" class="headerlink" title="svn"></a>svn</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/home/svnroot/</div></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/01/27/任意文件读取漏洞的利用/" data-id="cjbonglco000h2o1b54wbntlx" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-利用大数据进行攻击" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/01/15/利用大数据进行攻击/" class="article-date">
@@ -138,7 +198,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/01/15/利用大数据进行攻击/" data-id="cjbomyhtm000iz81bshayo5py" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/01/15/利用大数据进行攻击/" data-id="cjbonglcp000i2o1bnxmjm6nt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -214,7 +274,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/12/23/HTTP-协议/" data-id="cjbomyht30004z81blcyztwgn" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/12/23/HTTP-协议/" data-id="cjbonglc800052o1b1tsl65c9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -254,7 +314,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/12/04/端口大集合/" data-id="cjbomyhtp000mz81bz9p0o61t" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/12/04/端口大集合/" data-id="cjbonglcs000l2o1bl4hlveq4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -318,7 +378,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjbomyhss0001z81bew1z4nn3" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjbonglc700042o1bfnzfyl7q" class="article-share-link">Share</a>
       
       
     </footer>
@@ -408,7 +468,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjbomyhtd0009z81bnjol1ntm" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjbonglck000c2o1bqgq4hzkz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -461,7 +521,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/10/10/Java反序列化漏洞/" data-id="cjbomyht50007z81b9nvv49zd" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/10/10/Java反序列化漏洞/" data-id="cjbonglc900072o1bmf307jq4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -533,7 +593,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/09/18/WAF-Bypass-技巧总结/" data-id="cjbomyhti000ez81bb7i0lnc0" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/09/18/WAF-Bypass-技巧总结/" data-id="cjbonglcl000d2o1b9wxqbbje" class="article-share-link">Share</a>
       
       
     </footer>
@@ -577,7 +637,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cjbomyhtj000fz81bgl5pjnm7" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cjbonglcn000g2o1b16wz7aso" class="article-share-link">Share</a>
       
       
     </footer>
@@ -634,51 +694,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/08/08/OGNL机制和Struts2漏洞利用原理研究/" data-id="cjbomyhte000bz81bfstrtshk" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="w-Spring-Boot框架SPEL表达式注入漏洞" class="article article-type-w" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" class="article-date">
-  <time datetime="2016-07-15T07:42:14.000Z" itemprop="datePublished">2016-07-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/">Spring Boot框架SPEL表达式注入漏洞</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>pring是2003年兴起的轻量级Java开发框架。任何Java应用都可以使用该框架的核心特性，在Java EE平台之上有可用于构建Web应用的扩展。Spring Boot是Spring 的一个核心子项目，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置国内包括百度、阿里巴巴、腾讯等诸多知名企业都在使用该框架。<br>最近Spring Boot框架的SpEL表达式注入通用漏洞曝光，利用该漏洞，远程攻击者在服务器上可执行任意命令。</p>
-<h4 id="受影响的版本"><a href="#受影响的版本" class="headerlink" title="受影响的版本"></a>受影响的版本</h4><p>Spring Boot 1.1 1.2 1.3.0版本</p>
-<h4 id="不受影响的版本"><a href="#不受影响的版本" class="headerlink" title="不受影响的版本"></a>不受影响的版本</h4><p>Spring Boot 1.3.1及以上版本</p>
-<h4 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h4><p>以下是官方给的漏洞说明：<br><img src="/upload_image/3.png" alt=""><br>查看spring boot1.3.0的源文件ErrorMvcAutoConfiguration.java，发现出问题的地方主要在SpelView类中：<br><img src="/upload_image/4.png" alt=""><br>经过分析得知在用户采用了Spring Boot启动Spring MVC项目后Spring Boot的默认异常模板在处理异常信息的时候递归解析SPEL表达式，可导致SPEL表达式注入并执行。主要问题是SpelView类中会对路径中或者名字中含有的表达式递归解析，所以在1.3.1修复时添加了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
-<h4 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h4><p>利用此漏洞，只需在SpringMVC的Controller中的参数触发一个异常，异常信息带有SPEL表达式就可以注入了。<br>POC：<br><a href="http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}" target="_blank" rel="external">http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}</a><br>漏洞证明：<br><img src="/upload_image/5.png" alt=""><br>利用表达式成功创建了字符串Nsfocus.</p>
-<h4 id="补丁分析"><a href="#补丁分析" class="headerlink" title="补丁分析"></a>补丁分析</h4><p>从spring-boot的github的项目中可以看到，这个漏洞是在这个commit中修复的：<br><a href="https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6</a><br>在修复的log里可以看到存着漏洞的1.3.0和1.3.1的差别：<br><img src="/upload_image/6.png" alt=""><br>1.3.1创建了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
-<h4 id="修复方法"><a href="#修复方法" class="headerlink" title="修复方法"></a>修复方法</h4><p>升级Spring Boot版本至1.3.1或以上版本</p>
-<h4 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h4><p><a href="http://www.freebuf.com/news/108665.html" target="_blank" rel="external">http://www.freebuf.com/news/108665.html</a><br><a href="http://www.wooyun.org/bugs/wooyun-2010-226888" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-226888</a><br><a href="https://github.com/spring-projects/spring-boot/issues/4763" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/issues/4763</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cjbomyhtg000cz81b4xwgxsvr" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/08/08/OGNL机制和Struts2漏洞利用原理研究/" data-id="cjbonglcg00082o1bgqjlgx4u" class="article-share-link">Share</a>
       
       
     </footer>
@@ -730,15 +746,15 @@
           </li>
         
           <li>
+            <a href="/2017/11/18/洛克希德·马丁定义的“杀伤链模型/">洛克希德·马丁定义的“杀伤链模型</a>
+          </li>
+        
+          <li>
             <a href="/2017/11/03/蜜罐与内网安全/">蜜罐与内网安全</a>
           </li>
         
           <li>
             <a href="/2017/10/27/HTTP-fuzzing-List/">HTTP fuzzing List</a>
-          </li>
-        
-          <li>
-            <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/">Java反序列化漏洞利用的学习与实践</a>
           </li>
         
       </ul>
