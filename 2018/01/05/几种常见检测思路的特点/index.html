@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>wonderful | SY0U&#39;s Blog</title>
+  <title>几种常见检测思路的特点 | SY0U&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一半技术 一半生活">
-<meta property="og:type" content="website">
-<meta property="og:title" content="wonderful">
-<meta property="og:url" content="http://wsygoogol.github.io/wonderful/index.html">
+  <meta name="description" content="特征检测应用广泛（防病毒、网络设备、……）技术原理简明易懂，实现不太难。需要有样本持续积累（各种漏洞库、恶意代码库）作为检测的依据。样本分析、积累成本和制造样本成本不对称时，攻击方可以制造大量样本 DoS 防守方的样本分析、检测资源，造成特征检测不可用。 基于信誉目前逐渐开始广泛应用（防病毒、网络设备、……），技术原理也比较简明易懂，实现也不太难。需要有检测的基础能力，并积累时间、IP、域名、UR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="几种常见检测思路的特点">
+<meta property="og:url" content="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
-<meta property="og:description" content="一半技术 一半生活">
-<meta property="og:updated_time" content="2017-06-23T07:59:44.819Z">
+<meta property="og:description" content="特征检测应用广泛（防病毒、网络设备、……）技术原理简明易懂，实现不太难。需要有样本持续积累（各种漏洞库、恶意代码库）作为检测的依据。样本分析、积累成本和制造样本成本不对称时，攻击方可以制造大量样本 DoS 防守方的样本分析、检测资源，造成特征检测不可用。 基于信誉目前逐渐开始广泛应用（防病毒、网络设备、……），技术原理也比较简明易懂，实现也不太难。需要有检测的基础能力，并积累时间、IP、域名、UR">
+<meta property="og:updated_time" content="2018-01-05T10:56:38.329Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="wonderful">
-<meta name="twitter:description" content="一半技术 一半生活">
+<meta name="twitter:title" content="几种常见检测思路的特点">
+<meta name="twitter:description" content="特征检测应用广泛（防病毒、网络设备、……）技术原理简明易懂，实现不太难。需要有样本持续积累（各种漏洞库、恶意代码库）作为检测的依据。样本分析、积累成本和制造样本成本不对称时，攻击方可以制造大量样本 DoS 防守方的样本分析、检测资源，造成特征检测不可用。 基于信誉目前逐渐开始广泛应用（防病毒、网络设备、……），技术原理也比较简明易懂，实现也不太难。需要有检测的基础能力，并积累时间、IP、域名、UR">
   
     <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
   
@@ -63,10 +63,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-几种常见检测思路的特点" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/wonderful/index.html" class="article-date">
-  <time datetime="2017-06-23T07:59:44.000Z" itemprop="datePublished">2017-06-23</time>
+    <a href="/2018/01/05/几种常见检测思路的特点/" class="article-date">
+  <time datetime="2018-01-05T10:54:54.000Z" itemprop="datePublished">2018-01-05</time>
 </a>
     
   </div>
@@ -77,7 +77,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      wonderful
+      几种常见检测思路的特点
     </h1>
   
 
@@ -85,17 +85,39 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h4 id="特征检测"><a href="#特征检测" class="headerlink" title="特征检测"></a>特征检测</h4><p>应用广泛（防病毒、网络设备、……）技术原理简明易懂，实现不太难。需要有样本持续积累（各种漏洞库、恶意代码库）作为检测的依据。样本分析、积累成本和制造样本成本不对称时，攻击方可以制造大量样本 DoS 防守方的样本分析、检测资源，造成特征检测不可用。</p>
+<h4 id="基于信誉"><a href="#基于信誉" class="headerlink" title="基于信誉"></a>基于信誉</h4><p>目前逐渐开始广泛应用（防病毒、网络设备、……），技术原理也比较简明易懂，实现也不太难。需要有检测的基础能力，并积累时间、IP、域名、URL、文件等其他纬度的数据（信誉库）。首先，信誉很高的对象一次恶意的行为可能无法通过信誉判断（例如，一个良好信誉的人一次性恶意透支所有信用卡限额），其次信誉库需要积累，而且存在覆盖度不够的情况，再次，攻击方同样可以<br> DoS 检测能力。</p>
+<h4 id="基于行为"><a href="#基于行为" class="headerlink" title="基于行为"></a>基于行为</h4><p>对正常的行为模式进行建模，不符合模型的被判断为可疑，进一步判断后用于完善正常行为模型。应用范围有限，技术复杂度高，实现比较困难。找到普适的建模方法比较困难。工程上可能一开始就不具备建模的纯正常行为的环境，如何得到正常行为的模型也比较困难。模型判断为可疑，如何进一步判断实际上往往还需要前面几种检测方法参与，最终也很难实现自动化。</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/wonderful/index.html" data-id="cjc1wxjnf000hjo1bo7dsgdzj" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/" data-id="cjc1wxjmr000ejo1bg02bidz2" class="article-share-link">Share</a>
       
       
     </footer>
   </div>
   
     
+<nav id="article-nav">
+  
+    <a href="/2018/01/05/浏览器工作原理/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          浏览器工作原理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/01/02/机器学习之安全数据集/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">机器学习之安全数据集</div>
+    </a>
+  
+</nav>
+
   
 </article>
 
