@@ -5,18 +5,18 @@
   
   <title>蜜罐与内网安全 | SY0U&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x01 蜜罐定义、分类及功能研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络正在被攻击并且能够">
+  <meta name="description" content="蜜罐相关文章笔记 0x01 蜜罐定义、分类及功能研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络">
 <meta property="og:type" content="article">
 <meta property="og:title" content="蜜罐与内网安全">
 <meta property="og:url" content="http://wsygoogol.github.io/2017/11/03/蜜罐与内网安全/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
-<meta property="og:description" content="0x01 蜜罐定义、分类及功能研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络正在被攻击并且能够">
+<meta property="og:description" content="蜜罐相关文章笔记 0x01 蜜罐定义、分类及功能研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络">
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/Miwang-1.png">
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/Miwang-2.png">
-<meta property="og:updated_time" content="2017-12-11T06:14:51.933Z">
+<meta property="og:updated_time" content="2018-01-09T08:32:19.396Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="蜜罐与内网安全">
-<meta name="twitter:description" content="0x01 蜜罐定义、分类及功能研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络正在被攻击并且能够">
+<meta name="twitter:description" content="蜜罐相关文章笔记 0x01 蜜罐定义、分类及功能研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络">
 <meta name="twitter:image" content="http://wsygoogol.github.io/upload_image/Miwang-1.png">
   
     <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
@@ -88,7 +88,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="0x01-蜜罐定义、分类及功能"><a href="#0x01-蜜罐定义、分类及功能" class="headerlink" title="0x01 蜜罐定义、分类及功能"></a>0x01 蜜罐定义、分类及功能</h3><p>研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。<br>内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络正在被攻击并且能够定位攻击源进而采取措施，而不至于当重要信息资产被侵害后还不自知。<br>蜜罐简单说来，是一种存在漏洞的、 暴露在网络中的一个虚假的服务（器），其价值在于被扫描、 攻击和攻陷。</p>
+        <p><a href="https://sosly.me/" target="_blank" rel="external">蜜罐相关文章笔记</a></p>
+<h3 id="0x01-蜜罐定义、分类及功能"><a href="#0x01-蜜罐定义、分类及功能" class="headerlink" title="0x01 蜜罐定义、分类及功能"></a>0x01 蜜罐定义、分类及功能</h3><p>研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。<br>内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络正在被攻击并且能够定位攻击源进而采取措施，而不至于当重要信息资产被侵害后还不自知。<br>蜜罐简单说来，是一种存在漏洞的、 暴露在网络中的一个虚假的服务（器），其价值在于被扫描、 攻击和攻陷。</p>
 <p>if 系统没有对外开放任何真实的服务<br>then 任何一个对它的连接尝试都是可疑的</p>
 <p>相比传统的防火墙技术和入侵检测技术，蜜罐技术更加主动和隐蔽，蜜罐的主要优势在于能诱导和记录网络攻击行为，阻止或延缓其对真正目标的攻击，而且能记录攻击日志，便于审计和回溯。<br>如果将蜜罐部署到外网，每天都能收到记录大量的攻击日志，很多只是批量的扫描，并不是针对性的攻击，这些行为说明不了什么问题。但是在内网不一样，因为默认情况下我们认为内网正常用户不会去扫描或者攻击，那么一旦内网的蜜罐捕获到可疑连接尝试，那就可以认为出现了攻击行为。<br>因此，我觉得将蜜罐技术应用到内网的攻击感知，天生就不用太考虑误报的问题，问题更聚焦。<br>通常将蜜罐(honeypot)定义为一种安全资源，它不需要提供实际的应用，蜜罐的存在价值就是诱导和记录攻击行为，从而了解攻击者的入侵方法和手段，并能够延缓其攻击进程，进而根据捕获的攻击行为数据，分析攻击者使用的攻击方法和工具，从而让防御方针对性地增强系统的安全防护能力。<br>蜜罐通常具备数据捕获、数据分析和数据控制方面的功能。数据捕获主要收集主机数据或者网络数据，主机上可以捕获攻击者的TCP连接情况、执行的命令、各种日志信息等，网络数据包括防护系统日志、网络流量数据等。但蜜罐的价值通常需要对捕获的数据进行分析后才能体现，主要包括网络协议类型分析、攻击行为分析和攻击数据包内容分析等。数据控制主要是指通过对蜜罐的对外数据发送和网络进行限制，使得当蜜罐系统被攻击者攻破时，也不会造成更多的危害。数据控制主要用来保障蜜罐本身的安全。<br>按交互程度分类：（1）低交互蜜罐（2）高交互蜜罐<br>按具体实现分类：（1）物理蜜罐（2）虚拟蜜罐<br>蜜罐技术(honeypot)就是为了改变这种被动的防护状况而出现的一种更加主动的防护技术。<br>蜜罐技术也从蜜罐发展到蜜网(honeynet)、再到分布式蜜网(distributed honeynet)和蜜场(honeyfarm)。蜜罐技术也不断应用到恶意样本捕获、入侵检测、攻击手法分析、网络取证、僵尸网络调查等安全方向。</p>
 <h3 id="0x02常见的内网攻击类型及检测"><a href="#0x02常见的内网攻击类型及检测" class="headerlink" title="0x02常见的内网攻击类型及检测"></a>0x02常见的内网攻击类型及检测</h3><p>端口扫描是一种攻击初期的信息收集技术，主要用来判断目标主机是否开放相应的端口和服务，通过向目标主机发送端口连接请求，然后根据目标主机的回应信息判断目标对应端口是否开放。<br>在内网重要信息系统分布区的相邻网址部署多个被动式蜜罐可以提高内网攻击的检测覆盖率。在内网中部署两台以上的被动式蜜罐，还可以避免单点故障，以及检测蜜罐被控的情况。</p>
@@ -100,7 +101,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/11/03/蜜罐与内网安全/" data-id="cjc5u9l4t000stg1b1kk836zo" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/11/03/蜜罐与内网安全/" data-id="cjc7e5gbh000srw1b0lo3ax4c" class="article-share-link">Share</a>
       
       
     </footer>
@@ -145,7 +146,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
   </div>
 
