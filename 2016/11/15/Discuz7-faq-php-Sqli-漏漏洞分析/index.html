@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="SY0U&#39;s Blog">
 <meta property="og:description" content="0x00 漏洞概述Discuz7 SQL注射的漏洞利用PHP一个特性绕过gpc防护，可直接将SQL注入到原有查询中。 0x01 漏洞根源问题出现在/faq.php文件里，部分代码如下： 1234567891011121314151617181920212223242526272829elseif($action == &apos;grouppermission&apos;) &amp;#123;/*省略部分代码*/    i">
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/Discuz7-1.png">
-<meta property="og:updated_time" content="2017-11-15T08:05:55.620Z">
+<meta property="og:updated_time" content="2018-01-09T09:32:08.796Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Discuz7 faq.php Sqli 漏漏洞分析">
 <meta name="twitter:description" content="0x00 漏洞概述Discuz7 SQL注射的漏洞利用PHP一个特性绕过gpc防护，可直接将SQL注入到原有查询中。 0x01 漏洞根源问题出现在/faq.php文件里，部分代码如下： 1234567891011121314151617181920212223242526272829elseif($action == &apos;grouppermission&apos;) &amp;#123;/*省略部分代码*/    i">
@@ -94,9 +94,9 @@
 <p>虽然在discuz在前面处理提交的时候，对单引号内容进行了转义，但是利用PHP字符串特性，可以达到绕过转义的效果。</p>
 <h3 id="0x02-漏洞利用"><a href="#0x02-漏洞利用" class="headerlink" title="0x02 漏洞利用"></a>0x02 漏洞利用</h3><p>PHP对于字符串，也会将它作为数组来处理。例如：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$s = <span class="string">'1234567890'</span>;</div><div class="line"><span class="keyword">print</span> $s[<span class="number">0</span>];</div></pre></td></tr></table></figure>
-<p>上面这段代码则会输出字符1。正是这个特性，导致这个问题的可利用。通过代码，我们可以看出$gids会被当做数组来处理，并且每个数组中的内容只读取第一个元素的内容。然后在后面的SQL语句中，通过“’,’”来分隔每个数组中的内容。例如，我$gids中赋予的内容是$gids[0]=’tang’,$gids[1]=’3’,那么最终SQL的拼接结果是：</p>
+<p>上面这段代码则会输出字符1。正是这个特性，导致这个问题的可利用。通过代码，我们可以看出$gids会被当做数组来处理，并且每个数组中的内容只读取第一个元素的内容。然后在后面的SQL语句中，通过“’,’”来分隔每个数组中的内容。例如，我$gids中赋予的内容是$gids[0]=’wsyo’,$gids[1]=’3’,那么最终SQL的拼接结果是：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> &#123;$tablepre&#125;usergroups u <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> &#123;$tablepre&#125;admingroups a <span class="keyword">ON</span> u.groupid=a.admingid <span class="keyword">WHERE</span> u.groupid <span class="keyword">IN</span> (<span class="string">'t'</span>,<span class="string">'3'</span>)</div></pre></td></tr></table></figure>
-<p>那么如果$gids[0]=’\’’这样一个转以后的单引号来代替刚才的’tang’会发生什么？</p>
+<p>那么如果$gids[0]=’\’’这样一个转以后的单引号来代替刚才的’wsyo’会发生什么？</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> &#123;$tablepre&#125;usergroups u <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> &#123;$tablepre&#125;admingroups a <span class="keyword">ON</span> u.groupid=a.admingid <span class="keyword">WHERE</span> u.groupid <span class="keyword">IN</span> (<span class="string">'\','</span><span class="number">3</span><span class="string">')</span></div></pre></td></tr></table></figure>
 <p>原有的单引号被破坏掉了，我们只需要$gids[1][0]来添加要注入的SQL语句就可以实现SQL注入攻击了。</p>
 <h3 id="0x03-漏洞重现"><a href="#0x03-漏洞重现" class="headerlink" title="0x03 漏洞重现"></a>0x03 漏洞重现</h3><p>向/faq.php?faq.php?action=grouppermission发送请求，使用GET或POST提交参数</p>
@@ -119,7 +119,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjc7e5gb2000arw1ba8efukkn" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjc7ig4e1000acg1b4lxzu36t" class="article-share-link">Share</a>
       
       
     </footer>

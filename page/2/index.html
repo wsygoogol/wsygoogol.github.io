@@ -96,7 +96,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjc7e5gbf000qrw1bmc6r8xdd" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjc7ig4eh000pcg1brw3mqok2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -164,7 +164,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjc7e5gbi000vrw1bni3z6gru" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjc7ig4ey000ucg1bcvxfn7kj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -217,7 +217,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/05/10/Java反序列化漏洞/" data-id="cjc7e5gb3000brw1b1jyov6ob" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/05/10/Java反序列化漏洞/" data-id="cjc7ig4e3000ccg1bolhfwmlr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -254,7 +254,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/02/27/各行业常见漏洞测试点总结/" data-id="cjc7e5gbc000krw1b3big5i7u" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/02/27/各行业常见漏洞测试点总结/" data-id="cjc7ig4eb000jcg1b5h0nx435" class="article-share-link">Share</a>
       
       
     </footer>
@@ -314,7 +314,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/01/27/任意文件读取漏洞的利用/" data-id="cjc7e5gbc000lrw1b6jxhsbix" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/01/27/任意文件读取漏洞的利用/" data-id="cjc7ig4ea000icg1bz0k68syp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -390,7 +390,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/12/23/HTTP-协议/" data-id="cjc7e5gax0008rw1bq8o2jcnd" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/12/23/HTTP-协议/" data-id="cjc7ig4e00009cg1bxcw1g00e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -430,7 +430,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/12/04/端口大集合/" data-id="cjc7e5gbf000prw1b3zzcz81j" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/12/04/端口大集合/" data-id="cjc7ig4ei000rcg1bm7bhqb1q" class="article-share-link">Share</a>
       
       
     </footer>
@@ -469,9 +469,9 @@
 <p>虽然在discuz在前面处理提交的时候，对单引号内容进行了转义，但是利用PHP字符串特性，可以达到绕过转义的效果。</p>
 <h3 id="0x02-漏洞利用"><a href="#0x02-漏洞利用" class="headerlink" title="0x02 漏洞利用"></a>0x02 漏洞利用</h3><p>PHP对于字符串，也会将它作为数组来处理。例如：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$s = <span class="string">'1234567890'</span>;</div><div class="line"><span class="keyword">print</span> $s[<span class="number">0</span>];</div></pre></td></tr></table></figure>
-<p>上面这段代码则会输出字符1。正是这个特性，导致这个问题的可利用。通过代码，我们可以看出$gids会被当做数组来处理，并且每个数组中的内容只读取第一个元素的内容。然后在后面的SQL语句中，通过“’,’”来分隔每个数组中的内容。例如，我$gids中赋予的内容是$gids[0]=’tang’,$gids[1]=’3’,那么最终SQL的拼接结果是：</p>
+<p>上面这段代码则会输出字符1。正是这个特性，导致这个问题的可利用。通过代码，我们可以看出$gids会被当做数组来处理，并且每个数组中的内容只读取第一个元素的内容。然后在后面的SQL语句中，通过“’,’”来分隔每个数组中的内容。例如，我$gids中赋予的内容是$gids[0]=’wsyo’,$gids[1]=’3’,那么最终SQL的拼接结果是：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> &#123;$tablepre&#125;usergroups u <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> &#123;$tablepre&#125;admingroups a <span class="keyword">ON</span> u.groupid=a.admingid <span class="keyword">WHERE</span> u.groupid <span class="keyword">IN</span> (<span class="string">'t'</span>,<span class="string">'3'</span>)</div></pre></td></tr></table></figure>
-<p>那么如果$gids[0]=’\’’这样一个转以后的单引号来代替刚才的’tang’会发生什么？</p>
+<p>那么如果$gids[0]=’\’’这样一个转以后的单引号来代替刚才的’wsyo’会发生什么？</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> &#123;$tablepre&#125;usergroups u <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> &#123;$tablepre&#125;admingroups a <span class="keyword">ON</span> u.groupid=a.admingid <span class="keyword">WHERE</span> u.groupid <span class="keyword">IN</span> (<span class="string">'\','</span><span class="number">3</span><span class="string">')</span></div></pre></td></tr></table></figure>
 <p>原有的单引号被破坏掉了，我们只需要$gids[1][0]来添加要注入的SQL语句就可以实现SQL注入攻击了。</p>
 <h3 id="0x03-漏洞重现"><a href="#0x03-漏洞重现" class="headerlink" title="0x03 漏洞重现"></a>0x03 漏洞重现</h3><p>向/faq.php?faq.php?action=grouppermission发送请求，使用GET或POST提交参数</p>
@@ -494,7 +494,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjc7e5gb2000arw1ba8efukkn" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjc7ig4e1000acg1b4lxzu36t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -534,10 +534,8 @@
 <p>本篇文章将针对MVEL解析表达式的过程进行简单的分析，来帮助我们在未来的研究中探索这种表达式的特性。</p>
 <h3 id="0x01-MVEL表达式执行方法"><a href="#0x01-MVEL表达式执行方法" class="headerlink" title="0x01 MVEL表达式执行方法"></a>0x01 MVEL表达式执行方法</h3><p>MVEL运行时提供给使用者两种使用模式——解释模式和编译模式。解释模式是一种无状态的即时编译并执行的特设模式，不会产生中间产物，但是表达式执行的速度会减慢。编译模式会产生大量的编译中间产物，用于缓存和预执行，但是执行速度比解释模式更快。</p>
 <p>以上是官方文档中向使用者描述的两种使用方法，下面我们来看下，官方对于这两种模式的实现示例。</p>
-<p>####解释模式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.mvel.MVEL;</div><div class="line"></div><div class="line">   <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MVELTest</span> </span>&#123;</div><div class="line">         <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">               String expression = <span class="string">"foobar &gt; 99"</span>;</div><div class="line"></div><div class="line">               Map vars = <span class="keyword">new</span> HashMap();</div><div class="line">               vars.put(<span class="string">"foobar"</span>, <span class="keyword">new</span> Integer(<span class="number">100</span>));</div><div class="line"></div><div class="line">               <span class="comment">// We know this expression should return a boolean.</span></div><div class="line">               Boolean result = (Boolean) MVEL.eval(expression, vars);</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (result.booleanValue()) &#123;</div><div class="line">                   System.out.println(<span class="string">"It works!"</span>);</div><div class="line">              &#125;</div><div class="line">         &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>####编译模式</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.mvel.MVEL;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MVELTest2</span> </span>&#123;</div><div class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">            String expression = <span class="string">"foobar &gt; 99"</span>;</div><div class="line"></div><div class="line">            <span class="comment">// Compile the expression.</span></div><div class="line">            Serializable compiled = MVEL.compileExpression(expression);</div><div class="line"></div><div class="line">            Map vars = <span class="keyword">new</span> HashMap();</div><div class="line">            vars.put(<span class="string">"foobar"</span>, <span class="keyword">new</span> Integer(<span class="number">100</span>));</div><div class="line"></div><div class="line">            <span class="comment">// Now we execute it.</span></div><div class="line">            Boolean result = (Boolean) MVEL.executeExpression(compiled, vars);</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (result.booleanValue()) &#123;</div><div class="line">                System.out.println(<span class="string">"It works!"</span>);</div><div class="line">           &#125;</div><div class="line">      &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="解释模式"><a href="#解释模式" class="headerlink" title="解释模式"></a>解释模式</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.mvel.MVEL;</div><div class="line"></div><div class="line">   <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MVELTest</span> </span>&#123;</div><div class="line">         <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">               String expression = <span class="string">"foobar &gt; 99"</span>;</div><div class="line"></div><div class="line">               Map vars = <span class="keyword">new</span> HashMap();</div><div class="line">               vars.put(<span class="string">"foobar"</span>, <span class="keyword">new</span> Integer(<span class="number">100</span>));</div><div class="line"></div><div class="line">               <span class="comment">// We know this expression should return a boolean.</span></div><div class="line">               Boolean result = (Boolean) MVEL.eval(expression, vars);</div><div class="line"></div><div class="line">               <span class="keyword">if</span> (result.booleanValue()) &#123;</div><div class="line">                   System.out.println(<span class="string">"It works!"</span>);</div><div class="line">              &#125;</div><div class="line">         &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h4 id="编译模式"><a href="#编译模式" class="headerlink" title="编译模式"></a>编译模式</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.mvel.MVEL;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MVELTest2</span> </span>&#123;</div><div class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">            String expression = <span class="string">"foobar &gt; 99"</span>;</div><div class="line"></div><div class="line">            <span class="comment">// Compile the expression.</span></div><div class="line">            Serializable compiled = MVEL.compileExpression(expression);</div><div class="line"></div><div class="line">            Map vars = <span class="keyword">new</span> HashMap();</div><div class="line">            vars.put(<span class="string">"foobar"</span>, <span class="keyword">new</span> Integer(<span class="number">100</span>));</div><div class="line"></div><div class="line">            <span class="comment">// Now we execute it.</span></div><div class="line">            Boolean result = (Boolean) MVEL.executeExpression(compiled, vars);</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (result.booleanValue()) &#123;</div><div class="line">                System.out.println(<span class="string">"It works!"</span>);</div><div class="line">           &#125;</div><div class="line">      &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>除了上面的两种调用方法，我在看ElasticSearch代码时，发现它使用了另外的一种方法，来实现MVEL的执行。这种方法属于编译模式，我的测试代码如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.util.HashMap;</div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.mvel2.MVEL;</div><div class="line"><span class="keyword">import</span> org.mvel2.compiler.ExecutableStatement;</div><div class="line"><span class="keyword">import</span> org.mvel2.integration.impl.MapVariableResolverFactory;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MvelDemo</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        String expression = <span class="string">"foobar &gt; 99"</span>;</div><div class="line">        String str = <span class="string">"a=123"</span>;</div><div class="line">        String exp = <span class="string">";new java.lang.ProcessBuilder(\"calc\").start();"</span>;</div><div class="line">        MapVariableResolverFactory resolver = <span class="keyword">new</span> MapVariableResolverFactory(<span class="keyword">new</span> HashMap());</div><div class="line">        Map vars = <span class="keyword">new</span> HashMap();</div><div class="line">        vars.put(<span class="string">"foobar"</span>, <span class="keyword">new</span> Integer(<span class="number">100</span>));</div><div class="line">        ExecutableStatement script = (ExecutableStatement) MVEL.compileExpression(str+exp);</div><div class="line"></div><div class="line">        script.getValue(<span class="keyword">null</span>,resolver)；</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>即通过编译后的内容可以转换成ExecutableStatement类型，通过这种类型的getValue方法，也是可以执行表达式内容的。</p>
@@ -584,7 +582,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjc7e5gb5000drw1b8sp3sj9i" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjc7ig4e4000dcg1bdgozmfma" class="article-share-link">Share</a>
       
       
     </footer>
@@ -628,7 +626,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cjc7e5gb8000hrw1b0xxg9qz7" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cjc7ig4ed000lcg1bhpjx2b1m" class="article-share-link">Share</a>
       
       
     </footer>
