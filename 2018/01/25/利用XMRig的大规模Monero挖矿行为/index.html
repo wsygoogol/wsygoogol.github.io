@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://wsygoogol.github.io/2018/01/25/利用XMRig的大规模Monero挖矿行为/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
 <meta property="og:description" content="昨天，Palo Alto发了一篇关于通过开源程序XMRig进行挖矿的行为报告，最近我们也在处理相关的事件，本文会结合我们处理的一些问题对Palo Alto的报告进行一个简单的翻译，文末有一大波IOC信息。 January 24, 2018，Palo Alto发了一篇关于通过开源程序XMRig进行挖矿的行为报告，最近我们也在处理相关的事件，本文会结合我们处理的一些问题对Palo Alto的报告进行一">
-<meta property="og:image" content="https://github.com/wsygoogol/MarkdownPhotoes/blob/master/original_filename.png">
+<meta property="og:image" content="http://wsygoogol.github.io/upload_image/original_filename.png">
 <meta property="og:image" content="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/figure1-3.png">
 <meta property="og:image" content="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/figure2-2.png">
 <meta property="og:image" content="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/figure3-2.png">
@@ -23,11 +23,11 @@
 <meta property="og:image" content="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/Monero_9.png">
 <meta property="og:image" content="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/Monero_10.png">
 <meta property="og:image" content="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/Monero_11.png">
-<meta property="og:updated_time" content="2018-02-03T09:58:31.478Z">
+<meta property="og:updated_time" content="2018-02-05T05:29:31.629Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="利用XMRig的大规模Monero挖矿行为">
 <meta name="twitter:description" content="昨天，Palo Alto发了一篇关于通过开源程序XMRig进行挖矿的行为报告，最近我们也在处理相关的事件，本文会结合我们处理的一些问题对Palo Alto的报告进行一个简单的翻译，文末有一大波IOC信息。 January 24, 2018，Palo Alto发了一篇关于通过开源程序XMRig进行挖矿的行为报告，最近我们也在处理相关的事件，本文会结合我们处理的一些问题对Palo Alto的报告进行一">
-<meta name="twitter:image" content="https://github.com/wsygoogol/MarkdownPhotoes/blob/master/original_filename.png">
+<meta name="twitter:image" content="http://wsygoogol.github.io/upload_image/original_filename.png">
   
     <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
   
@@ -105,7 +105,7 @@
 <h4 id="0x01-传播"><a href="#0x01-传播" class="headerlink" title="0x01 传播"></a>0x01 传播</h4><p>目前为止，在这个Monero加密货币挖掘活动中观察到超过250个独特的Microsoft Windows PE文件。</p>
 <p>其中一半以上的样本是从<a href="https://en.4sync.com/" target="_blank" rel="external">4sync</a>在线云存储提供商处下载的。不幸的是，还不知道是什么启动了恶意软件样本的这些下载。</p>
 <p>但是，当我们查看原始文件名时，可以得到一些线索。下面是观察到的原始文件名前缀的百分比：</p>
-<p><img src="https://github.com/wsygoogol/MarkdownPhotoes/blob/master/original_filename.png" alt="original_filename"></p>
+<p><img src="/upload_image/original_filename.png" alt=""></p>
 <p>正如我们所看到的，攻击者希望使这些文件看起来既具有通用名称，也似乎来源于流行的文件共享服务。文件名还以其他方式提供线索，就像“[File4org]”这个前缀对于此特定恶意软件活动是唯一的。</p>
 <p><a href="https://adf.ly/" target="_blank" rel="external">Adf.ly</a>是一个网址缩短服务。根据下面报告，很多Adfly URLs是恶意链接，用户点击短链接，下载cryptocurrency恶意软件到他们的电脑上。</p>
 <p><img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/figure1-3.png" alt="figure1"></p>
@@ -113,7 +113,7 @@
 <p><img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/figure2-2.png" alt="img"></p>
 <p><em>Figure 2 YouTube user explaining how they downloaded and ran the cryptocurrency malware</em></p>
 <p><img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/figure3-2.png" alt="img"></p>
-<p><em>Figure 3 User explaining that they downloaded the cryptocurrency malware when attempting to download a counter-strike: Go cheat using an Adfly URL. Translated from gutefrage.com, a German question/answer website.</em> </p>
+<p><em>Figure 3 User explaining that they downloaded the cryptocurrency malware when attempting to download a counter-strike: Go cheat using an Adfly URL. Translated from gutefrage.com, a German question/answer website.</em></p>
 <p>值得注意的是，图2中，受害者点击Adfly广告链接，认为是视频中提到的文件的下载。然而，下载了有问题的文件，重定向到Monero挖掘恶意软件。</p>
 <h4 id="0x02-恶意软件分析"><a href="#0x02-恶意软件分析" class="headerlink" title="0x02 恶意软件分析"></a>0x02 恶意软件分析</h4><p>这个Monero挖矿恶意软件有很多特征：</p>
 <ul>
@@ -206,7 +206,7 @@
 <h4 id="0x04-结论"><a href="#0x04-结论" class="headerlink" title="0x04 结论"></a>0x04 结论</h4><p>通过恶意广告针对随机用户，对恶意软件文件使用看似无害的名称，同时使用内置的Windows实用程序和脚本文件，攻击者可以大规模感染受害者系统。</p>
 <p>正如我们所看到的，随着时间的推移，攻击者对其恶意软件工具集进行了迭代更新，每个月都在改变他们的策略。根据SFX和.NET droppers提供的线索，有一些边缘证据表明，袭击者可能位于东欧。迄今为止，已经有至少1500万受害者。这些受害者遍布全球，但最重的目标地区包括东南亚，北非和南美洲。</p>
 <p>Palo Alto Networks的客户可以通过以下几种方式防范这种威胁：</p>
-<p>恶意软件使用的所有URL都被标记为恶意软件 </p>
+<p>恶意软件使用的所有URL都被标记为恶意软件</p>
 <p>所有观察到的样本在WildFire中被分类为恶意<br>陷阱可以通过WildFire集成来阻止这种威胁</p>
 <h4 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h4><p><strong>XMRig Proxy Connections</strong></p>
 <p>5.101.122[.]228:8080</p>
@@ -521,7 +521,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/25/利用XMRig的大规模Monero挖矿行为/" data-id="cjd9rwh6u0014n81bt2rj7bmd" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/25/利用XMRig的大规模Monero挖矿行为/" data-id="cjd9s1fet0012481bygvxypkp" class="article-share-link">Share</a>
       
       
     </footer>
