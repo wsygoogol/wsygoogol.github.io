@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -63,6 +63,66 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-任意文件读取漏洞的利用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/01/27/任意文件读取漏洞的利用/" class="article-date">
+  <time datetime="2017-01-27T05:36:48.000Z" itemprop="datePublished">2017-01-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/01/27/任意文件读取漏洞的利用/">任意文件读取漏洞的利用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="任意文件读取的利用思路"><a href="#任意文件读取的利用思路" class="headerlink" title="任意文件读取的利用思路"></a>任意文件读取的利用思路</h1><p>有些文件需要高权限才能读取</p>
+<ol>
+<li><code>/etc/passwd</code> # 用户情况</li>
+<li><code>/etc/shadow</code> # 直接 John the Ripper</li>
+<li><code>/etc/hosts</code> # 主机信息</li>
+<li><code>/root/.bashrc</code> # 环境变量</li>
+<li><code>/root/.bash_history</code> # 还有root外的其他用户</li>
+<li><code>/root/.viminfo</code> # vim 信息</li>
+<li><code>/root/.ssh/id_rsa</code> # 拿私钥直接ssh</li>
+<li><code>/proc/xxxx/cmdline</code> # 进程状态枚举 xxxx 可以为0000-9999 使用burpsuite</li>
+<li>数据库 config 文件</li>
+<li>web 日志 <code>access.log, error.log</code></li>
+<li>ssh 日志</li>
+<li><code>/var/lib/php/sess_PHPSESSID</code> # 非常规问题 session 文件( 参考 平安科技的一道session包含 <a href="http://www.jianshu.com/p/2c24ea34566b" target="_blank" rel="external">http://www.jianshu.com/p/2c24ea34566b</a>)</li>
+</ol>
+<h1 id="进一步推断系统版本"><a href="#进一步推断系统版本" class="headerlink" title="进一步推断系统版本"></a>进一步推断系统版本</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">uname -a</div><div class="line">lsb_release -d</div><div class="line">cat /etc/issue</div><div class="line">cat /proc/version</div><div class="line">cat /etc/redhat-release </div><div class="line">cat /etc/debian_version</div><div class="line">cat /etc/slackware_version</div><div class="line">ls /etc/*version</div><div class="line">cat /proc/cpuinfo</div></pre></td></tr></table></figure>
+<h1 id="无痕反弹shell"><a href="#无痕反弹shell" class="headerlink" title="无痕反弹shell"></a>无痕反弹shell</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kill -9 $$</div></pre></td></tr></table></figure>
+<h1 id="常用默认路径整理"><a href="#常用默认路径整理" class="headerlink" title="常用默认路径整理"></a>常用默认路径整理</h1><p>可以开虚拟机看看默认路径是什么</p>
+<h2 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/root/.ssh/id_rsa</div><div class="line">/root/.ssh/id_rsa.pub</div><div class="line">/root/.ssh/authorized_keys</div><div class="line">/etc/ssh/sshd_config</div><div class="line">/var/log/secure</div></pre></td></tr></table></figure>
+<h2 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/etc/nginx/nginx.conf</div><div class="line">/var/www/html</div><div class="line">/usr/local/services/nginx-1.6.2/logs/access.log</div><div class="line">/usr/local/services/nginx-1.6.2/logs/error.log </div><div class="line">/usr/local/services/nginx-1.6.2/nginx.conf</div><div class="line">/usr/local/services/nginx-1.6.2/conf/nginx.conf</div><div class="line">/usr/local/services/nginx-1.6.2/conf/proxy.conf </div><div class="line">/usr/local/services/nginx-1.6.2/conf/extra/haolaiyao.conf</div></pre></td></tr></table></figure>
+<h2 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/home/httpd/</div><div class="line">/home/httpd/www/</div></pre></td></tr></table></figure>
+<h2 id="jetty"><a href="#jetty" class="headerlink" title="jetty"></a>jetty</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/usr/local/services/jetty-8.1.16/</div><div class="line">/usr/local/services/jetty-8.1.16/logs/stderrout.log</div><div class="line">/usr/local/services/jetty-8.1.16/etc/jetty.xml</div></pre></td></tr></table></figure>
+<h2 id="resin"><a href="#resin" class="headerlink" title="resin"></a>resin</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/usr/local/services/resin-4.0.44/</div><div class="line">/usr/local/services/resin-4.0.44/conf/resin.xml</div><div class="line">/usr/local/services/resin-4.0.44/conf/resin.properties</div></pre></td></tr></table></figure>
+<h2 id="tomcat"><a href="#tomcat" class="headerlink" title="tomcat"></a>tomcat</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/usr/local/services/apache-tomcat-8.0.23/logs</div><div class="line">/usr/local/services/apache-tomcat-8.0.23/logs/catalina.out</div></pre></td></tr></table></figure>
+<h2 id="svn"><a href="#svn" class="headerlink" title="svn"></a>svn</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/home/svnroot/</div></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2017/01/27/任意文件读取漏洞的利用/" data-id="cjei7mg6p000zx0vhzdxha7n9" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-Discuz7-faq-php-Sqli-漏漏洞分析" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -118,7 +178,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjdecrhww000su81bi699brou" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/Discuz7-faq-php-Sqli-漏漏洞分析/" data-id="cjei7mg6j000sx0vh8h4ztckf" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -206,7 +266,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjdecrhwy000vu81bpbdaufn9" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/11/15/MVEL解析表达式/" data-id="cjei7mg6o000yx0vhh6l6r37c" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -250,7 +310,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cjdecrhx1000xu81brcvvqye1" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/07/15/Spring-Boot框架SPEL表达式注入漏洞/" data-id="cjei7mg6l000vx0vhfns9d0vz" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -306,7 +366,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/18/sql注入之数据库识别/" data-id="cjdecrhwx000uu81btwrj1wxe" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/18/sql注入之数据库识别/" data-id="cjei7mg6p0010x0vht2cqqcu3" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -360,7 +420,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/18/Hexo-搭建Blog教程/" data-id="cjdecrhwr000pu81b3clhna8p" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/18/Hexo-搭建Blog教程/" data-id="cjei7mg6g000rx0vhrjtxifzl" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -405,7 +465,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/hello-world/" data-id="cjdecrhx2000yu81bzzgrw2lp" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/hello-world/" data-id="cjei7mg6m000wx0vhp9v8b29z" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -436,7 +496,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
   </div>
 
@@ -444,9 +504,13 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/03/06/利用Memcached的反射型DDOS攻击/">利用Memcached的反射型DDOS攻击</a>
+          </li>
         
           <li>
             <a href="/2018/01/28/metasploit备忘/">metasploit备忘</a>
@@ -464,10 +528,6 @@
             <a href="/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/">vBulletin routestring Unauthenticated Remote Code Execution Vulnerability</a>
           </li>
         
-          <li>
-            <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/">Java反序列化漏洞利用的学习与实践</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -482,7 +542,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2018 SY0U<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>

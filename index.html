@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -91,7 +91,61 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjdecrhwv000ru81btj36qbmr" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjei7mg6b000px0vhb0e5yl4w" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="w-利用Memcached的反射型DDOS攻击" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/06/利用Memcached的反射型DDOS攻击/" class="article-date">
+  <time datetime="2018-03-06T08:25:35.000Z" itemprop="datePublished">2018-03-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/06/利用Memcached的反射型DDOS攻击/">利用Memcached的反射型DDOS攻击</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="0x00-DRDOS攻击原理"><a href="#0x00-DRDOS攻击原理" class="headerlink" title="0x00 DRDOS攻击原理"></a>0x00 DRDOS攻击原理</h4><p>攻击者发送大量带有被害者IP地址的UDP数据包给Memcached服务，从而导致Memcached主机对伪造的IP地址源做出大量回应，形成分布式拒绝服务攻击。</p>
+<h6 id="要完成一次UDP反射放大攻击，需要满足以下几个基本条件："><a href="#要完成一次UDP反射放大攻击，需要满足以下几个基本条件：" class="headerlink" title="要完成一次UDP反射放大攻击，需要满足以下几个基本条件："></a>要完成一次UDP反射放大攻击，需要满足以下几个基本条件：</h6><p>作为攻击者，需要能伪造IP，并发送海量伪造来源的请求。<br>作为反射服务器，上面需要运行着容易放大反射攻击的服务，而运行了设计不当的UDP协议的服务是最佳的选择。<br>反射服务器的响应包最好远远大于请求包，这样才能使用较小的攻击流量进行高流量的DDOS攻击。<br>反射服务器对应的协议或服务在互联网上有一定的使用量，比如本次攻击中的Memcached。</p>
+<p>######　而Memcached提供的基于UDP协议的服务正好满足上诉的UDP反射放大攻击的各种条件：</p>
+<p>从协议看，Memcached支持UDP。<br>Memcached大部分是作为企业应用的组件，往往具有很高的上传带宽。<br>Memcached不需要认证就可以随意交互。<br>很多用户编译安装时，错误的监听了0.0.0.0，且未设置iptables或云安全组，这使得攻击者可以自由访问这些服务，从而进行UDP反射攻击。</p>
+<h4 id="0x01-Memcached环境搭建"><a href="#0x01-Memcached环境搭建" class="headerlink" title="0x01 Memcached环境搭建"></a>0x01 Memcached环境搭建</h4><p>系统centos7</p>
+<p>安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum -y install memcached</div></pre></td></tr></table></figure>
+<p>将memcached加入linux服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chkconfig --level 2345 memcached on</div></pre></td></tr></table></figure>
+<p>vi /etc/sysconfig/memcached来修改参数， 修改memcached的参数，主要涉及memcached启动绑定的端口、用户、最大连接、最大内存等.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">PORT=<span class="string">"11211"</span></div><div class="line">USER=<span class="string">"memcached"</span></div><div class="line">MAXCONN=<span class="string">"1024"</span></div><div class="line">CACHESIZE=<span class="string">"64"</span></div><div class="line">OPTIONS=<span class="string">""</span></div></pre></td></tr></table></figure>
+<p>启动、关闭、重启memcached服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl start/stop/restart memcached.service</div></pre></td></tr></table></figure>
+<p>修改完配置参数后，需要重启memcached服务来完成参数的生效。</p>
+<p>可使用memcached-tool来检测memcached的服务状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">memcached-tool 127.0.0.1:11211 stats</div></pre></td></tr></table></figure>
+<p>正常情况下显示如下：</p>
+<p><img src="/upload_image/memcached_status.png" alt=""></p>
+<h4 id="0x02-DRDOS攻击测试"><a href="#0x02-DRDOS攻击测试" class="headerlink" title="0x02 DRDOS攻击测试"></a>0x02 DRDOS攻击测试</h4>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/03/06/利用Memcached的反射型DDOS攻击/" data-id="cjei7mg6t0015x0vhw37xagxj" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -151,7 +205,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/28/metasploit备忘/" data-id="cjdecrhx3000zu81bjsz5ujbz" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/28/metasploit备忘/" data-id="cjei7mg6n000xx0vhfntfd82j" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -606,7 +660,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/25/利用XMRig的大规模Monero挖矿行为/" data-id="cjdecrhx60013u81b52tls5hx" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/25/利用XMRig的大规模Monero挖矿行为/" data-id="cjei7mg6s0013x0vh5ao2kyvk" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -645,7 +699,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/" data-id="cjdecrhx50012u81b8dm1cr3t" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/" data-id="cjei7mg6r0012x0vh9rrvmmy2" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -700,7 +754,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/" data-id="cjdecrhx40010u81bna02p5z7" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/" data-id="cjei7mg6q0011x0vhzzlxsf16" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -779,7 +833,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cjdecrhwx000tu81b279vj4hy" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cjei7mg6j000tx0vh5zd3bxcm" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -832,7 +886,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/09/10/Java反序列化漏洞/" data-id="cjdecrhwy000wu81bbb86dour" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/09/10/Java反序列化漏洞/" data-id="cjei7mg6k000ux0vhjixdncmx" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -874,7 +928,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjdecrhx70015u81b5bv5u92d" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjei7mg6u0016x0vhxnebprcb" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -954,67 +1008,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjdecrhx70014u81brnby971s" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-任意文件读取漏洞的利用" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/01/27/任意文件读取漏洞的利用/" class="article-date">
-  <time datetime="2017-01-27T05:36:48.000Z" itemprop="datePublished">2017-01-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/27/任意文件读取漏洞的利用/">任意文件读取漏洞的利用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="任意文件读取的利用思路"><a href="#任意文件读取的利用思路" class="headerlink" title="任意文件读取的利用思路"></a>任意文件读取的利用思路</h1><p>有些文件需要高权限才能读取</p>
-<ol>
-<li><code>/etc/passwd</code> # 用户情况</li>
-<li><code>/etc/shadow</code> # 直接 John the Ripper</li>
-<li><code>/etc/hosts</code> # 主机信息</li>
-<li><code>/root/.bashrc</code> # 环境变量</li>
-<li><code>/root/.bash_history</code> # 还有root外的其他用户</li>
-<li><code>/root/.viminfo</code> # vim 信息</li>
-<li><code>/root/.ssh/id_rsa</code> # 拿私钥直接ssh</li>
-<li><code>/proc/xxxx/cmdline</code> # 进程状态枚举 xxxx 可以为0000-9999 使用burpsuite</li>
-<li>数据库 config 文件</li>
-<li>web 日志 <code>access.log, error.log</code></li>
-<li>ssh 日志</li>
-<li><code>/var/lib/php/sess_PHPSESSID</code> # 非常规问题 session 文件( 参考 平安科技的一道session包含 <a href="http://www.jianshu.com/p/2c24ea34566b" target="_blank" rel="external">http://www.jianshu.com/p/2c24ea34566b</a>)</li>
-</ol>
-<h1 id="进一步推断系统版本"><a href="#进一步推断系统版本" class="headerlink" title="进一步推断系统版本"></a>进一步推断系统版本</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">uname -a</div><div class="line">lsb_release -d</div><div class="line">cat /etc/issue</div><div class="line">cat /proc/version</div><div class="line">cat /etc/redhat-release </div><div class="line">cat /etc/debian_version</div><div class="line">cat /etc/slackware_version</div><div class="line">ls /etc/*version</div><div class="line">cat /proc/cpuinfo</div></pre></td></tr></table></figure>
-<h1 id="无痕反弹shell"><a href="#无痕反弹shell" class="headerlink" title="无痕反弹shell"></a>无痕反弹shell</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">kill -9 $$</div></pre></td></tr></table></figure>
-<h1 id="常用默认路径整理"><a href="#常用默认路径整理" class="headerlink" title="常用默认路径整理"></a>常用默认路径整理</h1><p>可以开虚拟机看看默认路径是什么</p>
-<h2 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/root/.ssh/id_rsa</div><div class="line">/root/.ssh/id_rsa.pub</div><div class="line">/root/.ssh/authorized_keys</div><div class="line">/etc/ssh/sshd_config</div><div class="line">/var/log/secure</div></pre></td></tr></table></figure>
-<h2 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/etc/nginx/nginx.conf</div><div class="line">/var/www/html</div><div class="line">/usr/local/services/nginx-1.6.2/logs/access.log</div><div class="line">/usr/local/services/nginx-1.6.2/logs/error.log </div><div class="line">/usr/local/services/nginx-1.6.2/nginx.conf</div><div class="line">/usr/local/services/nginx-1.6.2/conf/nginx.conf</div><div class="line">/usr/local/services/nginx-1.6.2/conf/proxy.conf </div><div class="line">/usr/local/services/nginx-1.6.2/conf/extra/haolaiyao.conf</div></pre></td></tr></table></figure>
-<h2 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/home/httpd/</div><div class="line">/home/httpd/www/</div></pre></td></tr></table></figure>
-<h2 id="jetty"><a href="#jetty" class="headerlink" title="jetty"></a>jetty</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/usr/local/services/jetty-8.1.16/</div><div class="line">/usr/local/services/jetty-8.1.16/logs/stderrout.log</div><div class="line">/usr/local/services/jetty-8.1.16/etc/jetty.xml</div></pre></td></tr></table></figure>
-<h2 id="resin"><a href="#resin" class="headerlink" title="resin"></a>resin</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/usr/local/services/resin-4.0.44/</div><div class="line">/usr/local/services/resin-4.0.44/conf/resin.xml</div><div class="line">/usr/local/services/resin-4.0.44/conf/resin.properties</div></pre></td></tr></table></figure>
-<h2 id="tomcat"><a href="#tomcat" class="headerlink" title="tomcat"></a>tomcat</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/usr/local/services/apache-tomcat-8.0.23/logs</div><div class="line">/usr/local/services/apache-tomcat-8.0.23/logs/catalina.out</div></pre></td></tr></table></figure>
-<h2 id="svn"><a href="#svn" class="headerlink" title="svn"></a>svn</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/home/svnroot/</div></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/01/27/任意文件读取漏洞的利用/" data-id="cjdecrhx40011u81b0qiiruws" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjei7mg6t0014x0vhwqx1heug" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -1045,7 +1039,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
   </div>
 
@@ -1053,9 +1047,13 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/03/06/利用Memcached的反射型DDOS攻击/">利用Memcached的反射型DDOS攻击</a>
+          </li>
         
           <li>
             <a href="/2018/01/28/metasploit备忘/">metasploit备忘</a>
@@ -1073,10 +1071,6 @@
             <a href="/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/">vBulletin routestring Unauthenticated Remote Code Execution Vulnerability</a>
           </li>
         
-          <li>
-            <a href="/2017/09/12/Java反序列化漏洞利用的学习与实践/">Java反序列化漏洞利用的学习与实践</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1091,7 +1085,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2018 SY0U<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
