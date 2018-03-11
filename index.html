@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -91,7 +91,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjemu1rmk000pnovhzfea2sqv" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjemumxnp000ts0vh2gevsaw7" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -127,11 +127,25 @@
 <p>根据shodan的统计，国内受<a href="">影响的</a>Memcached服务器大约有27300+个：</p>
 <p><img src="/upload_image/Shodan_11211.png" alt=""></p>
 <p>全球受影响的Memcached服务器大约有119000+个：</p>
-<p><img src="/upload_image/Shodan_11211_all.png" alt=""></p>
-<h6 id="要完成一次UDP反射放大攻击，需要满足以下几个基本条件："><a href="#要完成一次UDP反射放大攻击，需要满足以下几个基本条件：" class="headerlink" title="要完成一次UDP反射放大攻击，需要满足以下几个基本条件："></a>要完成一次UDP反射放大攻击，需要满足以下几个基本条件：</h6><p>作为攻击者，需要能伪造IP，并发送海量伪造来源的请求。<br>作为反射服务器，上面需要运行着容易放大反射攻击的服务，而运行了设计不当的UDP协议的服务是最佳的选择。<br>反射服务器的响应包最好远远大于请求包，这样才能使用较小的攻击流量进行高流量的DDOS攻击。<br>反射服务器对应的协议或服务在互联网上有一定的使用量，比如本次攻击中的Memcached。</p>
-<p>######　而Memcached提供的基于UDP协议的服务正好满足上诉的UDP反射放大攻击的各种条件：</p>
-<p>从协议看，Memcached支持UDP。<br>Memcached大部分是作为企业应用的组件，往往具有很高的上传带宽。<br>Memcached不需要认证就可以随意交互。<br>很多用户编译安装时，错误的监听了0.0.0.0，且未设置iptables或云安全组，这使得攻击者可以自由访问这些服务，从而进行UDP反射攻击。</p>
-<h4 id="0x01-Memcached环境搭建"><a href="#0x01-Memcached环境搭建" class="headerlink" title="0x01 Memcached环境搭建"></a>0x01 Memcached环境搭建</h4><p>系统centos7</p>
+<p><img src="/upload_image/shodan_11211_all.png" alt=""></p>
+<p>DDoSMon统计的Memcache DRDOS在现网中的情况：</p>
+<h6 id="UDP反射放大攻击需要满足的基本条件："><a href="#UDP反射放大攻击需要满足的基本条件：" class="headerlink" title="UDP反射放大攻击需要满足的基本条件："></a>UDP反射放大攻击需要满足的基本条件：<img src="/upload_image/ddosmon_memcache.png" alt=""></h6><h4 id="0x01-Memcached-反射DDOS攻击原理"><a href="#0x01-Memcached-反射DDOS攻击原理" class="headerlink" title="0x01 Memcached 反射DDOS攻击原理"></a>0x01 Memcached 反射DDOS攻击原理</h4><h6 id="什么是反射DDOS（DRDOS）"><a href="#什么是反射DDOS（DRDOS）" class="headerlink" title="什么是反射DDOS（DRDOS）"></a>什么是反射DDOS（DRDOS）</h6><p>反射DDOS是发送大量带有被害者IP地址的请求给反射服务器，反射服务器对IP地址源做出大量回应，形成拒绝服务攻击。CLOUDFLARE的这张图很好的解释了DDOS反射攻击过程：</p>
+<p><img src="/upload_image/cloudflare.png" alt=""></p>
+<h6 id="UDP反射放大攻击需要满足的基本条件：-1"><a href="#UDP反射放大攻击需要满足的基本条件：-1" class="headerlink" title="UDP反射放大攻击需要满足的基本条件："></a>UDP反射放大攻击需要满足的基本条件：</h6><p>1.攻击者，需要能伪造IP，并发送大量伪造IP的请求给反射服务器。</p>
+<p>2.反射服务器，上面需要运行着容易放大反射攻击的服务。</p>
+<p>3.反射服务器的响应包最好远远大于请求包。</p>
+<p>4.反射服务器对应的协议或服务在互联网上有一定的使用量。</p>
+<p>本次事件中，攻击者发送大量带有被害者IP地址的UDP数据包给Memcached服务器，Memcached服务器对伪造的IP地址源做出大量回应，形成分布式拒绝服务攻击。</p>
+<h6 id="本次攻击的特点："><a href="#本次攻击的特点：" class="headerlink" title="本次攻击的特点："></a>本次攻击的特点：</h6><p>1.memcache放大倍数高，最高可以达到51000倍左右。</p>
+<p>2.可被利用的memcache服务器（反射服务器）数量很多，而且这些服务器网络拥有较高的带宽资源。</p>
+<p>下面这张us-cert的表详细的给出了各类反射攻击的放大倍数：</p>
+<p><img src="/upload_image/cert-ddos.png" alt=""></p>
+<p>仅从放大倍数看，memcached 反射DDOS危害要高于其他类型的反射DDOS。</p>
+<h6 id="Memcached-DRDOS攻击流程"><a href="#Memcached-DRDOS攻击流程" class="headerlink" title="Memcached DRDOS攻击流程"></a>Memcached DRDOS攻击流程</h6><p>1.收集反射器,扫描端口和服务，获取不需要认证的Memcache。</p>
+<p>2.上传指定数据到远程服务器Memcached上。</p>
+<p>3.攻击者将自身IP伪造成攻击的目标IP地址，向Memcached反射服务器发送请求读取在Memcached中存储的数据。</p>
+<p>4.Memcached在收到请求后，向伪造的IP回复放大了几万倍的数据包，造成反射DDOS攻击。</p>
+<h4 id="0x02-Memcached环境搭建"><a href="#0x02-Memcached环境搭建" class="headerlink" title="0x02 Memcached环境搭建"></a>0x02 Memcached环境搭建</h4><p>系统centos7</p>
 <p>安装：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum -y install memcached</div></pre></td></tr></table></figure>
 <p>将memcached加入linux服务：</p>
@@ -149,7 +163,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/03/06/利用Memcached的反射型DDOS攻击/" data-id="cjemu1rmz0012novh2mvcx6wc" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/03/06/利用Memcached的反射型DDOS攻击/" data-id="cjemumxny0012s0vh8non7u1o" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -209,7 +223,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/28/metasploit备忘/" data-id="cjemu1rmu000wnovht9eer83o" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/28/metasploit备忘/" data-id="cjemumxnw0010s0vhg5a7lvmr" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -664,7 +678,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/25/利用XMRig的大规模Monero挖矿行为/" data-id="cjemu1rn00013novhiz2z0qqj" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/25/利用XMRig的大规模Monero挖矿行为/" data-id="cjemumxo20016s0vhzvpsxr4e" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -703,7 +717,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/" data-id="cjemu1rmx0010novhsm8ja58u" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/" data-id="cjemumxny0013s0vhtexg3jzr" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -758,7 +772,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/" data-id="cjemu1rmy0011novhp0x44885" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/" data-id="cjemumxnx0011s0vhxwei3jmu" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -837,7 +851,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cjemu1rmq000snovh599ekjww" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cjemumxnr000us0vhudqz1gnb" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -890,7 +904,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/09/10/Java反序列化漏洞/" data-id="cjemu1rmp000rnovh3za1w6mr" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/09/10/Java反序列化漏洞/" data-id="cjemumxns000ws0vhdcq4lqfs" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -932,7 +946,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjemu1rn10014novhp88cmvtl" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjemumxo00014s0vhc96q70pw" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -1012,7 +1026,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjemu1rn20015novhjmgwhb7s" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjemumxo10015s0vh58830bpe" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -1051,7 +1065,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
         
@@ -1089,7 +1103,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2018 SY0U<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
