@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -91,7 +91,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjei7mg6b000px0vhb0e5yl4w" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjemrksgo000rycvh2p233507" class="article-share-link">Share</a>
       
       
     </footer>
@@ -123,7 +123,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="0x00-DRDOS攻击原理"><a href="#0x00-DRDOS攻击原理" class="headerlink" title="0x00 DRDOS攻击原理"></a>0x00 DRDOS攻击原理</h4><p>攻击者发送大量带有被害者IP地址的UDP数据包给Memcached服务，从而导致Memcached主机对伪造的IP地址源做出大量回应，形成分布式拒绝服务攻击。</p>
+        <h4 id="0x00-影响面"><a href="#0x00-影响面" class="headerlink" title="0x00 影响面"></a>0x00 影响面</h4><p>最近几天，Memcached反射DDOS流量突然增大，引起了国内外多家安全厂商和机构的注意，我也在第一时间持续关注跟踪相关事件。</p>
+<p>根据shodan的统计，国内受<a href="">影响的</a>Memcached服务器大约有27300+个：</p>
+<p><img src="/upload_image/Shodan_11211.png" alt=""></p>
+<p>全球受影响的Memcached服务器大约有119000+个：</p>
+<p><img src="/upload_image/Shodan_11211_all.png" alt=""></p>
 <h6 id="要完成一次UDP反射放大攻击，需要满足以下几个基本条件："><a href="#要完成一次UDP反射放大攻击，需要满足以下几个基本条件：" class="headerlink" title="要完成一次UDP反射放大攻击，需要满足以下几个基本条件："></a>要完成一次UDP反射放大攻击，需要满足以下几个基本条件：</h6><p>作为攻击者，需要能伪造IP，并发送海量伪造来源的请求。<br>作为反射服务器，上面需要运行着容易放大反射攻击的服务，而运行了设计不当的UDP协议的服务是最佳的选择。<br>反射服务器的响应包最好远远大于请求包，这样才能使用较小的攻击流量进行高流量的DDOS攻击。<br>反射服务器对应的协议或服务在互联网上有一定的使用量，比如本次攻击中的Memcached。</p>
 <p>######　而Memcached提供的基于UDP协议的服务正好满足上诉的UDP反射放大攻击的各种条件：</p>
 <p>从协议看，Memcached支持UDP。<br>Memcached大部分是作为企业应用的组件，往往具有很高的上传带宽。<br>Memcached不需要认证就可以随意交互。<br>很多用户编译安装时，错误的监听了0.0.0.0，且未设置iptables或云安全组，这使得攻击者可以自由访问这些服务，从而进行UDP反射攻击。</p>
@@ -145,7 +149,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/03/06/利用Memcached的反射型DDOS攻击/" data-id="cjei7mg6t0015x0vhw37xagxj" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/03/06/利用Memcached的反射型DDOS攻击/" data-id="cjemrksgu000wycvh1kfe3aft" class="article-share-link">Share</a>
       
       
     </footer>
@@ -205,7 +209,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/28/metasploit备忘/" data-id="cjei7mg6n000xx0vhfntfd82j" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/28/metasploit备忘/" data-id="cjemrksgv000xycvhgo43z2po" class="article-share-link">Share</a>
       
       
     </footer>
@@ -660,7 +664,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/25/利用XMRig的大规模Monero挖矿行为/" data-id="cjei7mg6s0013x0vh5ao2kyvk" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/25/利用XMRig的大规模Monero挖矿行为/" data-id="cjemrksh00015ycvhg9jkrl39" class="article-share-link">Share</a>
       
       
     </footer>
@@ -699,7 +703,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/" data-id="cjei7mg6r0012x0vh9rrvmmy2" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/" data-id="cjemrksgy0012ycvhfgg1vq2e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -754,7 +758,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/" data-id="cjei7mg6q0011x0vhzzlxsf16" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/" data-id="cjemrksh10016ycvh23gohv01" class="article-share-link">Share</a>
       
       
     </footer>
@@ -833,7 +837,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cjei7mg6j000tx0vh5zd3bxcm" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/09/12/Java反序列化漏洞利用的学习与实践/" data-id="cjemrksgp000sycvhh15zvboq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -886,7 +890,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/09/10/Java反序列化漏洞/" data-id="cjei7mg6k000ux0vhjixdncmx" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/09/10/Java反序列化漏洞/" data-id="cjemrksgs000uycvhfpy77s9v" class="article-share-link">Share</a>
       
       
     </footer>
@@ -928,7 +932,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjei7mg6u0016x0vhxnebprcb" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/08/11/机器学习再信息安全中的应用/" data-id="cjemrksh00014ycvhjb7njvxy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1008,7 +1012,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjei7mg6t0014x0vhwqx1heug" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2017/07/18/解密Struts2-POC/" data-id="cjemrksgz0013ycvhbdhcpqdy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1047,7 +1051,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
@@ -1085,7 +1089,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2018 SY0U<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
