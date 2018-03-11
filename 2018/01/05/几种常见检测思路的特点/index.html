@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>几种常见检测思路的特点 | SY0U&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="特征检测应用广泛（防病毒、网络设备、……）技术原理简明易懂，实现不太难。需要有样本持续积累（各种漏洞库、恶意代码库）作为检测的依据。样本分析、积累成本和制造样本成本不对称时，攻击方可以制造大量样本 DoS 防守方的样本分析、检测资源，造成特征检测不可用。 基于信誉目前逐渐开始广泛应用（防病毒、网络设备、……），技术原理也比较简明易懂，实现也不太难。需要有检测的基础能力，并积累时间、IP、域名、UR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="几种常见检测思路的特点">
+<meta property="og:url" content="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/index.html">
+<meta property="og:site_name" content="SY0U&#39;s Blog">
+<meta property="og:description" content="特征检测应用广泛（防病毒、网络设备、……）技术原理简明易懂，实现不太难。需要有样本持续积累（各种漏洞库、恶意代码库）作为检测的依据。样本分析、积累成本和制造样本成本不对称时，攻击方可以制造大量样本 DoS 防守方的样本分析、检测资源，造成特征检测不可用。 基于信誉目前逐渐开始广泛应用（防病毒、网络设备、……），技术原理也比较简明易懂，实现也不太难。需要有检测的基础能力，并积累时间、IP、域名、UR">
+<meta property="og:updated_time" content="2018-01-05T10:56:38.329Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="几种常见检测思路的特点">
+<meta name="twitter:description" content="特征检测应用广泛（防病毒、网络设备、……）技术原理简明易懂，实现不太难。需要有样本持续积累（各种漏洞库、恶意代码库）作为检测的依据。样本分析、积累成本和制造样本成本不对称时，攻击方可以制造大量样本 DoS 防守方的样本分析、检测资源，造成特征检测不可用。 基于信誉目前逐渐开始广泛应用（防病毒、网络设备、……），技术原理也比较简明易懂，实现也不太难。需要有检测的基础能力，并积累时间、IP、域名、UR">
+  
+    <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">SY0U&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-几种常见检测思路的特点" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/05/几种常见检测思路的特点/" class="article-date">
+  <time datetime="2018-01-05T10:54:54.000Z" itemprop="datePublished">2018-01-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      几种常见检测思路的特点
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="特征检测"><a href="#特征检测" class="headerlink" title="特征检测"></a>特征检测</h4><p>应用广泛（防病毒、网络设备、……）技术原理简明易懂，实现不太难。需要有样本持续积累（各种漏洞库、恶意代码库）作为检测的依据。样本分析、积累成本和制造样本成本不对称时，攻击方可以制造大量样本 DoS 防守方的样本分析、检测资源，造成特征检测不可用。</p>
+<h4 id="基于信誉"><a href="#基于信誉" class="headerlink" title="基于信誉"></a>基于信誉</h4><p>目前逐渐开始广泛应用（防病毒、网络设备、……），技术原理也比较简明易懂，实现也不太难。需要有检测的基础能力，并积累时间、IP、域名、URL、文件等其他纬度的数据（信誉库）。首先，信誉很高的对象一次恶意的行为可能无法通过信誉判断（例如，一个良好信誉的人一次性恶意透支所有信用卡限额），其次信誉库需要积累，而且存在覆盖度不够的情况，再次，攻击方同样可以<br> DoS 检测能力。</p>
+<h4 id="基于行为"><a href="#基于行为" class="headerlink" title="基于行为"></a>基于行为</h4><p>对正常的行为模式进行建模，不符合模型的被判断为可疑，进一步判断后用于完善正常行为模型。应用范围有限，技术复杂度高，实现比较困难。找到普适的建模方法比较困难。工程上可能一开始就不具备建模的纯正常行为的环境，如何得到正常行为的模型也比较困难。模型判断为可疑，如何进一步判断实际上往往还需要前面几种检测方法参与，最终也很难实现自动化。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/" data-id="cjemu1rmx0010novhsm8ja58u" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/01/25/利用XMRig的大规模Monero挖矿行为/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          利用XMRig的大规模Monero挖矿行为
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">vBulletin routestring Unauthenticated Remote Code Execution Vulnerability</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/03/06/利用Memcached的反射型DDOS攻击/">利用Memcached的反射型DDOS攻击</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/28/metasploit备忘/">metasploit备忘</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/25/利用XMRig的大规模Monero挖矿行为/">利用XMRig的大规模Monero挖矿行为</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/05/几种常见检测思路的特点/">几种常见检测思路的特点</a>
+          </li>
+        
+          <li>
+            <a href="/2017/12/27/vBulletin-routestring-Unauthenticated-Remote-Code-Execution-Vulnerability/">vBulletin routestring Unauthenticated Remote Code Execution Vulnerability</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <!--
+<footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 SY0U<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+-->
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
