@@ -5,22 +5,25 @@
   
   <title>利用Memcached的反射型DDOS攻击 | SY0U&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x00 影响面最近几天，Memcached反射DDOS流量突然增大，引起了国内外多家安全厂商和机构的注意，我也在第一时间持续关注跟踪相关事件。 根据shodan的统计，国内受影响的Memcached服务器大约有27300+个：  全球受影响的Memcached服务器大约有119000+个：  DDoSMon统计的Memcache DRDOS在现网中的情况： UDP反射放大攻击需要满足的基本条件：">
+  <meta name="description" content="0x00 影响面最近几天，Memcached反射DDOS流量突然增大，引起了国内外多家安全厂商和机构的注意，我也在第一时间持续关注跟踪相关事件。 根据shodan的统计，国内受影响的Memcached服务器大约有27300+个：  全球受影响的Memcached服务器大约有119000+个：  DDoSMon统计的Memcache DRDOS在现网中的情况：  0x01 Memcached 反射D">
 <meta property="og:type" content="article">
 <meta property="og:title" content="利用Memcached的反射型DDOS攻击">
 <meta property="og:url" content="http://wsygoogol.github.io/2018/03/06/利用Memcached的反射型DDOS攻击/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
-<meta property="og:description" content="0x00 影响面最近几天，Memcached反射DDOS流量突然增大，引起了国内外多家安全厂商和机构的注意，我也在第一时间持续关注跟踪相关事件。 根据shodan的统计，国内受影响的Memcached服务器大约有27300+个：  全球受影响的Memcached服务器大约有119000+个：  DDoSMon统计的Memcache DRDOS在现网中的情况： UDP反射放大攻击需要满足的基本条件：">
+<meta property="og:description" content="0x00 影响面最近几天，Memcached反射DDOS流量突然增大，引起了国内外多家安全厂商和机构的注意，我也在第一时间持续关注跟踪相关事件。 根据shodan的统计，国内受影响的Memcached服务器大约有27300+个：  全球受影响的Memcached服务器大约有119000+个：  DDoSMon统计的Memcache DRDOS在现网中的情况：  0x01 Memcached 反射D">
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/Shodan_11211.png">
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/shodan_11211_all.png">
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/ddosmon_memcache.png">
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/cloudflare.png">
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/cert-ddos.png">
 <meta property="og:image" content="http://wsygoogol.github.io/upload_image/memcached_status.png">
-<meta property="og:updated_time" content="2018-03-11T13:46:06.001Z">
+<meta property="og:image" content="http://wsygoogol.github.io/upload_image/memcached_test.png">
+<meta property="og:image" content="http://wsygoogol.github.io/upload_image/memcached_pcap.png">
+<meta property="og:image" content="http://wsygoogol.github.io/upload_image/memcache_jiagu.png">
+<meta property="og:updated_time" content="2018-03-11T14:10:38.121Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="利用Memcached的反射型DDOS攻击">
-<meta name="twitter:description" content="0x00 影响面最近几天，Memcached反射DDOS流量突然增大，引起了国内外多家安全厂商和机构的注意，我也在第一时间持续关注跟踪相关事件。 根据shodan的统计，国内受影响的Memcached服务器大约有27300+个：  全球受影响的Memcached服务器大约有119000+个：  DDoSMon统计的Memcache DRDOS在现网中的情况： UDP反射放大攻击需要满足的基本条件：">
+<meta name="twitter:description" content="0x00 影响面最近几天，Memcached反射DDOS流量突然增大，引起了国内外多家安全厂商和机构的注意，我也在第一时间持续关注跟踪相关事件。 根据shodan的统计，国内受影响的Memcached服务器大约有27300+个：  全球受影响的Memcached服务器大约有119000+个：  DDoSMon统计的Memcache DRDOS在现网中的情况：  0x01 Memcached 反射D">
 <meta name="twitter:image" content="http://wsygoogol.github.io/upload_image/Shodan_11211.png">
   
     <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
@@ -59,9 +62,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -98,9 +101,10 @@
 <p>全球受影响的Memcached服务器大约有119000+个：</p>
 <p><img src="/upload_image/shodan_11211_all.png" alt=""></p>
 <p>DDoSMon统计的Memcache DRDOS在现网中的情况：</p>
-<h6 id="UDP反射放大攻击需要满足的基本条件："><a href="#UDP反射放大攻击需要满足的基本条件：" class="headerlink" title="UDP反射放大攻击需要满足的基本条件："></a>UDP反射放大攻击需要满足的基本条件：<img src="/upload_image/ddosmon_memcache.png" alt=""></h6><h4 id="0x01-Memcached-反射DDOS攻击原理"><a href="#0x01-Memcached-反射DDOS攻击原理" class="headerlink" title="0x01 Memcached 反射DDOS攻击原理"></a>0x01 Memcached 反射DDOS攻击原理</h4><h6 id="什么是反射DDOS（DRDOS）"><a href="#什么是反射DDOS（DRDOS）" class="headerlink" title="什么是反射DDOS（DRDOS）"></a>什么是反射DDOS（DRDOS）</h6><p>反射DDOS是发送大量带有被害者IP地址的请求给反射服务器，反射服务器对IP地址源做出大量回应，形成拒绝服务攻击。CLOUDFLARE的这张图很好的解释了DDOS反射攻击过程：</p>
+<p><img src="/upload_image/ddosmon_memcache.png" alt=""></p>
+<h4 id="0x01-Memcached-反射DDOS攻击原理"><a href="#0x01-Memcached-反射DDOS攻击原理" class="headerlink" title="0x01 Memcached 反射DDOS攻击原理"></a>0x01 Memcached 反射DDOS攻击原理</h4><h6 id="什么是反射DDOS（DRDOS）"><a href="#什么是反射DDOS（DRDOS）" class="headerlink" title="什么是反射DDOS（DRDOS）"></a>什么是反射DDOS（DRDOS）</h6><p>反射DDOS是发送大量带有被害者IP地址的请求给反射服务器，反射服务器对IP地址源做出大量回应，形成拒绝服务攻击。CLOUDFLARE的这张图很好的解释了DDOS反射攻击过程：</p>
 <p><img src="/upload_image/cloudflare.png" alt=""></p>
-<h6 id="UDP反射放大攻击需要满足的基本条件：-1"><a href="#UDP反射放大攻击需要满足的基本条件：-1" class="headerlink" title="UDP反射放大攻击需要满足的基本条件："></a>UDP反射放大攻击需要满足的基本条件：</h6><p>1.攻击者，需要能伪造IP，并发送大量伪造IP的请求给反射服务器。</p>
+<h6 id="UDP反射放大攻击需要满足的基本条件："><a href="#UDP反射放大攻击需要满足的基本条件：" class="headerlink" title="UDP反射放大攻击需要满足的基本条件："></a>UDP反射放大攻击需要满足的基本条件：</h6><p>1.攻击者，需要能伪造IP，并发送大量伪造IP的请求给反射服务器。</p>
 <p>2.反射服务器，上面需要运行着容易放大反射攻击的服务。</p>
 <p>3.反射服务器的响应包最好远远大于请求包。</p>
 <p>4.反射服务器对应的协议或服务在互联网上有一定的使用量。</p>
@@ -128,11 +132,44 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">memcached-tool 127.0.0.1:11211 stats</div></pre></td></tr></table></figure>
 <p>正常情况下显示如下：</p>
 <p><img src="/upload_image/memcached_status.png" alt=""></p>
-<h4 id="0x02-DRDOS攻击测试"><a href="#0x02-DRDOS攻击测试" class="headerlink" title="0x02 DRDOS攻击测试"></a>0x02 DRDOS攻击测试</h4>
+<h4 id="0x03-DRDOS攻击测试"><a href="#0x03-DRDOS攻击测试" class="headerlink" title="0x03 DRDOS攻击测试"></a>0x03 DRDOS攻击测试</h4><p>蜜罐搭建成功后我们对它进行了一些测试，让我们看看反射放大效果：</p>
+<p><img src="/upload_image/memcached_test.png" alt=""></p>
+<p>可以看到，本次测试放大倍数基本上稳定在2w+多倍，太恐怖了。</p>
+<p>形成的攻击报文如下：</p>
+<p><img src="/upload_image/memcached_pcap.png" alt=""></p>
+<h4 id="0x04Memcached反射DDOS防御"><a href="#0x04Memcached反射DDOS防御" class="headerlink" title="0x04Memcached反射DDOS防御"></a>0x04Memcached反射DDOS防御</h4><h6 id="Memcached攻击流量清洗"><a href="#Memcached攻击流量清洗" class="headerlink" title="Memcached攻击流量清洗"></a>Memcached攻击流量清洗</h6><ol>
+<li><p>运营商处在边界配置UDP访问控制规则和BGP FlowSpec策略，将源端口为11211的流量进行阻断或限速。</p>
+</li>
+<li><p>不具备路由权限的企业客客户，可以在抗DDOS设备上配置防护策略，同样可以对端口为11211的UDP流量进行阻断和限速。</p>
+</li>
+</ol>
+<h6 id="Memcached系统防护加固"><a href="#Memcached系统防护加固" class="headerlink" title="Memcached系统防护加固"></a>Memcached系统防护加固</h6><p>默认情况下Memcached没有配置任何认证鉴权措施，对所有网络可达的客户端可访问。为了避免Memcached系统被攻击者利用，各开发者和memcache管理者，需要对Memcached服务进行安全检查，进行一些加固。</p>
+<h6 id="1-配置监听地址仅限本地回环地址"><a href="#1-配置监听地址仅限本地回环地址" class="headerlink" title="1.配置监听地址仅限本地回环地址"></a>1.配置监听地址仅限本地回环地址</h6><p>在 memcached的配置文件，或者启动参数中，使用”-l 127.0.0.1”指定监听的 ip 地址。</p>
+<p><img src="/upload_image/memcache_jiagu.png" alt=""></p>
+<h6 id="2-配置防火墙-ACL-策略"><a href="#2-配置防火墙-ACL-策略" class="headerlink" title="2.配置防火墙 ACL 策略"></a>2.配置防火墙 ACL 策略</h6><p>使用 iptables 等手段控制 memcached 的端口ACL策略，示例如下：</p>
+<p>仅限来自指定 IP 段的访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iptables -t filter -A INPUT -p tcp -s 192.168.1.0/24 --dport 11211 -j ACCEPT</div></pre></td></tr></table></figure>
+<p>屏蔽任何其他 IP 对 Memcached 端口的访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iptables -t filter -A INPUT -p tcp --dport 11211 -j DROP</div></pre></td></tr></table></figure>
+<h6 id="3-配置认证鉴权策略"><a href="#3-配置认证鉴权策略" class="headerlink" title="3. 配置认证鉴权策略"></a>3. 配置认证鉴权策略</h6><p>Memcached 1.4.3 及之后的版本，如果编译时开启了 –enable-sasl，则可以使用 sasl 配置认证。</p>
+<p>安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install cyrus-sasl</div></pre></td></tr></table></figure>
+<p>设置用于 Memcached 的 SASL 用户名密码,运行以下命令，指定需要的用户名，然后输入两次密码即可:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">saslpasswd2 -a memcached -c [customized username]</div></pre></td></tr></table></figure>
+<p>由于 SASL 账户密码默认保存在 /etc/sasldb2 文件里，但是该文件权限为 0640 或者 0660，对于运行 Memcached 的 user/group 不可读，因此需要做一些权限上面的修改。</p>
+<p>配置该文件的属组为 Memcached 运行所用的 group。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo chown :memcached /etc/sasldb2</div></pre></td></tr></table></figure>
+<p>配置 Memcached 启用 SASL 认证在 memcached 的配置文件，或者启动参数中，使用 “ -S ” 即可开启 SASL 认证示例配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">PORT=&quot;11211&quot;</div><div class="line"></div><div class="line">USER=&quot;memcached&quot;</div><div class="line"></div><div class="line">MAXCONN=&quot;1024&quot;</div><div class="line"></div><div class="line">CACHESIZE=&quot;64&quot;</div><div class="line"></div><div class="line">OPTIONS=&quot;-S&quot;</div></pre></td></tr></table></figure>
+<h4 id="0x05-追溯处置措施"><a href="#0x05-追溯处置措施" class="headerlink" title="0x05 追溯处置措施"></a>0x05 追溯处置措施</h4><p>这种反射DDOS攻击源追踪难点在于准确定位，在被攻击端，看到的IP都是真实的IP，都是被利用的反射放大节点服务器。和直接攻击不一样，因为有反射的因素，这时候看到的真实攻击IP不是真正的发起原始流量的IP。下面结合以往追溯DDOS攻击的经验给出几点建议<strong>：</strong></p>
+<h6 id="反射源上找线索"><a href="#反射源上找线索" class="headerlink" title="反射源上找线索"></a>反射源上找线索</h6><p>通过memcached蜜罐监测，看初期的信息采集阶段（比如找可用度反射放大源）很可能用的就是自己的IP，各种小动作会露出马脚，再多个维度关联，有时也能找出攻击者。</p>
+<h6 id="失陷主机上找线索"><a href="#失陷主机上找线索" class="headerlink" title="失陷主机上找线索"></a>失陷主机上找线索</h6><p>在一次大流量过后，访问量高的IP都可以列为可疑目标，重点排查，尤其要注意筛选ICMP数据包，一般情况下攻击者有个习惯：就是在攻击的过程中和攻击结束都会用本机ping目标服务器，查看目标的存活性。如果运气好，能找出攻击者。</p>
+<h6 id="运营商配合定位攻击者"><a href="#运营商配合定位攻击者" class="headerlink" title="运营商配合定位攻击者"></a>运营商配合定位攻击者</h6><p>通过memcached蜜罐的监测，根据以上测试过程中得出的Memcached DRDOS攻击的流量特征，和运营商配合，看哪些子网有非自己段的源IP流量出来，然后再做端的流量监测，比如HIDS，即为可以找出可疑IP。</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/03/06/利用Memcached的反射型DDOS攻击/" data-id="cjemur3bb00112kvhaw3ogdmt" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/03/06/利用Memcached的反射型DDOS攻击/" data-id="cjemvmlg10013wovhugkmtssl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -143,7 +180,7 @@
   
   
     <a href="/2018/01/28/metasploit备忘/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ancien</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">metasploit备忘</div>
     </a>
   
@@ -176,7 +213,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
@@ -214,7 +251,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2018 SY0U<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
