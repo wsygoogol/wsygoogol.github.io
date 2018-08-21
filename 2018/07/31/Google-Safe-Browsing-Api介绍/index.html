@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Google Safe Browsing Api介绍 | SY0U&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Safe Browing API 简介​    Safe browsing (安全浏览)是谷歌提供的一种服务，利用谷歌持续更新的恶意网址和钓鱼网站的数据集，来检测url的安全性，帮助我们有效抵御网上诱骗、社交工程、恶意软件、垃圾软件、恶意广告、侵扰性广告以及侮辱性网站或扩展程序带来的危害。  ​    支持谷歌浏览器和火狐浏览器。 Safe Browsing API 使用Google Safe B">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Google Safe Browsing Api介绍">
+<meta property="og:url" content="http://wsygoogol.github.io/2018/07/31/Google-Safe-Browsing-Api介绍/index.html">
+<meta property="og:site_name" content="SY0U&#39;s Blog">
+<meta property="og:description" content="Safe Browing API 简介​    Safe browsing (安全浏览)是谷歌提供的一种服务，利用谷歌持续更新的恶意网址和钓鱼网站的数据集，来检测url的安全性，帮助我们有效抵御网上诱骗、社交工程、恶意软件、垃圾软件、恶意广告、侵扰性广告以及侮辱性网站或扩展程序带来的危害。  ​    支持谷歌浏览器和火狐浏览器。 Safe Browsing API 使用Google Safe B">
+<meta property="og:updated_time" content="2018-08-01T11:00:13.076Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Google Safe Browsing Api介绍">
+<meta name="twitter:description" content="Safe Browing API 简介​    Safe browsing (安全浏览)是谷歌提供的一种服务，利用谷歌持续更新的恶意网址和钓鱼网站的数据集，来检测url的安全性，帮助我们有效抵御网上诱骗、社交工程、恶意软件、垃圾软件、恶意广告、侵扰性广告以及侮辱性网站或扩展程序带来的危害。  ​    支持谷歌浏览器和火狐浏览器。 Safe Browsing API 使用Google Safe B">
+  
+    <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">SY0U&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="w-Google-Safe-Browsing-Api介绍" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/31/Google-Safe-Browsing-Api介绍/" class="article-date">
+  <time datetime="2018-07-31T07:25:01.000Z" itemprop="datePublished">2018-07-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Google Safe Browsing Api介绍
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Safe-Browing-API-简介"><a href="#Safe-Browing-API-简介" class="headerlink" title="Safe Browing API 简介"></a>Safe Browing API 简介</h3><p>​    Safe browsing (安全浏览)是谷歌提供的一种服务，利用谷歌持续更新的恶意网址和钓鱼网站的数据集，来检测url的安全性，帮助我们有效抵御<a href="https://safebrowsing.google.com/#policies" target="_blank" rel="external">网上诱骗、社交工程、恶意软件、垃圾软件</a>、恶意广告、侵扰性广告以及侮辱性网站或扩展程序带来的危害。 </p>
+<p>​    支持谷歌浏览器和火狐浏览器。</p>
+<h3 id="Safe-Browsing-API-使用"><a href="#Safe-Browsing-API-使用" class="headerlink" title="Safe Browsing API 使用"></a>Safe Browsing API 使用</h3><h5 id="Google-Safe-Browsing-Google-Developers-官网"><a href="#Google-Safe-Browsing-Google-Developers-官网" class="headerlink" title="Google Safe Browsing | Google Developers 官网"></a>Google Safe Browsing | Google Developers 官网</h5><p><a href="https://developers.google.com/safe-browsing/" target="_blank" rel="external">https://developers.google.com/safe-browsing/ </a></p>
+<p>通过介绍了解到Safe Browsing APIs(V3)现在已经弃用,将于2018年10月1日被拒绝使用。 所有Safe Browsing API客户端都应该使用（v4）API。 </p>
+<h5 id="Safe-Browsing-APIs-v4-官网"><a href="#Safe-Browsing-APIs-v4-官网" class="headerlink" title="Safe Browsing APIs(v4)官网"></a>Safe Browsing APIs(v4)官网</h5><p><a href="https://developers.google.com/safe-browsing/v4/" target="_blank" rel="external">https://developers.google.com/safe-browsing/v4/</a></p>
+<p>要确定URL是否位于任何安全浏览列表中,浏览器客户端可以使用Lookup API(在线版本)或Update API(离线版本)。</p>
+<h5 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h5><p><a href="https://accounts.google.com/signup/v2/webcreateaccount?flowName=GlifWebSignIn&amp;flowEntry=SignUp" target="_blank" rel="external">创建Google账户</a></p>
+<p><a href="https://cloud.google.com/resource-manager/docs/creating-managing-projects?hl=en&amp;visit_id=1-636686269369798517-522602518&amp;rd=1" target="_blank" rel="external">创建项目工程</a></p>
+<p><a href="https://cloud.google.com/docs/authentication/api-keys?hl=en&amp;ref_topic=6262490&amp;visit_id=1-636686278056026695-2572364886&amp;rd=1" target="_blank" rel="external">申请API key</a>,创建的项目是通过API key与谷歌提供的API服务相连接的一个接口。 </p>
+<p><a href="https://support.google.com/cloud/answer/6158841?hl=en" target="_blank" rel="external">激活API</a>,选择相应的项目，选择API和服务，然后选择库，点击Enable</p>
+<h5 id="Lookup-API-v4"><a href="#Lookup-API-v4" class="headerlink" title="Lookup API (v4)"></a>Lookup API (v4)</h5><p>​    Lookup API就是浏览器将URL发送到Google Safe Browsing服务器以检查其安全性。Lookup API比Update API简单易用。 </p>
+<h6 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h6><p>简单的URL检测:您发送带有URL的HTTP POST请求，服务器以URL的状态（安全或不安全）进行响应。</p>
+<h6 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h6><p>隐私:URL没有经过加密处理,服务器知道你查找到URL。</p>
+<p>响应时间:每个查找请求都由服务器处理，影响效率。</p>
+<h6 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h6><p>参考：<a href="https://developers.google.com/safe-browsing/v4/lookup-api" target="_blank" rel="external">https://developers.google.com/safe-browsing/v4/lookup-api</a></p>
+<p>Request header</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">POST https://safebrowsing.googleapis.com/v4/threatMatches:find?key=API_KEY HTTP/1.1</div><div class="line">Content-Type: application/json</div></pre></td></tr></table></figure>
+<p>Request body</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="string">"client"</span>: &#123;</div><div class="line">      <span class="string">"clientId"</span>:      <span class="string">"yourcompanyname"</span>,</div><div class="line">      <span class="string">"clientVersion"</span>: <span class="string">"1.5.2"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="string">"threatInfo"</span>: &#123;</div><div class="line">      <span class="string">"threatTypes"</span>:      [<span class="string">"MALWARE"</span>, <span class="string">"SOCIAL_ENGINEERING"</span>],</div><div class="line">      <span class="string">"platformTypes"</span>:    [<span class="string">"WINDOWS"</span>],</div><div class="line">      <span class="string">"threatEntryTypes"</span>: [<span class="string">"URL"</span>],</div><div class="line">      <span class="string">"threatEntries"</span>: [</div><div class="line">        &#123;<span class="string">"url"</span>: <span class="string">"http://www.urltocheck1.org/"</span>&#125;,</div><div class="line">        &#123;<span class="string">"url"</span>: <span class="string">"http://www.urltocheck2.org/"</span>&#125;,</div><div class="line">        &#123;<span class="string">"url"</span>: <span class="string">"http://www.urltocheck3.com/"</span>&#125;</div><div class="line">      ]</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>Response header</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">HTTP/1.1 200 OK</div><div class="line">Content-Type: application/json</div></pre></td></tr></table></figure>
+<p>Response body:包含了匹配信息，列表名称和列表里匹配到的URL(如果匹配到)，元数据等。如果没有匹配，则HTTP POST响应只会在响应正文中返回一个空对象。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="string">"matches"</span>: [&#123;</div><div class="line">    <span class="string">"threatType"</span>:      <span class="string">"MALWARE"</span>,</div><div class="line">    <span class="string">"platformType"</span>:    <span class="string">"WINDOWS"</span>,</div><div class="line">    <span class="string">"threatEntryType"</span>: <span class="string">"URL"</span>,</div><div class="line">    <span class="string">"threat"</span>:          &#123;<span class="string">"url"</span>: <span class="string">"http://www.urltocheck1.org/"</span>&#125;,</div><div class="line">    <span class="string">"threatEntryMetadata"</span>: &#123;</div><div class="line">      <span class="string">"entries"</span>: [&#123;</div><div class="line">        <span class="string">"key"</span>: <span class="string">"malware_threat_type"</span>,</div><div class="line">        <span class="string">"value"</span>: <span class="string">"landing"</span></div><div class="line">     &#125;]</div><div class="line">    &#125;,</div><div class="line">    <span class="string">"cacheDuration"</span>: <span class="string">"300.000s"</span></div><div class="line">  &#125;, &#123;</div><div class="line">    <span class="string">"threatType"</span>:      <span class="string">"MALWARE"</span>,</div><div class="line">    <span class="string">"platformType"</span>:    <span class="string">"WINDOWS"</span>,</div><div class="line">    <span class="string">"threatEntryType"</span>: <span class="string">"URL"</span>,</div><div class="line">    <span class="string">"threat"</span>:          &#123;<span class="string">"url"</span>: <span class="string">"http://www.urltocheck2.org/"</span>&#125;,</div><div class="line">    <span class="string">"threatEntryMetadata"</span>: &#123;</div><div class="line">      <span class="string">"entries"</span>: [&#123;</div><div class="line">        <span class="string">"key"</span>:   <span class="string">"malware_threat_type"</span>,</div><div class="line">        <span class="string">"value"</span>: <span class="string">"landing"</span></div><div class="line">     &#125;]</div><div class="line">    &#125;,</div><div class="line">    <span class="string">"cacheDuration"</span>: <span class="string">"300.000s"</span></div><div class="line">  &#125;]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="Update-API-v4"><a href="#Update-API-v4" class="headerlink" title="Update API (v4)"></a>Update API (v4)</h5><p>​    Update API就是浏览器定期与Google Safe Browsing服务器通信，下载最新的加密版本的安全浏览列表，系统会将该列表的最新副本存储在您本地的系统上。浏览器会参照该本地列表检查您访问的每个网站对应的网址和下载的文件。如果您要浏览的网址出现在该列表中，Chrome 会向 Google 发送网址指纹的一部分（相应网址的 SHA-256 哈希值的前 32 位），以便验证该网址是否确实不安全。如果某个网站请求的权限可能不安全，Chrome 也会发送网址指纹的一部分；这样一来，如果该网站包含恶意内容，Google 就可以保护您免受攻击。</p>
+<h6 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h6><p>隐私：服务器不知道实际查询的URL。</p>
+<p>响应时间：不需要每次检查URL时查询服务器。</p>
+<h6 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h6><p>使用复杂</p>
+<h6 id="Firefox本地缓存目录"><a href="#Firefox本地缓存目录" class="headerlink" title="Firefox本地缓存目录"></a>Firefox本地缓存目录</h6><ul>
+<li><code>~/.cache/mozilla/firefox/XXXX/safebrowsing/</code> on Linux</li>
+<li><code>~/Library/Caches/Firefox/Profiles/XXXX/safebrowsing/</code> on Mac</li>
+<li><code>C:\Users\XXXX\AppData\Local\mozilla\firefox\profiles\XXXX\safebrowsing\</code> on Windows</li>
+</ul>
+<h6 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h6><p><a href="https://developers.google.com/safe-browsing/v4/update-api" target="_blank" rel="external">https://developers.google.com/safe-browsing/v4/update-api</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/07/31/Google-Safe-Browsing-Api介绍/" data-id="cjl3ht17d0017ww9ll30jb0z5" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/08/14/使用YARA规则进行威胁狩猎/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Récent</strong>
+      <div class="article-nav-title">
+        
+          使用YARA规则进行威胁狩猎
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/06/29/数字取证入门/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">数字取证入门</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/08/14/使用YARA规则进行威胁狩猎/">使用YARA规则进行威胁狩猎</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/31/Google-Safe-Browsing-Api介绍/">Google Safe Browsing Api介绍</a>
+          </li>
+        
+          <li>
+            <a href="/2018/06/29/数字取证入门/">数字取证入门</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/19/Dionaea蜜罐部署/">Dionaea蜜罐部署</a>
+          </li>
+        
+          <li>
+            <a href="/2018/03/12/Blackhat-SEO/">Blackhat SEO</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <!--
+<footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 SY0U<br>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+-->
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
