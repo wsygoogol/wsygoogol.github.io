@@ -14,13 +14,13 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/hdr.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei_1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei_3.png">
-<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei_6.png">
-<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei5.png">
-<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei.png">
-<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/hnap.png">
-<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/dlink.png">
-<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/rrr.png">
-<meta property="og:updated_time" content="2018-12-17T07:13:28.370Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei_6.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei5.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/hnap.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/dlink.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/rrr.png">
+<meta property="og:updated_time" content="2018-12-17T07:19:08.075Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Satori 物联网蠕虫分析">
 <meta name="twitter:description" content="0x00 样本植入​    我们通过高交互蜜罐捕获到Satori 变种物联网蠕虫样本，Satori是一个Mirai的变种，主要是利用物联网设备的漏洞进行传播，本次捕获的样本利用了4个路由器漏洞：  ​    攻击者利用couchdb权限提升漏洞和couchdb远程命令执行漏洞向蜜罐系统植入了一个shell脚本，执行shell脚本下载样本并执行。 payload如下： 添加admin帐户，passw">
@@ -62,9 +62,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -114,25 +114,25 @@
 <p>2.设置原始套接字，失败则退出：</p>
 <p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei_3.png" alt="huawei_3"></p>
 <p>3.设置IPv4的报文头部，tcph_0-&gt;dest为目的端口：37215，tcph-&gt;source为源端口。 </p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei_6.png" alt="huawei_6"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei_6.png" alt="huawei_6"></p>
 <p>4.通过huaweiscanner_get_random_ip()函数随机生成IP地址,通过sendto()函数向对应IP的37215端口发送数据包</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei5.png" alt="huawei5"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei5.png" alt="huawei5"></p>
 <p>5.扫描到开放37215端口的主机后尝试使用payload建立连接，执行wget命令从指定服务器IP:148.72.176.78中下载恶意文件。</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei.png" alt="huawei"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei.png" alt="huawei"></p>
 <p>​    其他三个漏洞的利用过程与上面的过程基本相同，只是换了对应的端口和payload：</p>
 <p>D-Link Devices HNAP SOAPAction-Header命令注入漏洞，攻击8081端口，payload如下：</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\hnap.png" alt="hnap"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/hnap.png" alt="hnap"></p>
 <p>D-Link DSL-2750B OS命令注入漏洞，攻击80和8080端口，payload如下：</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\dlink.png" alt="dlink"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/dlink.png" alt="dlink"></p>
 <p>Realtek SDK Miniigd UPnP SOAP命令执行漏洞，攻击52869端口，payload如下：</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\rrr.png" alt="rrr"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/rrr.png" alt="rrr"></p>
 <p>​    通过与Mirai的对比分析发现，这个样本的攻击过程与Mirai几乎一致，具有同源性，确定为Mirai变种。均是通过随机生成ip地址扫描特定的端口，Mirai扫描23端口，该样本扫描8081（Hnap）、80和8080（Dlink）、52869(Realtek)、37215（Huawei）。发现主机后，Mirai是尝试弱口令通过telnet进行登陆，而这个样本则是通过相应的payload尝试从指定主机中下载感染bot程序进行感染。 </p>
 <p>​    由于Mirai 的源码已经在网上公开，改造 Mirai ，以其变种身份形式出现，构造巨大的僵尸网络早已不是难事。这也是为什么自Mirai后，发现了大量Mirai变种形成的僵尸网络。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/" data-id="cjprzgeci000ysg9lhko09lgf" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/" data-id="cjprzo3jl0012t49l5vppbwn5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -142,7 +142,7 @@
 <nav id="article-nav">
   
     <a href="/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Récent</strong>
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
           攻击者利用CertUtil.exe植入恶意软件
@@ -152,7 +152,7 @@
   
   
     <a href="/2018/09/14/Suricata-tips/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ancien</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">Suricata tips</div>
     </a>
   
@@ -185,7 +185,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
@@ -223,7 +223,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2018 SY0U<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>

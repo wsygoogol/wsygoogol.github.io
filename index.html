@@ -51,9 +51,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -91,7 +91,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjprzgec8000psg9loumdcsei" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjprzo3j7000pt49lim7m0ovo" class="article-share-link">Share</a>
       
       
     </footer>
@@ -144,7 +144,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/" data-id="cjprzgecv001csg9l23aneftc" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/" data-id="cjprzo3ju001bt49lvoupsd4a" class="article-share-link">Share</a>
       
       
     </footer>
@@ -195,25 +195,25 @@
 <p>2.设置原始套接字，失败则退出：</p>
 <p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei_3.png" alt="huawei_3"></p>
 <p>3.设置IPv4的报文头部，tcph_0-&gt;dest为目的端口：37215，tcph-&gt;source为源端口。 </p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei_6.png" alt="huawei_6"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei_6.png" alt="huawei_6"></p>
 <p>4.通过huaweiscanner_get_random_ip()函数随机生成IP地址,通过sendto()函数向对应IP的37215端口发送数据包</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei5.png" alt="huawei5"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei5.png" alt="huawei5"></p>
 <p>5.扫描到开放37215端口的主机后尝试使用payload建立连接，执行wget命令从指定服务器IP:148.72.176.78中下载恶意文件。</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei.png" alt="huawei"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei.png" alt="huawei"></p>
 <p>​    其他三个漏洞的利用过程与上面的过程基本相同，只是换了对应的端口和payload：</p>
 <p>D-Link Devices HNAP SOAPAction-Header命令注入漏洞，攻击8081端口，payload如下：</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\hnap.png" alt="hnap"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/hnap.png" alt="hnap"></p>
 <p>D-Link DSL-2750B OS命令注入漏洞，攻击80和8080端口，payload如下：</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\dlink.png" alt="dlink"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/dlink.png" alt="dlink"></p>
 <p>Realtek SDK Miniigd UPnP SOAP命令执行漏洞，攻击52869端口，payload如下：</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\rrr.png" alt="rrr"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/rrr.png" alt="rrr"></p>
 <p>​    通过与Mirai的对比分析发现，这个样本的攻击过程与Mirai几乎一致，具有同源性，确定为Mirai变种。均是通过随机生成ip地址扫描特定的端口，Mirai扫描23端口，该样本扫描8081（Hnap）、80和8080（Dlink）、52869(Realtek)、37215（Huawei）。发现主机后，Mirai是尝试弱口令通过telnet进行登陆，而这个样本则是通过相应的payload尝试从指定主机中下载感染bot程序进行感染。 </p>
 <p>​    由于Mirai 的源码已经在网上公开，改造 Mirai ，以其变种身份形式出现，构造巨大的僵尸网络早已不是难事。这也是为什么自Mirai后，发现了大量Mirai变种形成的僵尸网络。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/" data-id="cjprzgeci000ysg9lhko09lgf" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/" data-id="cjprzo3jl0012t49l5vppbwn5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -250,7 +250,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/14/Suricata-tips/" data-id="cjprzgeck0011sg9ljqbu2vie" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/14/Suricata-tips/" data-id="cjprzo3jk0011t49l3cz66y4m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -344,7 +344,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/11/开源情报收集/" data-id="cjprzgect001asg9lac0ob8qv" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/11/开源情报收集/" data-id="cjprzo3ju001at49lwusi221e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -445,7 +445,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/06/构建SOC的机器学习分析模型/" data-id="cjprzgecz001fsg9l8kndj6ev" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/06/构建SOC的机器学习分析模型/" data-id="cjprzo3jx001et49li7t34l6h" class="article-share-link">Share</a>
       
       
     </footer>
@@ -499,7 +499,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/08/14/使用YARA规则进行威胁狩猎/" data-id="cjprzgecr0017sg9loi5trxtm" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/08/14/使用YARA规则进行威胁狩猎/" data-id="cjprzo3js0018t49ljxagbauk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -568,7 +568,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/07/31/Google-Safe-Browsing-Api介绍/" data-id="cjprzgece000tsg9llx76nq33" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/07/31/Google-Safe-Browsing-Api介绍/" data-id="cjprzo3jf000ut49lfehetf8z" class="article-share-link">Share</a>
       
       
     </footer>
@@ -616,7 +616,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/06/29/数字取证入门/" data-id="cjprzgecv001dsg9lfc5kb4c1" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/06/29/数字取证入门/" data-id="cjprzo3jw001dt49lj2k07r7j" class="article-share-link">Share</a>
       
       
     </footer>
@@ -664,7 +664,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/03/19/Dionaea蜜罐部署/" data-id="cjprzgecf000usg9l2m685cgd" class="article-share-link">Partager</a>
+      <a data-url="http://wsygoogol.github.io/2018/03/19/Dionaea蜜罐部署/" data-id="cjprzo3jb000rt49lufk5ap8z" class="article-share-link">Share</a>
       
       
     </footer>
@@ -703,7 +703,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
+    <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
         
@@ -741,7 +741,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2018 SY0U<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
