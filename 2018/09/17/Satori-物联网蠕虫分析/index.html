@@ -11,20 +11,20 @@
 <meta property="og:url" content="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
 <meta property="og:description" content="0x00 样本植入​    我们通过高交互蜜罐捕获到Satori 变种物联网蠕虫样本，Satori是一个Mirai的变种，主要是利用物联网设备的漏洞进行传播，本次捕获的样本利用了4个路由器漏洞：  ​    攻击者利用couchdb权限提升漏洞和couchdb远程命令执行漏洞向蜜罐系统植入了一个shell脚本，执行shell脚本下载样本并执行。 payload如下： 添加admin帐户，passw">
-<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/hdr.png">
-<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei_1.png">
-<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei_3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/hdr.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei_1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei_3.png">
 <meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei_6.png">
 <meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei5.png">
 <meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei.png">
 <meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/hnap.png">
 <meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/dlink.png">
 <meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/rrr.png">
-<meta property="og:updated_time" content="2018-09-19T07:09:10.405Z">
+<meta property="og:updated_time" content="2018-12-17T07:13:28.370Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Satori 物联网蠕虫分析">
 <meta name="twitter:description" content="0x00 样本植入​    我们通过高交互蜜罐捕获到Satori 变种物联网蠕虫样本，Satori是一个Mirai的变种，主要是利用物联网设备的漏洞进行传播，本次捕获的样本利用了4个路由器漏洞：  ​    攻击者利用couchdb权限提升漏洞和couchdb远程命令执行漏洞向蜜罐系统植入了一个shell脚本，执行shell脚本下载样本并执行。 payload如下： 添加admin帐户，passw">
-<meta name="twitter:image" content="d:/gitBlog/themes/landscape/source/upload_image/hdr.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/hdr.png">
   
     <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
   
@@ -62,9 +62,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -96,7 +96,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="0x00-样本植入"><a href="#0x00-样本植入" class="headerlink" title="0x00 样本植入"></a>0x00 样本植入</h4><p>​    我们通过高交互蜜罐捕获到Satori 变种物联网蠕虫样本，Satori是一个Mirai的变种，主要是利用物联网设备的漏洞进行传播，本次捕获的样本利用了4个路由器漏洞：</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\hdr.png" alt="hdr"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/hdr.png" alt="hdr"></p>
 <p>​    攻击者利用couchdb权限提升漏洞和couchdb远程命令执行漏洞向蜜罐系统植入了一个shell脚本，执行shell脚本下载样本并执行。</p>
 <p>payload如下：</p>
 <p>添加admin帐户，password：guest</p>
@@ -110,9 +110,9 @@
 <h4 id="0x01-样本分析"><a href="#0x01-样本分析" class="headerlink" title="0x01 样本分析"></a>0x01 样本分析</h4><p>​    样本利用了4个路由器漏洞：<a href="https://www.exploit-db.com/exploits/43414/" target="_blank" rel="external">Huawei Router HG532命令执行漏洞</a>，<a href="https://www.exploit-db.com/exploits/44760/" target="_blank" rel="external">D-Link DSL-2750B OS命令注入漏洞</a>,<a href="https://www.exploit-db.com/exploits/37171/" target="_blank" rel="external">D-Link Devices HNAP SOAPAction-Header命令注入漏洞</a>,<a href="https://www.exploit-db.com/exploits/37169/" target="_blank" rel="external">Realtek SDK Miniigd UPnP SOAP命令执行漏洞</a>。这四个漏洞在之前捕获的Mirai和Satori样本中均出现过，利用的非常多。</p>
 <p>下面对Huawei Router HG532命令执行漏洞的利用过程进行分析.</p>
 <p>1.创建子进程，通过util_local_addr()获取本地IP地址：</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei_1.png" alt="huawei_1"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei_1.png" alt="huawei_1"></p>
 <p>2.设置原始套接字，失败则退出：</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei_3.png" alt="huawei_3"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/huawei_3.png" alt="huawei_3"></p>
 <p>3.设置IPv4的报文头部，tcph_0-&gt;dest为目的端口：37215，tcph-&gt;source为源端口。 </p>
 <p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei_6.png" alt="huawei_6"></p>
 <p>4.通过huaweiscanner_get_random_ip()函数随机生成IP地址,通过sendto()函数向对应IP的37215端口发送数据包</p>
@@ -132,7 +132,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/" data-id="cjprz59y9000w309l7mhq1prx" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/" data-id="cjprzgeci000ysg9lhko09lgf" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -142,7 +142,7 @@
 <nav id="article-nav">
   
     <a href="/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
+      <strong class="article-nav-caption">Récent</strong>
       <div class="article-nav-title">
         
           攻击者利用CertUtil.exe植入恶意软件
@@ -152,7 +152,7 @@
   
   
     <a href="/2018/09/14/Suricata-tips/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">Ancien</strong>
       <div class="article-nav-title">Suricata tips</div>
     </a>
   
@@ -185,7 +185,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
         
@@ -223,7 +223,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2018 SY0U<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
