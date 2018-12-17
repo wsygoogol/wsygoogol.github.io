@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>构建SOC的机器学习分析模型 | SY0U&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="基本监督模型过程​    数据科学术语是“有监督的分类模型”，它被“监督”意味着它通过已被标记为正常或恶意的数据来学习，并且它是一种被训练的“分类模型”，我们希望它检测一个新的数据能几个离散的结果之间做出决策。在我们的例子中，我们只希望它在告警的两个“类”之间做出决定：恶意和正常。    为了开始创建这样的模型，必须收集数据集。该数据集构成了模型的“经验”，是我们用来“训练”模型以做出决策的信息。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="构建SOC的机器学习分析模型">
+<meta property="og:url" content="http://wsygoogol.github.io/2018/09/06/构建SOC的机器学习分析模型/index.html">
+<meta property="og:site_name" content="SY0U&#39;s Blog">
+<meta property="og:description" content="基本监督模型过程​    数据科学术语是“有监督的分类模型”，它被“监督”意味着它通过已被标记为正常或恶意的数据来学习，并且它是一种被训练的“分类模型”，我们希望它检测一个新的数据能几个离散的结果之间做出决策。在我们的例子中，我们只希望它在告警的两个“类”之间做出决定：恶意和正常。    为了开始创建这样的模型，必须收集数据集。该数据集构成了模型的“经验”，是我们用来“训练”模型以做出决策的信息。">
+<meta property="og:updated_time" content="2018-09-07T05:58:47.236Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="构建SOC的机器学习分析模型">
+<meta name="twitter:description" content="基本监督模型过程​    数据科学术语是“有监督的分类模型”，它被“监督”意味着它通过已被标记为正常或恶意的数据来学习，并且它是一种被训练的“分类模型”，我们希望它检测一个新的数据能几个离散的结果之间做出决策。在我们的例子中，我们只希望它在告警的两个“类”之间做出决定：恶意和正常。    为了开始创建这样的模型，必须收集数据集。该数据集构成了模型的“经验”，是我们用来“训练”模型以做出决策的信息。">
+  
+    <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">SY0U&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="w-构建SOC的机器学习分析模型" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/06/构建SOC的机器学习分析模型/" class="article-date">
+  <time datetime="2018-09-06T01:47:45.000Z" itemprop="datePublished">2018-09-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      构建SOC的机器学习分析模型
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h5 id="基本监督模型过程"><a href="#基本监督模型过程" class="headerlink" title="基本监督模型过程"></a>基本监督模型过程</h5><p>​    数据科学术语是“有监督的分类模型”，它被“监督”意味着它通过已被标记为正常或恶意的数据来学习，并且它是一种被训练的“分类模型”，我们希望它检测一个新的数据能几个离散的结果之间做出决策。在我们的例子中，我们只希望它在告警的两个“类”之间做出决定：恶意和正常。<br>    为了开始创建这样的模型，必须收集数据集。该数据集构成了模型的“经验”，是我们用来“训练”模型以做出决策的信息。监督模型，每个数据单元必须标记为恶意或正常，以便模型可以评估每个观察结果，并弄清楚是什么使它恶意，什么使它正常。通常，收集干净的标记数据集是监督模型管道中最难的部分之一; 但是，就我们的SOC而言，我们的分析师每周都会不断地对数千个警报进行分类（或“标记”），因此我们很能够获得大量干净，标准化的标签警报。</p>
+<p>​    一旦定义了标记数据集，下一步就是定义“功能”，可用于描绘每个告警中的信息。“特征”可以被认为是这一点信息的一个方面。例如，如果信息表示为字符串，则自然“特征”可以是字符串的长度。为我们的警报分类模型构建功能背后的核心思想是找到一种方法来表示和记录分析师在做出决策时可能考虑的所有方面。</p>
+<p>然后，构建模型需要选择要使用的模型结构，并在可用总数据的子集上训练模型。训练数据集越大越多样化，模型通常表现越好。剩下的数据用作“测试集”，以查看训练的模型是否确实有效。拿出这个测试装置可以确保模型在以前从未见过的样品上进行评估，但真正的标签是已知的。</p>
+<p>最后，确保有一种方法可以评估模型随时间的效果，以及调查错误以便进行适当的调整。如果没有计划和管道进行评估和重新培训，该模型几乎肯定会在性能上衰退。</p>
+<h5 id="特征工程"><a href="#特征工程" class="headerlink" title="特征工程"></a>特征工程</h5><p>​    在创建我们自己的模型之前，我们采访了经验丰富的分析师，并在做出警报决策之前记录了他们通常评估的信息。这些访谈构成了我们的特征提取的基础。例如，当分析师说审查警报“很容易”时，我们会问：“为什么？什么可以帮助你做出这个决定？“正是这种逆向工程的各种方法让我们可以深入了解我们可以用来捕捉分析的特征和模型。</p>
+<p>例如，考虑一个进程执行事件。有关潜在恶意进程执行的警报可能包含以下字段：</p>
+<p>进程路径<br>进程MD5<br>父进程<br>进程命令参数<br>虽然这可能最初看起来像一个有限的特征空间，但是可以从这些字段中提取许多有用的信息。</p>
+<p>从“C：\ windows \ temp \ m.exe”的进程路径，分析师可以立即看到一些特征：</p>
+<p>该进程驻留在一个临时文件夹中：C：\ windows \ temp \<br>该进程是文件系统深处的两个目录<br>进程可执行文件名称长度为一个字符<br>该进程具有.exe扩展名<br>该过程不是“常见”进程名称<br>虽然这些看似简单，但在大量数据和示例中，提取这些信息将有助于模型区分事件。即使是最基本方面也必须被捕获，以“教导”模型以分析师的方式查看程序。</p>
+<p>然后将这些特征编码为更离散的表示，类似于：</p>
+<table>
+<thead>
+<tr>
+<th>Temp_folder</th>
+<th>Depth</th>
+<th>Name_Length</th>
+<th>Extension</th>
+<th>common_process_name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TRUE</td>
+<td>2</td>
+<td>1</td>
+<td>exe</td>
+<td>FALSE</td>
+</tr>
+</tbody>
+</table>
+<p>关于进程执行，需要考虑的另一个重要特性是父流程和子流程的组合。偏离预期的“血统”可能是恶意活动的强烈指标。</p>
+<p>假设上述示例的父进程是’powershell.exe’。然后可以从父进程和进程本身的串联中获得潜在的新功能：’powershell.exe_m.exe’。这在功能上用作父子关系的标识，并捕获另一个关键分析工件。</p>
+<p>然而，最富裕的领域可能是过程论证。流程参数是他们自己的语言，语言分析是预测分析的良好前提空间。</p>
+<p>我们可以寻找包括但不限于：</p>
+<p>网络连接字符串（例如’http：//‘，’https：//‘，’ftp：//‘）。<br>Base64编码命令<br>注册表键（’HKLM’，’HKCU’）<br>混淆的证据（蜱，$，分号）（阅读Daniel Bohannon的更多工作）<br>这些特征及其值在训练数据集中的显示方式将定义模型的学习方式。基于数千个警报的功能分布，特征和标签之间将开始出现关系。然后，这些关系将记录在我们的模型中，并最终用于影响新警报的预测。查看训练集中的特征分布可以深入了解这些潜在关系中的一些。</p>
+<p>例如，图2显示了在按恶意（红色）和良性（蓝色）分组时如何显示“处理命令长度”的分布。</p>
+<p>图2：按流程命令长度分组的流程事件警报的分布</p>
+<p>此图表显示，在一部分样本中，命令长度越长，恶意的可能性就越大。这表现为右侧为红色，左侧为蓝色。但是，工艺长度不是唯一的因素。</p>
+<p>作为我们的功能集的一部分，我们还认为近似每个命令的“复杂性”是有用的。为此，我们使用了“ Shannon entropy ”，这是一种常用的度量标准，用于衡量一串字符中存在的随机性程度。</p>
+<p>图3显示了命令熵的分布，分为恶意和良性。虽然这些类没有完全分开，但我们可以看到，对于这个数据样本，具有较高熵的样本通常具有较高的恶意机会。</p>
+<p>图3：按熵分组的流程事件警报的分布</p>
+<p>模型选择与推广<br>一旦为整个数据集生成了特征，就可以使用它们来训练模型。选择最佳模型没有完美的程序，但查看数据中的特征类型可以帮助缩小范围。在流程事件的情况下，我们有一些表示为字符串和数字的功能组合。当分析师评估每个工件时，他们会询问有关每个工件的问题，并将这些问题结合起来估算流程是恶意的概率。</p>
+<p>对于我们的用例，优先考虑“可解释的”模型也是有意义的 - 也就是说，可以更容易地揭示它为什么做出关于工件的特定决定的模型。通过这种方式，分析师可以建立对模型的信心，以及检测和修复模型正在制造的分析错误。鉴于数据的性质，分析师做出的决策以及对可解释性的渴望，我们认为基于决策树的模型非常适合于警报分类。</p>
+<p>有许多公开可用的资源可以学习决策树，但决策树背后的基本直觉是它是一个迭代过程，要求一系列问题试图得出一个非常自信的答案。任何玩过“二十个问题”游戏的人都熟悉这个概念。最初，要求提出一般性问题以帮助消除可能性，然后要求更具体的问题来缩小可能性。在提出足够的问题并回答之后，“提问者”认为他们很有可能猜出正确的答案。</p>
+<p>图4显示了可用于评估流程执行的决策树的示例。</p>
+<p>图4：用于确定警报是良性还是恶意的决策树</p>
+<p>对于图中的示例警报，“决策路径”标记为红色。这就是此决策树模型进行预测的方式。它首先问：“长度是否大于100个字符？”如果是这样，它会转到下一个问题“它是否包含字符串’http’？”等等，直到它有信心做出有根据的猜测。在图4的示例中，假设在此决策路径中传播的所有训练警报中有95％是恶意的，该模型预测此警报也有95％的可能性是恶意的。</p>
+<p>因为他们可以询问这些详细的问题组合，所以决策树可能会“过度拟合”，或者学习与训练集过于紧密联系的规则。这降低了模型“推广”到新数据的能力。减轻这种影响的一种方法是使用许多稍微不同的决策树，并让它们各自对结果“投票”。决策树的这种“集合”称为随机森林，它可以在野外部署时提高模型的性能。这是我们最终为我们的模型选择的算法。</p>
+<p>SOC警报模型如何工作<br>当出现新警报时，工件中的数据将转换为编码要素的向量，其结构与用于训练模型的要素表示相同。然后，模型评估该“特征向量”并对预测标签应用置信度。根据我们设置的阈值，我们可以将警报分类为恶意或良性。</p>
+<p>图5：捕获原始值时向分析师显示的警报</p>
+<p>例如，图5中显示的事件可能会创建以下功能值：</p>
+<p>父进程：’wscript’<br>命令熵：5.08<br>命令长度= 103<br>根据它们的训练方式，模型中的树各自询问新特征向量的一系列问题。当特征向量遍历每个树时，它最终会收敛于终端“叶子”，将其分类为良性或恶意。然后，我们可以评估每棵树所做的聚合决策，以估计向量中哪些特征在最终分类中起最大作用。</p>
+<p>对于SOC中的分析师，我们然后呈现从模型中提取的特征，显示这些特征在整个数据集上的分布。这使分析师能够深入了解模型的“原因”，以及它们如何在我们看到的所有警报中表示这些功能。例如，此警报的“说明”可能如下所示：</p>
+<p>命令熵= 5.08&gt; 4.60：51.73％威胁<br>occuranceOfChar“\”= 9.00&gt; 4.50：64.09％威胁<br>occuranceOfChar：“）”（= 0.00）&lt;= 0.50：78.69％威胁<br>NOT processTree =“cmd.exe_to_cscript.exe”：99.6％威胁<br>因此，在分析时，分析人员可以看到事件的原始数据，模型的预测，决策路径的近似，以及整体特征重要性的简化，可解释的视图。</p>
+<p>SOC如何使用模型<br>显示模型用于得出结论的特征允许有经验的分析师将他们的方法与模型进行比较，并在模型出错的情况下给出反馈。相反，新的分析师可能会学会查看他们可能错过的功能：父子关系，混淆的迹象或参数中的网络连接字符串。毕竟，该模型已经了解了每个分析师对数千个警报的集体体验。因此，该模型提供了对分析师总体经验的可操作反映回 SOC，以便每个分析师可以向他们的同事传递学习。</p>
+<p>此外，可以使用模型的输出作为参数来编写规则。如果模型对一部分警报特别有信心，并且SOC感觉很自然地自动对该系列威胁进行分类，则可以简单地编写一条规则来说：“如果警报属于此类型，则此恶意软件系列为AND，并且模型置信度高于99，自动调用此警报并生成报告。“或者，如果存在可能的误报风暴，可以使用低于10的模型得分编写规则来剔除误报群。</p>
+<p>模型如何有效<br>模型训练的那天，它停止学习。但是，威胁 - 以及警报 - 不断发展。因此，必须使用新的警报数据不断重新训练模型，以确保它继续学习环境的变化。</p>
+<p>此外，随着时间的推移监控模型的整体功效至关重要。建立功效分析管道以将模型结果与分析师反馈进行比较将有助于确定模型是否开始漂移或发展结构偏差。评估和整合分析师反馈对于识别和解决特定的错误分类以及发现可能需要的潜在新功能也至关重要。</p>
+<p>为了实现这些目标，我们运行后台工作，使用新标记的事件更新我们的培训数据库。随着我们收到越来越多的警报，我们会定期使用新的观察结果重新训练我们的模型。如果我们遇到准确性问题，我们会进行诊断并努力解决这些问题。一旦我们对再培训模型的整体准确度得分感到满意​​，我们就会存储模型对象并开始使用该模型版本。</p>
+<p>我们还为分析师提供反馈机制，以记录模型何时出错。分析师可以查看模型提供的标签和解释，但也可以自己做出决定。无论他们是否同意模型，他们都可以通过界面输入自己的标签。我们存储由分析师提供的这个标签以及他们给出的关于解释的任何可选解释。</p>
+<p>最后，应该注意的是，这些手册标签可能需要进一步评估。例如，考虑商品恶意软件警报，其中网络命令和控制通信陷入困境。分析师可以评估警报，撤回分类细节，包括PCAP样本，并查看恶意软件执行时的真实威胁减轻了对环境的影响。由于它不代表紧急威胁，分析师可能会将此警报标记为“良性”。然而，它被沉没的事实并没有改变执行工件仍然代表恶意活动。在不同的情况下，这种感染可能会对组织产生负面影响。但是，如果在重新训练模型时使用良性标签，那将告诉模型本质上恶意的东西实际上是良性的，并且可能在将来导致漏报。</p>
+<p>随着时间的推移监控功效，使用新警报更新和重新培训模型，以及评估手动分析师反馈，使我们可以了解模型的表现和学习方式。最终，这有助于建立对模型的信心，因此我们可以自动执行更多任务，并释放分析师时间来执行狩猎和调查等任务。</p>
+<p>结论<br>有监督的学习模型不是经验丰富的分析师的替代品。但是，将预测分析和机器学习纳入SOC工作流程有助于提高分析师的工作效率，节省时间，并确保他们利用调查技能和创造力来应对真正需要专业知识的威胁。</p>
+<p>本博文概述了为SOC构建警报分类模型的主要组件和注意事项。在构建此类模型时，必须仔细考虑数据收集，标签，特征生成，模型培训和功效分析。FireEye继续重复研究，以提高我们的检测和响应能力，不断提高我们产品的检测效率，并最终保护我们的客户。</p>
+<p>本文中讨论的过程和示例不仅仅是研究。在我们的FireEye Managed Defense SOC中，我们使用上述流程构建的警报分类模型来提高效率，并确保我们将分析师的专业知识应用到最需要的地方。在不断增加的威胁和警报的世界中，提高SOC效率可能意味着缺失和捕获关键入侵之间的差异。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/09/06/构建SOC的机器学习分析模型/" data-id="cjprqg7ts001g0c9lbnhlgydv" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/09/11/开源情报收集/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          开源情报收集
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/08/21/Perl-DDOS-IrcBot分析/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Perl DDOS IrcBot分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/17/Satori-物联网蠕虫分析/">Satori 物联网蠕虫分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/14/Suricata-tips/">Suricata tips</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/11/开源情报收集/">开源情报收集</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/06/构建SOC的机器学习分析模型/">构建SOC的机器学习分析模型</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/21/Perl-DDOS-IrcBot分析/">Perl DDOS IrcBot分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <!--
+<footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 SY0U<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+-->
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

