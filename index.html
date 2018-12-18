@@ -91,7 +91,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjpt6pz5v000qko9lkdq961s0" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2016/06/08/About-the-Blog/" data-id="cjptbfkey000sd89lbq65a3mi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -144,7 +144,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/" data-id="cjpt6pz6c001bko9lp1j7zi90" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/12/17/攻击者利用CertUtil-exe植入恶意软件/" data-id="cjptbfkgb001fd89l5ig4zt4t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -213,7 +213,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/" data-id="cjpt6pz63000xko9lbrnqt0a8" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/17/Satori-物联网蠕虫分析/" data-id="cjptbfkfo0018d89lv3x6hz81" class="article-share-link">Share</a>
       
       
     </footer>
@@ -250,7 +250,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/14/Suricata-tips/" data-id="cjpt6pz650010ko9lvi6tvyqz" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/14/Suricata-tips/" data-id="cjptbfkf0000ud89lwm5fiex7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -344,7 +344,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/11/开源情报收集/" data-id="cjpt6pz6d001cko9lokesw3rs" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/11/开源情报收集/" data-id="cjptbfkfr001cd89lgqy4tqmy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -376,7 +376,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h5 id="基本监督模型过程"><a href="#基本监督模型过程" class="headerlink" title="基本监督模型过程"></a>基本监督模型过程</h5><p>​    数据科学术语是“有监督的分类模型”，它被“监督”意味着它通过已被标记为正常或恶意的数据来学习，并且它是一种被训练的“分类模型”，我们希望它检测一个新的数据能几个离散的结果之间做出决策。在我们的例子中，我们只希望它在告警的两个“类”之间做出决定：恶意和正常。<br>    为了开始创建这样的模型，必须收集数据集。该数据集构成了模型的“经验”，是我们用来“训练”模型以做出决策的信息。监督模型，每个数据单元必须标记为恶意或正常，以便模型可以评估每个观察结果，并弄清楚是什么使它恶意，什么使它正常。通常，收集干净的标记数据集是监督模型管道中最难的部分之一; 但是，就我们的SOC而言，我们的分析师每周都会不断地对数千个警报进行分类（或“标记”），因此我们很能够获得大量干净，标准化的标签警报。</p>
+        <p>From：<a href="https://www.fireeye.com/blog/threat-research/2018/06/build-machine-learning-models-for-the-soc.html" target="_blank" rel="external">https://www.fireeye.com/blog/threat-research/2018/06/build-machine-learning-models-for-the-soc.html</a></p>
+<p>下面是我整理的思维导图：<br><img src="https://raw.githubusercontent.com/wsygoogol/MarkdownPhotoes/master/ML-Milious.png" alt="ML-Milious"></p>
+<h5 id="基本监督模型过程"><a href="#基本监督模型过程" class="headerlink" title="基本监督模型过程"></a>基本监督模型过程</h5><p>​    数据科学术语是“有监督的分类模型”，它被“监督”意味着它通过已被标记为正常或恶意的数据来学习，并且它是一种被训练的“分类模型”，我们希望它检测一个新的数据能几个离散的结果之间做出决策。在我们的例子中，我们只希望它在告警的两个“类”之间做出决定：恶意和正常。<br>    为了开始创建这样的模型，必须收集数据集。该数据集构成了模型的“经验”，是我们用来“训练”模型以做出决策的信息。监督模型，每个数据单元必须标记为恶意或正常，以便模型可以评估每个观察结果，并弄清楚是什么使它恶意，什么使它正常。通常，收集干净的标记数据集是监督模型管道中最难的部分之一; 但是，就我们的SOC而言，我们的分析师每周都会不断地对数千个警报进行分类（或“标记”），因此我们很能够获得大量干净，标准化的标签警报。</p>
 <p>​    一旦定义了标记数据集，下一步就是定义“功能”，可用于描绘每个告警中的信息。“特征”可以被认为是这一点信息的一个方面。例如，如果信息表示为字符串，则自然“特征”可以是字符串的长度。为我们的警报分类模型构建功能背后的核心思想是找到一种方法来表示和记录分析师在做出决策时可能考虑的所有方面。</p>
 <p>然后，构建模型需要选择要使用的模型结构，并在可用总数据的子集上训练模型。训练数据集越大越多样化，模型通常表现越好。剩下的数据用作“测试集”，以查看训练的模型是否确实有效。拿出这个测试装置可以确保模型在以前从未见过的样品上进行评估，但真正的标签是已知的。</p>
 <p>最后，确保有一种方法可以评估模型随时间的效果，以及调查错误以便进行适当的调整。如果没有计划和管道进行评估和重新培训，该模型几乎肯定会在性能上衰退。</p>
@@ -445,7 +447,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/09/06/构建SOC的机器学习分析模型/" data-id="cjpt6pz6f001fko9lwvglb7a7" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/09/06/构建SOC的机器学习分析模型/" data-id="cjptbfkfq001ad89lqmbinf5p" class="article-share-link">Share</a>
       
       
     </footer>
@@ -499,7 +501,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/08/14/使用YARA规则进行威胁狩猎/" data-id="cjpt6pz690016ko9lq408ox7v" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/08/14/使用YARA规则进行威胁狩猎/" data-id="cjptbfkga001ed89lhbctks9f" class="article-share-link">Share</a>
       
       
     </footer>
@@ -568,7 +570,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/07/31/Google-Safe-Browsing-Api介绍/" data-id="cjpt6pz61000vko9lua4pkbx3" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/07/31/Google-Safe-Browsing-Api介绍/" data-id="cjptbfkf80013d89lxgte4mbe" class="article-share-link">Share</a>
       
       
     </footer>
@@ -616,7 +618,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/06/29/数字取证入门/" data-id="cjpt6pz6e001dko9ljra1p4lu" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/06/29/数字取证入门/" data-id="cjptbfkgc001gd89lqzo1yjvq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -664,7 +666,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://wsygoogol.github.io/2018/03/19/Dionaea蜜罐部署/" data-id="cjpt6pz5x000rko9l4jmht09y" class="article-share-link">Share</a>
+      <a data-url="http://wsygoogol.github.io/2018/03/19/Dionaea蜜罐部署/" data-id="cjptbfkf90014d89lw61dabe8" class="article-share-link">Share</a>
       
       
     </footer>
